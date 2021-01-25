@@ -13,9 +13,6 @@ namespace TrainWorld
         private RailGraph railGraph;
 
         [SerializeField]
-        private RailVisualizer railVisualizer;
-
-        [SerializeField]
         private PlacementManager placementManager;
 
         Direction tempDirection;
@@ -59,11 +56,11 @@ namespace TrainWorld
             Type? data = placementManager.GetPlacementDataAt(roundedPosition);
             if (data != null) // pointer is over object
             {
-                tempObject.SetActive(false);
+               // tempObject.SetActive(false);
             }
             else
             {
-                tempObject.SetActive(true);
+                //tempObject.SetActive(true);
             }
         }
 
@@ -75,15 +72,15 @@ namespace TrainWorld
             if (crossProduct == Vector3Int.up)
             {
                 placementEndPosition = placementStartPosition + 
-                    directionVector * 2 + DirectionHelper.ToDirectionVector(DirectionHelper.Next90(placementStartDirection));
-                placementEndDirection = DirectionHelper.Next(placementStartDirection);
+                    directionVector + DirectionHelper.ToDirectionVector(DirectionHelper.Next(placementStartDirection));
+                placementEndDirection = DirectionHelper.Opposite(DirectionHelper.Next(placementStartDirection));
 
             }
             else if (crossProduct == Vector3Int.down)
             {
                 placementEndPosition = placementStartPosition +
-                    directionVector * 2 + DirectionHelper.ToDirectionVector(DirectionHelper.Prev90(placementStartDirection));
-                placementEndDirection = DirectionHelper.Prev(placementStartDirection);
+                    directionVector + DirectionHelper.ToDirectionVector(DirectionHelper.Prev(placementStartDirection));
+                placementEndDirection = DirectionHelper.Opposite(DirectionHelper.Prev(placementStartDirection));
             }
             else
             {
@@ -101,28 +98,26 @@ namespace TrainWorld
 
         public void PlaceRail(Vector3 position)
         {
+            Type? data = placementManager.GetPlacementDataAt(Vector3Int.RoundToInt(position));
             if (placementMode)  // at placementMode
             {
-                railGraph.AddEdge(placementStartPosition, placementEndPosition,
-                    placementStartDirection, placementEndDirection);
-                railVisualizer.Visualize(placementStartPosition, placementEndPosition,
-                    placementStartDirection, placementEndDirection);
+                if (data == null)   //   click empty space, place rail
+                {
+                    railGraph.AddEdge(placementStartPosition, placementEndPosition,
+                        placementStartDirection, placementEndDirection);
 
-                placementManager.AddTempObjectToDictionary(placementStartPosition, Type.Rail);
-                placementManager.AddTempObjectToDictionary(placementEndPosition, Type.Rail);
+                    placementManager.AddTempObjectToDictionary(placementStartPosition, Type.Rail);
+                    placementManager.AddTempObjectToDictionary(placementEndPosition, Type.Rail);
+                } // else, cancle placementMode
                 placementMode = false;
             }
             else
             {
-                Type? data = placementManager.GetPlacementDataAt(Vector3Int.RoundToInt(position));
-                if (data == null) // click empty space
+                if (data == null) // click empty space, place deadend
                 {
                     railGraph.AddNode(Vector3Int.RoundToInt(position), tempDirection);
-                    //railVisualizer.VisualizeDeadEnd(placementStartPosition, placementStartDirection);
-                    railVisualizer.Visualize(placementStartPosition, placementStartPosition + DirectionHelper.ToDirectionVector(placementStartDirection),
-                        placementStartDirection, placementStartDirection);
 
-                    placementManager.AddTempObjectToDictionary(placementStartPosition, Type.Rail);
+                    placementManager.AddTempObjectToDictionary(Vector3Int.RoundToInt(position), Type.Rail);
                 }
                 else if (data == Type.Rail)   // click rail -> enter placementMode
                 {
@@ -133,6 +128,7 @@ namespace TrainWorld
 
                     placementStartPosition = Vector3Int.RoundToInt(position);
                 }
+                // else ignore mouse click
             }
         }
 

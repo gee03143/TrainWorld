@@ -4,43 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace TrainWorld
-{ 
-    public class RailNode
-    {
-        public Vector3Int position;
-        public Rail rail;
-
-        public Dictionary<Direction, RailNode> connectedRails;
-
-        public RailNode(Vector3Int position, Direction direction)
-        {
-            this.position = position;
-            connectedRails = new Dictionary<Direction, RailNode>();
-            this.connectedRails.Add(direction, this);
-            this.connectedRails.Add(DirectionHelper.Opposite(direction), this);
-        }
-
-        public Direction GetClosestExtendDirection(Vector3 mousePosition)
-        {
-            double minDist = double.PositiveInfinity;
-            Direction returnValue = Direction.N;
-
-            foreach (var direction in connectedRails.Keys)
-            {
-                double distance = Vector3.Distance(mousePosition, position + DirectionHelper.ToDirectionVector(direction));
-                if (minDist > distance)
-                {
-                    minDist = distance;
-                    returnValue = direction;
-                }
-            }
-
-            return returnValue;
-        }
-    }
-
+{
     public class RailGraph : MonoBehaviour
     {
+        [SerializeField]
+        private GameObject railPrefab;
+
         private Dictionary<Vector3Int, RailNode> railGraph;
 
         private void Awake()
@@ -109,6 +78,9 @@ namespace TrainWorld
 
             railGraph[position1].connectedRails[direction1] = railGraph[position2];
             railGraph[position2].connectedRails[direction2] = railGraph[position1];
+
+            GameObject railObject = Instantiate(railPrefab, Vector3.zero, Quaternion.identity) as GameObject;
+            railObject.GetComponent<Rail>().InitRail(position1, position2, direction1, direction2);
         }
 
         private void OnDrawGizmos()

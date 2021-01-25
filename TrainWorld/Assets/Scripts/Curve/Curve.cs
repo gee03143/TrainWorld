@@ -27,14 +27,10 @@ namespace TrainWorld
 
         public Curve(Vector3 point1, Vector3 point2, Direction direction1, Direction direction2)
         {
-            float anchorDistance = 0.5f;
-            Vector3 normalizedAnchorDirection = Vector3.Normalize(
-                (DirectionHelper.ToDirectionVector(direction1) + DirectionHelper.ToDirectionVector(direction2))
-                );
             points = new List<Vector3> {
                 point1,
-                point1 + normalizedAnchorDirection * anchorDistance,
-                point2 + normalizedAnchorDirection * anchorDistance,
+                point1 + DirectionHelper.ToDirectionVector(direction1),
+                point2 +  DirectionHelper.ToDirectionVector(direction2),
                 point2
             };
         }

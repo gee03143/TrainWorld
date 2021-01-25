@@ -19,6 +19,7 @@ namespace TrainWorld
         {
             ClearButtonHandler();
 
+            Debug.Log("RailButtonHandler");
             inputManager.OnMouseMove += railManager.DisplayTempObjects;
             inputManager.OnMouseDown += railManager.PlaceRail;
             inputManager.OnRInput += railManager.RotateTempRail;
