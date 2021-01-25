@@ -7,9 +7,6 @@ namespace TrainWorld
     public class RailManager : MonoBehaviour
     {
         [SerializeField]
-        List<GameObject> tempRails;
-
-        [SerializeField]
         private RailGraph railGraph;
 
         [SerializeField]
@@ -33,7 +30,6 @@ namespace TrainWorld
                 return;
 
             tempDirection = DirectionHelper.Next(tempDirection);
-            tempObject.transform.rotation = Quaternion.Euler(DirectionHelper.ToEuler(tempDirection));
         }
 
         internal void DisplayTempObjects(Vector3 cursorPosition)
@@ -52,11 +48,12 @@ namespace TrainWorld
         {
             Vector3Int roundedPosition = Vector3Int.RoundToInt(cursorPosition);
 
-            tempObject.transform.position = roundedPosition;
+            //tempObject.GetComponent<Rail>().InitRail(roundedPosition, roundedPosition, placementStartDirection, placementStartDirection);
+
             Type? data = placementManager.GetPlacementDataAt(roundedPosition);
             if (data != null) // pointer is over object
             {
-               // tempObject.SetActive(false);
+               //tempObject.SetActive(false);
             }
             else
             {
@@ -85,15 +82,15 @@ namespace TrainWorld
             else
             {
                 placementEndPosition = placementStartPosition + directionVector;
-                placementEndDirection = placementStartDirection;
+                placementEndDirection = DirectionHelper.Opposite(placementStartDirection);
             }
-            ModifyTempRailTransform(placementStartPosition, placementStartDirection);
+            ModifyTempRailTransform();
         }
 
-        void ModifyTempRailTransform(Vector3Int placementStartPosition, Direction placementStartDirection)
+        void ModifyTempRailTransform()
         {
-            tempObject.transform.position = placementStartPosition + DirectionHelper.ToDirectionVector(placementStartDirection);
-            tempObject.transform.rotation = Quaternion.Euler(DirectionHelper.ToEuler(placementStartDirection));
+            Debug.Log("Modify Temp Rail Transform");
+            tempObject.GetComponent<Rail>().InitRail(placementStartPosition, placementEndPosition, placementStartDirection, placementEndDirection);
         }
 
         public void PlaceRail(Vector3 position)

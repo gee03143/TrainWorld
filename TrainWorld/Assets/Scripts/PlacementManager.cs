@@ -11,7 +11,6 @@ namespace TrainWorld
 
         Dictionary<Vector3Int, Type> placementDictionary;
 
-        public bool placementMode { get; private set; }
 
         private void Start()
         {

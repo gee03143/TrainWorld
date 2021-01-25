@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3113931150141260680}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
-  m_LocalPosition: {x: 11, y: 0, z: 14}
+  m_LocalPosition: {x: 9, y: 0, z: 14}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -48,10 +48,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curve:
     points:
-    - {x: -1, y: 0, z: 0}
-    - {x: -0.5, y: 0, z: 0.5}
-    - {x: 0.5, y: 0, z: -0.5}
-    - {x: 1, y: 0, z: 0}
+    - {x: 7, y: 0, z: 12}
+    - {x: 8, y: 0, z: 12}
+    - {x: 9, y: 0, z: 12}
+    - {x: 8, y: 0, z: 12}
     isClosed: 0
     autoSetControlPoints: 0
   anchorCol: {r: 1, g: 0, b: 0, a: 1}

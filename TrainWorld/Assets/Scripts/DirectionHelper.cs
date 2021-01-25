@@ -15,15 +15,6 @@ namespace TrainWorld
             return (Direction)(((uint)direction + 1) % (uint)Direction.DIRECTION_COUNT);
         }
 
-        public static Direction Prev90(Direction direction)
-        {
-            return (Direction)(((uint)direction - 2 + (uint)Direction.DIRECTION_COUNT) % (uint)Direction.DIRECTION_COUNT);
-        }
-        public static Direction Next90(Direction direction)
-        {
-            return (Direction)(((uint)direction + 2) % (uint)Direction.DIRECTION_COUNT);
-        }
-
         public static Direction Opposite(Direction direction)
         {
             return (Direction)(((uint)direction + ((uint)Direction.DIRECTION_COUNT / 2)) % (uint)Direction.DIRECTION_COUNT);
