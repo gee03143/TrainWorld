@@ -4,34 +4,56 @@ using UnityEngine;
 
 namespace TrainWorld
 {
+    public enum Direction
+    {
+        N,
+        NE,
+        E,
+        SE,
+        S,
+        SW,
+        W,
+        NW,
+        DIRECTION_COUNT // 8 way direction ststem
+    }
+
     public static class DirectionHelper
     {
-        public static Direction Prev(Direction direction)
+        public static Direction Next(Direction current)
         {
-            return (Direction)(((uint)direction - 1 + (uint)Direction.DIRECTION_COUNT) % (uint)Direction.DIRECTION_COUNT);
-        }
-        public static Direction Next(Direction direction)
-        {
-            return (Direction)(((uint)direction + 1) % (uint)Direction.DIRECTION_COUNT);
+            return (Direction)(((int)current + 1) % (int)Direction.DIRECTION_COUNT);
         }
 
-        public static Direction Opposite(Direction direction)
+        public static Direction Prev(Direction current)
         {
-            return (Direction)(((uint)direction + ((uint)Direction.DIRECTION_COUNT / 2)) % (uint)Direction.DIRECTION_COUNT);
+            return (Direction)(((int)current - 1 + (int)Direction.DIRECTION_COUNT) % (int)Direction.DIRECTION_COUNT);
         }
 
-        public static Vector3 ToEuler(Direction direction)
+        public static Direction Opposite(Direction current)
         {
-            return new Vector3(0, (uint)direction * 45, 0);
+            return (Direction)(((int)current + (int)Direction.DIRECTION_COUNT / 2) % (int)Direction.DIRECTION_COUNT);
         }
 
-        public static Vector3Int ToDirectionVector(Direction direction)
+        public static bool IsDiagonal(Direction direction)
         {
-            if (direction == Direction.W)
+            return direction == Direction.NW || direction == Direction.NE || direction == Direction.SE || direction == Direction.SW;
+        }
+
+        public static Vector3Int ToDirectionalVector(Direction direction)
+        {
+            if(direction == Direction.N)
+            {
+                return new Vector3Int(0, 0, 1);
+            }
+            else if(direction == Direction.NE)
+            {
+                return new Vector3Int(1, 0, 1);
+            }
+            else if (direction == Direction.E)
             {
                 return new Vector3Int(1, 0, 0);
             }
-            else if (direction == Direction.SW)
+            else if (direction == Direction.SE)
             {
                 return new Vector3Int(1, 0, -1);
             }
@@ -39,31 +61,23 @@ namespace TrainWorld
             {
                 return new Vector3Int(0, 0, -1);
             }
-            else if (direction == Direction.SE)
+            else if (direction == Direction.SW)
             {
                 return new Vector3Int(-1, 0, -1);
             }
-            else if (direction == Direction.E)
+            else if (direction == Direction.W)
             {
                 return new Vector3Int(-1, 0, 0);
             }
-            else if (direction == Direction.NE)
+            else // NW
             {
                 return new Vector3Int(-1, 0, 1);
             }
-            else if (direction == Direction.N)
-            {
-                return new Vector3Int(0, 0, 1);
-            }
-            else if (direction == Direction.NW)
-            {
-                return new Vector3Int(1, 0, 1);
-            }
-            else
-            {
-                Debug.Log("Invalid direction Data converted");
-                return Vector3Int.zero;
-            }
+        }
+
+        public static Vector3 ToEuler(Direction direction)
+        {
+            return new Vector3(0, 45 * (int)direction, 0);
         }
     }
 }

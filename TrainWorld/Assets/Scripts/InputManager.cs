@@ -6,84 +6,81 @@ using UnityEngine.EventSystems;
 
 namespace TrainWorld
 {
+    //유저 입력을 체크하는 클래스
+    // 마우스 키보드 입력을 인식하고 해당 Action을 Invoke 시킴
+    // 추후 다른 입력 방식이 생길 경우 GameManager참조를 인터페이스로 옮기고 
+    // 이 클래스가 해당 인터페이스를 구현하게 할 것
     public class InputManager : MonoBehaviour
     {
-        public Action<Vector3Int> OnMouseUp;
-        public Action<Vector3> OnMouseDown, OnMouseMove;
-        public Action<Vector3Int> OnRInput;
-        public Action OnArrowInput;
-
         [SerializeField]
+        private float minMouseMovement;
+
+        public Action<Vector3Int> onMouseDown, onMouseMove;
+        public Action onRInput, onEscInput;
+
         private LayerMask layerMask;
 
-        private Vector2 cameraMovementVector;
-
-        public Vector2 CameraMovementVector
+        private void Awake()
         {
-            get { return cameraMovementVector; }
+            layerMask = 1 << LayerMask.NameToLayer("Plane");
         }
 
         private void Update()
         {
-            GetMouseDown();
-            GetMouseMove();
-            GetMouseUp();
-            GetRInput();
-            GetArrowInput();
+            CheckMouseDown();
+            CheckMouseMove();
+            CheckRInput();
+            CheckEscInput();
         }
 
-        private void GetArrowInput()
+        private void CheckEscInput()
         {
-            cameraMovementVector.x = Input.GetAxis("Horizontal");
-            cameraMovementVector.y = Input.GetAxis("Vertical");
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                onEscInput.Invoke();
+            }
         }
 
-        private void GetRInput()
+        private void CheckRInput()
         {
             if (Input.GetKeyDown(KeyCode.R))
             {
-                Vector3? mousePosition = RayCastToGround();
-                if(mousePosition != null)
-                    OnRInput?.Invoke(Vector3Int.RoundToInt((Vector3)mousePosition));
+                onRInput.Invoke();
             }
         }
 
-        private void GetMouseUp()
+        private void CheckMouseMove()
         {
-            if (Input.GetMouseButtonUp(0) && EventSystem.current.IsPointerOverGameObject() == false)
+            if ( Mathf.Abs(Input.GetAxis("Mouse X")) > minMouseMovement || Mathf.Abs(Input.GetAxis("Mouse Y")) > minMouseMovement)
             {
-                Vector3? mousePosition = RayCastToGround();
-                if(mousePosition != null)
-                    OnMouseUp?.Invoke(Vector3Int.RoundToInt((Vector3)mousePosition));
+                Vector3? hitPosition = RaycastToGround();
+                if (hitPosition != null)
+                    onMouseMove?.Invoke(Vector3Int.RoundToInt((Vector3)hitPosition));
             }
         }
 
-        private void GetMouseMove()
-        {
-            if((Input.GetAxis("Mouse X") != 0) || (Input.GetAxis("Mouse Y") != 0) && EventSystem.current.IsPointerOverGameObject() == false)
-            {
-                Vector3? mousePosition = RayCastToGround();
-                if (mousePosition != null)
-                    OnMouseMove?.Invoke((Vector3)mousePosition);
-            }
-        }
-
-        private void GetMouseDown()
+        private void CheckMouseDown()
         {
             if(Input.GetMouseButtonDown(0) && EventSystem.current.IsPointerOverGameObject() == false)
             {
-                Vector3? mousePosition = RayCastToGround();
-                if(mousePosition != null)
-                    OnMouseDown?.Invoke((Vector3)mousePosition);
+                Vector3? hitPosition = RaycastToGround();
+                if (hitPosition != null)
+                {
+                    onMouseDown?.Invoke(Vector3Int.RoundToInt((Vector3)hitPosition));
+                }
             }
         }
 
-        private Vector3? RayCastToGround()
+        private Vector3? RaycastToGround()
         {
+            Vector3 hitPosition;
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if(Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask)){
-                return hit.point;
+
+            if(Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
+            {
+                hitPosition = hit.point;
+                return hitPosition;
             }
             return null;
         }

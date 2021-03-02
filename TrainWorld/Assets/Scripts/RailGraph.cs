@@ -1,101 +1,131 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace TrainWorld
 {
-    public class RailGraph : MonoBehaviour
+    public class RailGraph
     {
-        [SerializeField]
-        private GameObject railPrefab;
+        private Dictionary<Vertex, List<Vertex>> graph;
 
-        private Dictionary<Vector3Int, RailNode> railGraph;
-
-        private void Awake()
+        public RailGraph()
         {
-            railGraph = new Dictionary<Vector3Int, RailNode>();
+            graph = new Dictionary<Vertex, List<Vertex>>();
         }
 
-        public void AddNode(Vector3Int position, Direction direction)
+        internal Vertex GetVertexAt(Vector3 position, Direction direction)
         {
-            if(railGraph.ContainsKey(position) == false)
+            return graph.Keys.FirstOrDefault(x => CompareVerticies(x, position, direction));
+        }
+
+        internal List<Vertex> GetNeighboursAt(Vector3 position, Direction direction)
+        {
+            Vertex targetVertex = GetVertexAt(position, direction);
+            if (targetVertex == null)
             {
-                railGraph.Add(position, new RailNode(position, direction));
+                return null;
             }
             else
             {
-                RailNode selectedNode = GetNodeAt(position);
-                if(selectedNode.connectedRails.ContainsKey(direction) == false)
-                {
-                    selectedNode.connectedRails.Add(direction, selectedNode);
-                }
-
-                if (selectedNode.connectedRails.ContainsKey(DirectionHelper.Opposite(direction)) == false)
-                {
-                    selectedNode.connectedRails.Add(DirectionHelper.Opposite(direction), selectedNode);
-                }
-            }
-
-            ConnectWithAdjescentNodes(position);
-        }
-
-        private void ConnectWithAdjescentNodes(Vector3Int position)
-        {
-            RailNode startNode = GetNodeAt(position);
-            List<Direction> directions = new List<Direction>(startNode.connectedRails.Keys);
-
-            foreach (var direction in directions)
-            {
-                RailNode adjescentNode = GetNodeAt(position + DirectionHelper.ToDirectionVector(direction));
-                if (adjescentNode == null)
-                    continue;
-                if (adjescentNode.connectedRails.ContainsKey(DirectionHelper.Opposite(direction)))  //이웃 노드가 연결될 수 있다면
-                {
-                    AddEdge(position, adjescentNode.position, direction, DirectionHelper.Opposite(direction));
-                }
+                return graph[targetVertex];
             }
         }
 
-        public RailNode GetNodeAt(Vector3Int position)
+        private bool CompareVerticies(Vertex x, Vector3 position, Direction direction)
         {
-            if (railGraph.ContainsKey(position) == true)
-                return railGraph[position];
-
-            return null;
+            return Vector3.SqrMagnitude(position - x.Position) < 0.0001f && direction == x.direction;
         }
 
-        public void AddEdge(Vector3Int position1, Vector3Int position2, Direction direction1, Direction direction2)
+        private bool CompareVerticies(Vector3 position1, Direction direction1, Vector3 position2, Direction direction2)
         {
-            if(railGraph.ContainsKey(position1) == false)
-            {
-                AddNode(position1, direction1);
-            }
-            if (railGraph.ContainsKey(position2) == false)
-            {
-                AddNode(position2, direction2);
-            }
-
-            railGraph[position1].connectedRails[direction1] = railGraph[position2];
-            railGraph[position2].connectedRails[direction2] = railGraph[position1];
-
-            GameObject railObject = Instantiate(railPrefab, Vector3.zero, Quaternion.identity) as GameObject;
-            railObject.GetComponent<Rail>().InitRail(position1, position2, direction1, direction2);
+            return Vector3.SqrMagnitude(position2 - position1) < 0.0001f && direction1 == direction2;
         }
 
-        private void OnDrawGizmos()
+        private bool ComparePosition(Vector3 position1, Vector3 position2)
         {
-            if (railGraph == null)
+            return Vector3.SqrMagnitude(position2 - position1) < 0.0001f;
+        }
+
+        public void AddVertexAt(Vector3Int position, Direction direction)
+        {
+            AddVertex(new Vertex(position, direction));
+            AddVertex(new Vertex(position, DirectionHelper.Opposite(direction)));
+        }
+
+        public void AddVertex(Vertex v)
+        {
+            if (graph.ContainsKey(v))
                 return;
 
-            Gizmos.color = Color.red;
+            Debug.Log("Vertex Added at : " + v.ToString());
+            graph.Add(v, new List<Vertex>());
 
-            foreach (var nodePosition in railGraph.Keys)
+            //check opposite
+            if (GetVertexAt(v.Position, DirectionHelper.Opposite(v.direction)) != null)
             {
-                foreach (var item in GetNodeAt(nodePosition).connectedRails.Keys)
+                // if has opposite vertex
+                AddEdge(v.Position, v.Position, v.direction, DirectionHelper.Opposite(v.direction));
+            }
+            //check adjascent
+            Vector3 adjascentPosition = v.Position + DirectionHelper.ToDirectionalVector(v.direction);
+            if (GetVertexAt(adjascentPosition, DirectionHelper.Opposite(v.direction)) != null)
+            {
+                // if has adjascent vertex
+                AddEdge(v.Position, adjascentPosition, v.direction, DirectionHelper.Opposite(v.direction));
+            }
+        }
+
+        public void RemoveVertex(Vertex v)
+        {
+            if (graph.ContainsKey(v) == false)
+                return;
+
+            foreach (var neighbour in graph[v])
+            {
+                graph[neighbour].Remove(v);
+            }
+
+            graph.Remove(v);
+        }
+
+        public void AddEdge(Vector3 position1, Vector3 position2, Direction direction1, Direction direction2)
+        {
+            if(CompareVerticies(position1, direction1, position2, direction2))
+            {
+                return; //don't add edges between the same vertex
+            }
+
+            var v1 = GetVertexAt(position1, direction1);
+            var v2 = GetVertexAt(position2, direction2);
+            if (v1 == null)
+            {
+                v1 = new Vertex(position1, direction1);
+            }
+            if(v2 == null)
+            {
+                v2 = new Vertex(position2, direction2);
+            }
+            AddEdgeBetween(v1, v2);
+            AddEdgeBetween(v2, v1); //  this graph is non-directional
+        }
+
+        private void AddEdgeBetween(Vertex v1, Vertex v2)
+        {
+            if (v1 == v2)
+                return;
+
+            if (graph.ContainsKey(v1))
+            {
+                if (graph[v1].FirstOrDefault(x => x == v2) == null)
                 {
-                    Gizmos.DrawLine(nodePosition, GetNodeAt(nodePosition).connectedRails[item].position);
+                    graph[v1].Add(v2);
                 }
+            }
+            else
+            {
+                AddVertex(v1);
+                graph[v1].Add(v2);
             }
         }
     }

@@ -1,56 +1,87 @@
-﻿using SVS;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace TrainWorld
 {
+    // 각 Manager들을 통합하는 역할
+    // UI 입력에 따른 행동 설정
+    // 
     public class GameManager : MonoBehaviour
     {
         [SerializeField]
         private InputManager inputManager;
         [SerializeField]
-        private RailManager railManager;
+        private RailPlacementManager railPlacementManager;
         [SerializeField]
-        private CameraMovement cameraMovement;
+        private UiController uiController;
 
-        internal void RailButtonHandler()
+
+        private void Start()
         {
-            ClearButtonHandler();
+            uiController.OnRailPlacement += RailButtonHandler;
+            uiController.OnStationPlacement += StationButtonHandler;
+            uiController.OnTrafficPlacement += TrafficButtonHandler;
+            inputManager.onEscInput += HandleEscape;
 
-            Debug.Log("RailButtonHandler");
-            inputManager.OnMouseMove += railManager.DisplayTempObjects;
-            inputManager.OnMouseDown += railManager.PlaceRail;
-            inputManager.OnRInput += railManager.RotateTempRail;
+            inputManager.onMouseDown = TempFunction2;
+            inputManager.onMouseMove = TempFunction2;
+            inputManager.onRInput = TempFunction;
         }
 
-        internal void StationButtonHandler()
+        private void HandleEscape()
         {
-            ClearButtonHandler();
+            ClearInputActions();
+            uiController.ResetButtonColor();
         }
 
-        internal void TrafficButtonHandler()
+        void RailButtonHandler()
         {
-            ClearButtonHandler();
+            ClearInputActions();
+
+            if(uiController.GetCurrentButton() != uiController.placeRailButton)
+            {
+                railPlacementManager.RailPlacementEnter();
+            }
+
+            inputManager.onMouseDown += railPlacementManager.PlaceRail;
+            inputManager.onMouseMove += railPlacementManager.MoveCursor;
+            inputManager.onRInput += railPlacementManager.RotateCursor;
         }
 
-        internal void ClearButtonHandler()
+        void ClearInputActions()
         {
-            inputManager.OnMouseUp = null;
-            inputManager.OnMouseMove = null;
-            inputManager.OnMouseDown = null;
-            inputManager.OnRInput = null;
+            inputManager.onMouseDown = null;
+            inputManager.onMouseMove = null;
+            inputManager.onRInput = null;
         }
 
-        public void PrintPosition(Vector3Int position)
+        void StationButtonHandler()
         {
-            Debug.Log(position.ToString());
+            ClearInputActions();
+            inputManager.onMouseDown = TempFunction2;
+            inputManager.onMouseMove = TempFunction2;
+            inputManager.onRInput = TempFunction;
         }
 
-        private void Update()
+        void TrafficButtonHandler()
         {
-            cameraMovement.MoveCamera(inputManager.CameraMovementVector);
+            ClearInputActions();
+            inputManager.onMouseDown = TempFunction2;
+            inputManager.onMouseMove = TempFunction2;
+            inputManager.onRInput = TempFunction;
         }
+
+        void TempFunction()
+        {
+            //temp function to avoid nullReferenceException
+        }
+
+        void TempFunction2(Vector3Int vector)
+        {
+            //temp function to avoid nullReferenceException
+        }
+
     }
 }
