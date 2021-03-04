@@ -50,7 +50,6 @@ namespace TrainWorld
         public void AddVertexAt(Vector3Int position, Direction direction)
         {
             AddVertex(new Vertex(position, direction));
-            AddVertex(new Vertex(position, DirectionHelper.Opposite(direction)));
         }
 
         public void AddVertex(Vertex v)
@@ -61,18 +60,18 @@ namespace TrainWorld
             Debug.Log("Vertex Added at : " + v.ToString());
             graph.Add(v, new List<Vertex>());
 
-            //check opposite
-            if (GetVertexAt(v.Position, DirectionHelper.Opposite(v.direction)) != null)
-            {
-                // if has opposite vertex
-                AddEdge(v.Position, v.Position, v.direction, DirectionHelper.Opposite(v.direction));
-            }
             //check adjascent
             Vector3 adjascentPosition = v.Position + DirectionHelper.ToDirectionalVector(v.direction);
-            if (GetVertexAt(adjascentPosition, DirectionHelper.Opposite(v.direction)) != null)
+            if (GetVertexAt(adjascentPosition, v.direction) != null)
             {
                 // if has adjascent vertex
-                AddEdge(v.Position, adjascentPosition, v.direction, DirectionHelper.Opposite(v.direction));
+                AddEdge(v.Position, adjascentPosition, v.direction, v.direction);
+            }
+             adjascentPosition = v.Position - DirectionHelper.ToDirectionalVector(v.direction);
+            if (GetVertexAt(adjascentPosition, v.direction) != null)
+            {
+                // if has adjascent vertex
+                AddEdge(v.Position, adjascentPosition, v.direction, v.direction);
             }
         }
 

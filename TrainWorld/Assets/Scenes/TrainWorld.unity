@@ -19564,6 +19564,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deadend_straight: {fileID: 7396403275683496362, guid: 79e8d0eaa035c384e8670027f4243b7d, type: 3}
   deadend_diagonal: {fileID: 8612315042668930780, guid: 10b59671c45115b40946e406d2610393, type: 3}
+  arrowPrefab: {fileID: 8643363553076390648, guid: 8ad2e11c4eca3a94aa3c5338f2dc5958, type: 3}
 --- !u!4 &1942858624 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1880490119515231572, guid: aed2aed4bcf2ca849b78ed9886eb775b, type: 3}

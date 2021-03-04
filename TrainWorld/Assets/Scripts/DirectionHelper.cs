@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,11 +11,7 @@ namespace TrainWorld
         NE,
         E,
         SE,
-        S,
-        SW,
-        W,
-        NW,
-        DIRECTION_COUNT // 8 way direction ststem
+        DIRECTION_COUNT // 4 way direction ststem
     }
 
     public static class DirectionHelper
@@ -29,14 +26,9 @@ namespace TrainWorld
             return (Direction)(((int)current - 1 + (int)Direction.DIRECTION_COUNT) % (int)Direction.DIRECTION_COUNT);
         }
 
-        public static Direction Opposite(Direction current)
-        {
-            return (Direction)(((int)current + (int)Direction.DIRECTION_COUNT / 2) % (int)Direction.DIRECTION_COUNT);
-        }
-
         public static bool IsDiagonal(Direction direction)
         {
-            return direction == Direction.NW || direction == Direction.NE || direction == Direction.SE || direction == Direction.SW;
+            return direction == Direction.NE || direction == Direction.SE;
         }
 
         public static Vector3Int ToDirectionalVector(Direction direction)
@@ -57,21 +49,9 @@ namespace TrainWorld
             {
                 return new Vector3Int(1, 0, -1);
             }
-            else if (direction == Direction.S)
+            else
             {
-                return new Vector3Int(0, 0, -1);
-            }
-            else if (direction == Direction.SW)
-            {
-                return new Vector3Int(-1, 0, -1);
-            }
-            else if (direction == Direction.W)
-            {
-                return new Vector3Int(-1, 0, 0);
-            }
-            else // NW
-            {
-                return new Vector3Int(-1, 0, 1);
+                throw new Exception();
             }
         }
 

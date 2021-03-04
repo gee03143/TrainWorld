@@ -11,6 +11,11 @@ namespace TrainWorld
     // railObjectManager에 새 railObject를 저장하도록 함
     // 
 
+
+    // TODO : 복수의 레일을 한꺼번에 배치, a* 알고리즘을 사용할 것
+    // railcursor 아래 이미 같은 레일이 있을 경우 커서를 화살표로 교체
+    // placementmode에서 뒤 방향으로 커서가 이동할 경우 커서를 표시하지 않도록 만들기
+    // 8방향 Direction을 4방향으로 줄이는 방법?
     public class RailPlacementManager : MonoBehaviour
     {
 
@@ -25,8 +30,10 @@ namespace TrainWorld
         private RailCursor railCursor;
 
         private RailGraph railGraph;
+        private RailGraphPathfinder railGraphPathfinder;
 
         private HashSet<Vertex> railsToFix;
+        private List<Vertex> tempRailPositions;
 
         private bool placementMode = false;
         private Vector3Int placementStartPosition;
@@ -35,7 +42,9 @@ namespace TrainWorld
         private void Awake()
         {
             railGraph = new RailGraph();
+            railGraphPathfinder = new RailGraphPathfinder();
             railsToFix = new HashSet<Vertex>();
+            tempRailPositions = new List<Vertex>();
         }
 
         private bool isPositionEmpty(Vector3Int position)
@@ -58,27 +67,16 @@ namespace TrainWorld
             {
                 if (isPositionEmpty(position))
                 {
-                    int cpSign = DecideRailDirection(placementStartPosition, position + DirectionHelper.ToDirectionalVector(placementStartDirection), position);
-                    Direction nextDirection = placementStartDirection;
-                    Vector3Int nextPosition = placementStartPosition + DirectionHelper.ToDirectionalVector(placementStartDirection);
-                    if (cpSign == 0)    // 정면에 레일 배치
+                    List<Vertex> path = railGraphPathfinder.AStarSearch(placementStartPosition, placementStartDirection, position);
+                    Vertex last = null;
+                    foreach (var pos in path)
                     {
-                        nextDirection = placementStartDirection;
-                        nextPosition = placementStartPosition + DirectionHelper.ToDirectionalVector(placementStartDirection);
+                        if(last != null)
+                            AddRailAt(last.direction, Vector3Int.RoundToInt(last.Position), pos.direction, Vector3Int.RoundToInt(pos.Position));
+                        else
+                            AddRailAt(placementStartDirection, placementStartPosition, pos.direction, Vector3Int.RoundToInt(pos.Position));
+                        last = pos;
                     }
-                    else if(cpSign == 1)    // 오른쪽에 레일 배치
-                    {
-                        nextDirection = DirectionHelper.Next(placementStartDirection);
-                        nextPosition = placementStartPosition + DirectionHelper.ToDirectionalVector(placementStartDirection)
-                            + DirectionHelper.ToDirectionalVector(nextDirection);
-                    }
-                    else if(cpSign == -1)  // 왼쪽에 레일 배치
-                    {
-                        nextDirection = DirectionHelper.Prev(placementStartDirection);
-                        nextPosition = placementStartPosition + DirectionHelper.ToDirectionalVector(placementStartDirection)
-                            + DirectionHelper.ToDirectionalVector(nextDirection);
-                    }
-                    AddRailAt(nextDirection, nextPosition);
                     placementMode = false;
                 }
                 else
@@ -93,9 +91,7 @@ namespace TrainWorld
                     railGraph.AddVertexAt(position, railCursor.CursorDirection);
 
                     railsToFix.Add(new Vertex(position, railCursor.CursorDirection));
-                    railsToFix.Add(new Vertex(position, DirectionHelper.Opposite(railCursor.CursorDirection)));
                     railsToFix.UnionWith(railGraph.GetNeighboursAt(position, railCursor.CursorDirection));
-                    railsToFix.UnionWith(railGraph.GetNeighboursAt(position, DirectionHelper.Opposite(railCursor.CursorDirection)));
 
                     FixRails();
                 }
@@ -108,41 +104,15 @@ namespace TrainWorld
             }
         }
 
-        private void AddRailAt(Direction nextDirection, Vector3Int nextPosition)
+        private void AddRailAt(Direction startDirection, Vector3Int startPosition, Direction nextDirection, Vector3Int nextPosition)
         {
             railGraph.AddVertexAt(nextPosition, nextDirection);
-            if(placementStartDirection != nextDirection)
-                railGraph.AddEdge(placementStartPosition, nextPosition, placementStartDirection, DirectionHelper.Opposite(nextDirection));
+            if(startDirection != nextDirection)
+                railGraph.AddEdge(startPosition, nextPosition, startDirection, nextDirection);
 
             railsToFix.Add(new Vertex(nextPosition, nextDirection));
-            railsToFix.Add(new Vertex(nextPosition, DirectionHelper.Opposite(nextDirection)));
             railsToFix.UnionWith(railGraph.GetNeighboursAt(nextPosition, nextDirection));
-            railsToFix.UnionWith(railGraph.GetNeighboursAt(nextPosition, DirectionHelper.Opposite(nextDirection)));
             FixRails();
-        }
-
-        private int DecideRailDirection(Vector3Int a, Vector3Int b, Vector3Int c)
-        {
-            // AB와 AC사이의 cross product를 이용해 점 C의 AB로부터의 상대적인 방향을 알 수 있다.
-            // cross Product Between AB and AC
-            Vector3 cp = Vector3.Normalize(Vector3.Cross(b - a, c - a));
-            if (cp == Vector3.up)
-            {
-                return 1;   // C가 AB의 오른쪽에 존재
-            }else if(cp == Vector3.down)
-            {
-                return -1; // C가 AB의 왼쪽에 존재
-            }
-            else if(cp == Vector3.zero)
-            {
-                return 0; // AC가 AB와 평행
-            }
-            else
-            {
-                // something wrong happen
-                Debug.Log("something wrong happen at GetCrossProductSign");
-                throw new ArithmeticException();
-            }
         }
 
         private void FixRails()
@@ -161,11 +131,20 @@ namespace TrainWorld
             if (placementMode)
             {
                 railCursor.Move(placementStartPosition);
+                railCursor.ToggleCursorObject(true);
 
             }
             else
             {
                 railCursor.Move(position);
+                if (isPositionEmpty(position) == false)
+                {
+                    railCursor.ToggleCursorObject(true);
+                }
+                else
+                {
+                    railCursor.ToggleCursorObject(false);
+                }
             }
         }
 

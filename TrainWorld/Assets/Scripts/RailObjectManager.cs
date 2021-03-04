@@ -12,6 +12,7 @@ namespace TrainWorld
     public class RailObjectManager : MonoBehaviour
     {
         private Dictionary<(Vector3Int, Direction), List<GameObject>> railObjects;
+        private Dictionary<(Vector3Int, Direction), List<GameObject>> tempRailObjects;
 
         private void Awake()
         {
@@ -32,7 +33,7 @@ namespace TrainWorld
         {
             if (this.railObjects.ContainsKey((position, direction)) == false)
             {
-                this.railObjects[(position, direction)] = new List<GameObject>(); ;
+                this.railObjects[(position, direction)] = new List<GameObject>(); 
             }
 
             this.railObjects[(position, direction)].AddRange(objects);
@@ -62,33 +63,6 @@ namespace TrainWorld
                 railObjects[(position, direction)].Clear();
                 railObjects.Remove((position, direction));
             }
-        }
-
-        public List<(Vector3Int, Direction)> GetNeighbours(Vector3Int position, Direction direction)
-        {
-            List<(Vector3Int, Direction)> neighbours = new List<(Vector3Int, Direction)>();
-            Vector3Int frontPos = position + DirectionHelper.ToDirectionalVector(direction);
-            Vector3Int leftPos = position + DirectionHelper.ToDirectionalVector(direction) + DirectionHelper.ToDirectionalVector(DirectionHelper.Prev(direction));
-            Vector3Int rightPos = position + DirectionHelper.ToDirectionalVector(direction) + DirectionHelper.ToDirectionalVector(DirectionHelper.Next(direction));
-
-            if (IsRailAtPosition(frontPos, DirectionHelper.Opposite(direction)))    // neighbour at front position
-            {
-                neighbours.Add((frontPos, DirectionHelper.Opposite(direction)));
-            }
-            if (IsRailAtPosition(leftPos, DirectionHelper.Opposite(DirectionHelper.Prev(direction))))
-            {
-                neighbours.Add((leftPos, DirectionHelper.Opposite(DirectionHelper.Prev(direction))));
-            }
-            if (IsRailAtPosition(rightPos, DirectionHelper.Opposite(DirectionHelper.Next(direction))))
-            {
-                neighbours.Add((rightPos, DirectionHelper.Opposite(DirectionHelper.Next(direction))));
-            }
-            return neighbours;
-        }
-
-        public bool IsRailAtPosition(Vector3Int position, Direction direction)
-        {
-            return GetGameObjectsAt(position, direction).Count > 0;
         }
     }
 }
