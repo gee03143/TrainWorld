@@ -20460,6 +20460,7 @@ MonoBehaviour:
   maxHeight: 15
   railFixer: {fileID: 416826001}
   railCursor: {fileID: 1939386007}
+  railObjectManager: {fileID: 2082399391}
 --- !u!4 &2043687698
 Transform:
   m_ObjectHideFlags: 0
