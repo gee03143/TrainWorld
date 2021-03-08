@@ -13,7 +13,6 @@ namespace TrainWorld
 
 
     // TODO : 복수의 레일을 한꺼번에 배치, a* 알고리즘을 사용할 것
-    // railcursor 아래 이미 같은 레일이 있을 경우 커서를 화살표로 교체
     // placementmode에서 뒤 방향으로 커서가 이동할 경우 커서를 표시하지 않도록 만들기
     // 8방향 Direction을 4방향으로 줄이는 방법?
     public class RailPlacementManager : MonoBehaviour
@@ -73,25 +72,21 @@ namespace TrainWorld
                     {
                         if(last != null)
                             AddRailAt(last.direction, Vector3Int.RoundToInt(last.Position), pos.direction, Vector3Int.RoundToInt(pos.Position));
-                        else
-                            AddRailAt(placementStartDirection, placementStartPosition, pos.direction, Vector3Int.RoundToInt(pos.Position));
                         last = pos;
                     }
                     placementMode = false;
-                }
-                else
-                {
-
                 }
             }
             else
             {
                 if (isPositionEmpty(position))
                 {
-                    railGraph.AddVertexAt(position, railCursor.CursorDirection);
+                    railGraph.AddVertexAtGridCell(position, railCursor.CursorDirection);
 
                     railsToFix.Add(new Vertex(position, railCursor.CursorDirection));
+                    railsToFix.Add(new Vertex(position, DirectionHelper.Opposite(railCursor.CursorDirection)));
                     railsToFix.UnionWith(railGraph.GetNeighboursAt(position, railCursor.CursorDirection));
+                    railsToFix.UnionWith(railGraph.GetNeighboursAt(position, DirectionHelper.Opposite(railCursor.CursorDirection)));
 
                     FixRails();
                 }
@@ -106,12 +101,14 @@ namespace TrainWorld
 
         private void AddRailAt(Direction startDirection, Vector3Int startPosition, Direction nextDirection, Vector3Int nextPosition)
         {
-            railGraph.AddVertexAt(nextPosition, nextDirection);
-            if(startDirection != nextDirection)
-                railGraph.AddEdge(startPosition, nextPosition, startDirection, nextDirection);
+            railGraph.AddVertexAtGridCell(nextPosition, nextDirection);
+            railGraph.AddEdge(startPosition, nextPosition, startDirection, nextDirection);
+            railGraph.AddEdge(startPosition, nextPosition, DirectionHelper.Opposite(startDirection), DirectionHelper.Opposite(nextDirection));
 
             railsToFix.Add(new Vertex(nextPosition, nextDirection));
+            railsToFix.Add(new Vertex(nextPosition, DirectionHelper.Opposite(nextDirection)));
             railsToFix.UnionWith(railGraph.GetNeighboursAt(nextPosition, nextDirection));
+            railsToFix.UnionWith(railGraph.GetNeighboursAt(nextPosition, DirectionHelper.Opposite(nextDirection)));
             FixRails();
         }
 

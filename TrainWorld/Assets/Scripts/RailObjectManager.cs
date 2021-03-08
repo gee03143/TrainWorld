@@ -12,7 +12,6 @@ namespace TrainWorld
     public class RailObjectManager : MonoBehaviour
     {
         private Dictionary<(Vector3Int, Direction), List<GameObject>> railObjects;
-        private Dictionary<(Vector3Int, Direction), List<GameObject>> tempRailObjects;
 
         private void Awake()
         {

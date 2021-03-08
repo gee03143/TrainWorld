@@ -18,117 +18,94 @@ namespace TrainWorld {
         [SerializeField]
         private RailObjectManager railObjectManager;
 
+        [SerializeField]
+        private Transform railFolder;
+
         public void FixRailAtPosition(Vector3Int position, Direction direction, List<Vertex> neighbours)
         {
             railObjectManager.ClearGameObjectsAt(position, direction);
 
-            if (neighbours.Count == 0)
+            Vector3Int frontCandidatePos = position + DirectionHelper.ToDirectionalVector(direction);
+            Vector3Int leftCandidatePos = frontCandidatePos + DirectionHelper.ToDirectionalVector(DirectionHelper.Prev(direction));
+            Vector3Int rightCandidatePos = frontCandidatePos + DirectionHelper.ToDirectionalVector(DirectionHelper.Next(direction));
+
+            if(neighbours.Count == 0)
             {
                 if (DirectionHelper.IsDiagonal(direction))
                 {
-                    InstantiateRail(railObjectManager, position, direction, deadend_diagonal, false);
-                    InstantiateRail(railObjectManager, position, direction, deadend_diagonal, true);
+                    InstantiateRail(position, direction, deadend_diagonal, neighbours);
                 }
-                else { 
-                    InstantiateRail(railObjectManager, position, direction, deadend_straight, false);
-                    InstantiateRail(railObjectManager, position, direction, deadend_straight, true);
-                }
-            }
-            else
-            {
-                int reversedNeighbourCount = 0;
-                int notReversedNeighbourCount = 0;
-                foreach (Vertex neighbour in neighbours)
+                else
                 {
-                    Vector3Int deltaPos = Vector3Int.RoundToInt(neighbour.Position) - position;
-                    bool isReversed = IsReversed(deltaPos);
-                    if (isReversed)
-                        reversedNeighbourCount++;
-                    else
-                        notReversedNeighbourCount++;
-                    int manhattanDistance = ManhattanDistance(Vector3Int.RoundToInt(neighbour.Position), position);
-                    if (manhattanDistance == 3)
-                    {
-                        if (DirectionHelper.IsDiagonal(direction)) // if direction is diagonal
-                        {
-                            continue;   // do nothing
-                        }
-                        else
-                        {
-                            if (NeighbourIsAtRight(position, direction, neighbour.Position, isReversed))
-                            {
-                                InstantiateRail(railObjectManager, position, direction, corner_right, isReversed);
-                            }
-                            else
-                            {
-                                InstantiateRail(railObjectManager, position, direction, corner_left, isReversed);
-                            }
-                        }
-                    }
-                    else if (manhattanDistance == 2)
-                    {
-                        if (DirectionHelper.IsDiagonal(direction))// if direction is diagonal
-                        {
-                            // make diagonal rail
-                            InstantiateRail(railObjectManager, position, direction, diagonal, isReversed);
-                        }
-                        else
-                        {
-                            // something gone wrong, do nothing
-                            Debug.Log("Something gone wrong on FixRailAtPosition");
-                            throw new Exception();
-                        }
-                    }
-                    else if (manhattanDistance == 1)
-                    {
-                        if (DirectionHelper.IsDiagonal(direction))// if direction is diagonal
-                        {
-                            // something gone wrong, do nothing
-                            Debug.Log("Something gone wrong on FixRailAtPosition");
-                            throw new Exception();
-                        }
-                        else
-                        {
-                            // make straight rail
-                            InstantiateRail(railObjectManager, position, direction, straight, isReversed);
-                        }
-                    }
+                    InstantiateRail(position, direction, deadend_straight, neighbours);
                 }
-                if(reversedNeighbourCount == 0)
-                    InstantiateRail(railObjectManager, position, direction, deadend_diagonal, true);
-                if (notReversedNeighbourCount == 0)
-                    InstantiateRail(railObjectManager, position, direction, deadend_diagonal, false);
+                return;
             }
 
+            bool railCreated = false;
+            foreach (Vertex neighbour in neighbours)
+            {
+                if (Vector3Int.RoundToInt(neighbour.Position).Equals(leftCandidatePos))
+                {
+                    railCreated = true;
+                    if (DirectionHelper.IsDiagonal(direction)) // if direction is diagonal
+                    {
+                        continue;   // do nothing
+                    }
+                    else
+                    {
+                        InstantiateRail(position, direction, corner_left, neighbours);
+                    }
+                }
+                else if (Vector3Int.RoundToInt(neighbour.Position).Equals(rightCandidatePos))
+                {
+                    railCreated = true;
+                    if (DirectionHelper.IsDiagonal(direction)) // if direction is diagonal
+                    {
+                        continue;   // do nothing
+                    }
+                    else
+                    {
+                        InstantiateRail(position, direction, corner_right, neighbours);
+                    }
+                }
+                else if (Vector3Int.RoundToInt(neighbour.Position).Equals(frontCandidatePos))
+                {
+                    railCreated = true;
+                    if (DirectionHelper.IsDiagonal(direction))// if direction is diagonal
+                    {
+                        // make diagonal rail
+                        InstantiateRail(position, direction, diagonal, neighbours);
+                    }
+                    else
+                    {
+                        // make straight rail
+                        InstantiateRail(position, direction, straight, neighbours);
+                    }
+                }
+            }
+
+            if(railCreated == false)
+            {
+                if (DirectionHelper.IsDiagonal(direction))
+                {
+                    InstantiateRail(position, direction, deadend_diagonal, neighbours);
+                }
+                else
+                {
+                    InstantiateRail(position, direction, deadend_straight, neighbours);
+                }
+            }
         }
 
-        private bool NeighbourIsAtRight(Vector3Int position1, Direction direction1, Vector3 position2, bool reversed)
+        private void InstantiateRail(Vector3Int position, Direction direction, GameObject railPrefab, List<Vertex> neighbours)
         {
-            Vector3 straight = reversed? DirectionHelper.ToDirectionalVector(direction1) * -1 : DirectionHelper.ToDirectionalVector(direction1);
-            Vector3 target = position2 - position1;
-            Vector3 crossProduct = Vector3.Cross(straight, target);
-            
-            return Vector3.Normalize(crossProduct) == Vector3.up;         
-        }
+            GameObject newRail = Instantiate(railPrefab, position, Quaternion.Euler(DirectionHelper.ToEuler(direction)), railFolder.transform) as GameObject;
 
-        private void InstantiateRail(RailObjectManager railObjectManager, Vector3Int position, Direction direction, GameObject railPrefab, bool reversed)
-        {
-            GameObject newRail = Instantiate(railPrefab, position, Quaternion.Euler(DirectionHelper.ToEuler(direction))) as GameObject;
-
-            if(reversed)
-                newRail.transform.Rotate(new Vector3(0, 180, 0));
+            newRail.AddComponent<RailGizmo>();
+            newRail.GetComponent<RailGizmo>().SetNeighbours(neighbours);
 
             railObjectManager.AddGameObjectAt(position, direction, newRail);
-        }
-
-        private int ManhattanDistance(Vector3Int position1, Vector3Int position2)
-        {
-            return Mathf.Abs(position1.x - position2.x) + Mathf.Abs(position1.z - position2.z);
-        }
-
-        private bool IsReversed(Vector3Int deltaPos)
-        {
-            return deltaPos.z < -deltaPos.x;
         }
     }
 }

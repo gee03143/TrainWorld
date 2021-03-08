@@ -42,14 +42,12 @@ namespace TrainWorld
             return Vector3.SqrMagnitude(position2 - position1) < 0.0001f && direction1 == direction2;
         }
 
-        private bool ComparePosition(Vector3 position1, Vector3 position2)
-        {
-            return Vector3.SqrMagnitude(position2 - position1) < 0.0001f;
-        }
-
-        public void AddVertexAt(Vector3Int position, Direction direction)
+        public void AddVertexAtGridCell(Vector3Int position, Direction direction)
         {
             AddVertex(new Vertex(position, direction));
+            AddVertex(new Vertex(position, DirectionHelper.Opposite(direction)));
+
+            //DrawGraph();
         }
 
         public void AddVertex(Vertex v)
@@ -57,7 +55,6 @@ namespace TrainWorld
             if (graph.ContainsKey(v))
                 return;
 
-            Debug.Log("Vertex Added at : " + v.ToString());
             graph.Add(v, new List<Vertex>());
 
             //check adjascent
@@ -125,6 +122,17 @@ namespace TrainWorld
             {
                 AddVertex(v1);
                 graph[v1].Add(v2);
+            }
+        }
+
+        private void DrawGraph()
+        {
+            foreach(Vertex v in graph.Keys)
+            {
+                foreach(Vertex neighbours in graph[v])
+                {
+                    Debug.DrawLine(v.Position, neighbours.Position, Color.red, 10.0f);
+                }
             }
         }
     }

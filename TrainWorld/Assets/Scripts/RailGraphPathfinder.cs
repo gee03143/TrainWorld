@@ -73,42 +73,14 @@ namespace TrainWorld
         {
             List<Vertex> AdjacentCells = new List<Vertex>();
 
-            if(current.direction == Direction.N)
-            {
-                AdjacentCells.Add(new Vertex(current.Position + new Vector3Int(0,  0,  1), current.direction));
-                AdjacentCells.Add(new Vertex(current.Position + new Vector3Int(0,  0, -1), current.direction));
-                AdjacentCells.Add(new Vertex(current.Position + new Vector3Int(1,  0,  2), DirectionHelper.Next(current.direction)));
-                AdjacentCells.Add(new Vertex(current.Position + new Vector3Int(-1, 0,  2), DirectionHelper.Prev(current.direction)));
-                AdjacentCells.Add(new Vertex(current.Position + new Vector3Int(1,  0, -2), DirectionHelper.Prev(current.direction)));
-                AdjacentCells.Add(new Vertex(current.Position + new Vector3Int(-1, 0, -2), DirectionHelper.Next(current.direction)));
-            }
-            else if(current.direction == Direction.E)
-            {
-                AdjacentCells.Add(new Vertex(current.Position + new Vector3Int(1, 0, 0), current.direction));
-                AdjacentCells.Add(new Vertex(current.Position + new Vector3Int(-1, 0, 0), current.direction));
-                AdjacentCells.Add(new Vertex(current.Position + new Vector3Int(2, 0, -1), DirectionHelper.Prev(current.direction)));
-                AdjacentCells.Add(new Vertex(current.Position + new Vector3Int(2, 0, 1), DirectionHelper.Next(current.direction)));
-                AdjacentCells.Add(new Vertex(current.Position + new Vector3Int(-2, 0, -1), DirectionHelper.Prev(current.direction)));
-                AdjacentCells.Add(new Vertex(current.Position + new Vector3Int(-2, 0, 1), DirectionHelper.Next(current.direction)));
-            }
-            else if(current.direction == Direction.NE)
-            {
-                AdjacentCells.Add(new Vertex(current.Position + new Vector3Int(1, 0, 1), current.direction));
-                AdjacentCells.Add(new Vertex(current.Position + new Vector3Int(-1, 0, -1), current.direction));
-                AdjacentCells.Add(new Vertex(current.Position + new Vector3Int(2, 0, 1), DirectionHelper.Next(current.direction)));
-                AdjacentCells.Add(new Vertex(current.Position + new Vector3Int(1, 0, 2), DirectionHelper.Prev(current.direction)));
-                AdjacentCells.Add(new Vertex(current.Position + new Vector3Int(-1, 0, -2), DirectionHelper.Prev(current.direction)));
-                AdjacentCells.Add(new Vertex(current.Position + new Vector3Int(-2, 0, -1), DirectionHelper.Next(current.direction)));
-            }
-            else if (current.direction == Direction.SE)
-            {
-                AdjacentCells.Add(new Vertex(current.Position + new Vector3Int(-1, 0, 1), current.direction));
-                AdjacentCells.Add(new Vertex(current.Position + new Vector3Int(1, 0, -1), current.direction));
-                AdjacentCells.Add(new Vertex(current.Position + new Vector3Int(-2, 0, 1), DirectionHelper.Prev(current.direction)));
-                AdjacentCells.Add(new Vertex(current.Position + new Vector3Int(-1, 0, 2), DirectionHelper.Next(current.direction)));
-                AdjacentCells.Add(new Vertex(current.Position + new Vector3Int(1, 0, -2), DirectionHelper.Next(current.direction)));
-                AdjacentCells.Add(new Vertex(current.Position + new Vector3Int(2, 0, -1), DirectionHelper.Prev(current.direction)));
-            }
+            Vector3Int front = DirectionHelper.ToDirectionalVector(current.direction);
+            Vector3Int left = DirectionHelper.ToDirectionalVector(DirectionHelper.Prev(current.direction));
+            Vector3Int right = DirectionHelper.ToDirectionalVector(DirectionHelper.Next(current.direction));
+
+            AdjacentCells.Add(new Vertex(current.Position + front, current.direction));
+            AdjacentCells.Add(new Vertex(current.Position + front + left, DirectionHelper.Prev(current.direction)));
+            AdjacentCells.Add(new Vertex(current.Position + front + right, DirectionHelper.Next(current.direction)));
+
             return AdjacentCells;
         }
 
@@ -119,10 +91,6 @@ namespace TrainWorld
             while (parent != null && parentsDictionary.ContainsKey(parent))
             {
                 path.Add(parent);
-                if (parentsDictionary[parent] != null)
-                {
-                    Debug.DrawLine(parent.Position, parentsDictionary[parent].Position, Color.red, 5.0f);
-                }
                 parent = parentsDictionary[parent];
             }
             return path;
