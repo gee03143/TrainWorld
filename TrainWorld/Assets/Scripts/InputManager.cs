@@ -37,7 +37,7 @@ namespace TrainWorld
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                onEscInput.Invoke();
+                onEscInput?.Invoke();
             }
         }
 
@@ -45,7 +45,7 @@ namespace TrainWorld
         {
             if (Input.GetKeyDown(KeyCode.R))
             {
-                onRInput.Invoke();
+                onRInput?.Invoke();
             }
         }
 

@@ -23,11 +23,8 @@ namespace TrainWorld
             uiController.OnRailPlacement += RailButtonHandler;
             uiController.OnStationPlacement += StationButtonHandler;
             uiController.OnTrafficPlacement += TrafficButtonHandler;
+            uiController.OnDestruction += DestructionButtonHandler;
             inputManager.onEscInput += HandleEscape;
-
-            inputManager.onMouseDown = TempFunction2;
-            inputManager.onMouseMove = TempFunction2;
-            inputManager.onRInput = TempFunction;
         }
 
         private void HandleEscape()
@@ -40,7 +37,7 @@ namespace TrainWorld
         {
             ClearInputActions();
 
-            if(uiController.GetCurrentButton() != uiController.placeRailButton)
+            if (uiController.GetCurrentButton() != uiController.placeRailButton)
             {
                 railPlacementManager.RailPlacementEnter();
             }
@@ -60,28 +57,19 @@ namespace TrainWorld
         void StationButtonHandler()
         {
             ClearInputActions();
-            inputManager.onMouseDown = TempFunction2;
-            inputManager.onMouseMove = TempFunction2;
-            inputManager.onRInput = TempFunction;
         }
 
         void TrafficButtonHandler()
         {
             ClearInputActions();
-            inputManager.onMouseDown = TempFunction2;
-            inputManager.onMouseMove = TempFunction2;
-            inputManager.onRInput = TempFunction;
         }
 
-        void TempFunction()
+        private void DestructionButtonHandler()
         {
-            //temp function to avoid nullReferenceException
-        }
+            ClearInputActions();
 
-        void TempFunction2(Vector3Int vector)
-        {
-            //temp function to avoid nullReferenceException
+            inputManager.onMouseDown += railPlacementManager.DestroyRail;
+            inputManager.onRInput += railPlacementManager.RotateCursor;
         }
-
     }
 }

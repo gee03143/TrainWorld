@@ -11,7 +11,7 @@ namespace TrainWorld
 {
     public class RailGraphPathfinder
     {
-        internal List<Vertex> AStarSearch(Vector3Int placementStartPosition, Direction placementStartDirection, Vector3Int endPosition)
+        internal List<Vertex> AStarSearch(Vector3Int placementStartPosition, Direction8way placementStartDirection, Vector3Int endPosition)
         {
             List<Vertex> path = new List<Vertex>();
 

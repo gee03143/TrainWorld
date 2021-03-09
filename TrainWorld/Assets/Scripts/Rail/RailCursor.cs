@@ -18,7 +18,7 @@ namespace TrainWorld
 
         private Vector3Int position;
             
-        public Vector3Int CursorPosition
+        public Vector3Int Position
         {
             get { return position; }
             private set { 
@@ -27,9 +27,9 @@ namespace TrainWorld
             }
         }
 
-        private Direction direction;
+        private Direction8way direction;
 
-        public Direction CursorDirection
+        public Direction8way Direction
         {
             get { return direction; }
             private set { 
@@ -47,7 +47,7 @@ namespace TrainWorld
 
         internal void Move(Vector3Int position)
         {
-            CursorPosition = position;
+            Position = position;
         }
 
         internal void Rotate()

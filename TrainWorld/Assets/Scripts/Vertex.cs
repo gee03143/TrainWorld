@@ -8,9 +8,9 @@ namespace TrainWorld
     public class Vertex : IEquatable<Vertex>
     {
         public Vector3 Position { get; set; }
-        public Direction direction { get; set; }
+        public Direction8way direction { get; set; }
 
-        public Vertex(Vector3 position, Direction direction)
+        public Vertex(Vector3 position, Direction8way direction)
         {
             this.Position = position;
             this.direction = direction;

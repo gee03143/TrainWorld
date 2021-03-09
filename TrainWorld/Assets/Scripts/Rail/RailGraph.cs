@@ -14,12 +14,12 @@ namespace TrainWorld
             graph = new Dictionary<Vertex, List<Vertex>>();
         }
 
-        internal Vertex GetVertexAt(Vector3 position, Direction direction)
+        internal Vertex GetVertexAt(Vector3 position, Direction8way direction)
         {
             return graph.Keys.FirstOrDefault(x => CompareVerticies(x, position, direction));
         }
 
-        internal List<Vertex> GetNeighboursAt(Vector3 position, Direction direction)
+        internal List<Vertex> GetNeighboursAt(Vector3 position, Direction8way direction)
         {
             Vertex targetVertex = GetVertexAt(position, direction);
             if (targetVertex == null)
@@ -32,17 +32,17 @@ namespace TrainWorld
             }
         }
 
-        private bool CompareVerticies(Vertex x, Vector3 position, Direction direction)
+        private bool CompareVerticies(Vertex x, Vector3 position, Direction8way direction)
         {
             return Vector3.SqrMagnitude(position - x.Position) < 0.0001f && direction == x.direction;
         }
 
-        private bool CompareVerticies(Vector3 position1, Direction direction1, Vector3 position2, Direction direction2)
+        private bool CompareVerticies(Vector3 position1, Direction8way direction1, Vector3 position2, Direction8way direction2)
         {
             return Vector3.SqrMagnitude(position2 - position1) < 0.0001f && direction1 == direction2;
         }
 
-        public void AddVertexAtPosition(Vector3Int position, Direction direction)
+        public void AddVertexAtPosition(Vector3Int position, Direction8way direction)
         {
             AddVertex(new Vertex(position, direction));
             AddVertex(new Vertex(position, DirectionHelper.Opposite(direction)));
@@ -85,7 +85,7 @@ namespace TrainWorld
             graph.Remove(v);
         }
 
-        public void AddEdge(Vector3 position1, Vector3 position2, Direction direction1, Direction direction2)
+        public void AddEdge(Vector3 position1, Vector3 position2, Direction8way direction1, Direction8way direction2)
         {
             if(CompareVerticies(position1, direction1, position2, direction2))
             {
@@ -125,15 +125,24 @@ namespace TrainWorld
             }
         }
 
-        private void DrawGraph()
+        internal void DeleteVertexAtPosition(Vector3Int position, Direction8way direction)
         {
-            foreach(Vertex v in graph.Keys)
+            DeleteVertex(new Vertex(position, direction));
+            DeleteVertex(new Vertex(position, DirectionHelper.Opposite(direction)));
+        }
+
+        private void DeleteVertex(Vertex v)
+        {
+            if (graph.ContainsKey(v) == false) // if there's no such vertex
             {
-                foreach(Vertex neighbours in graph[v])
-                {
-                    Debug.DrawLine(v.Position, neighbours.Position, Color.red, 10.0f);
-                }
+                return; //  do nothing
             }
+
+            foreach(var neighbour in graph[v])
+            {
+                graph[neighbour].Remove(v);
+            }
+            graph.Remove(v);
         }
     }
 }

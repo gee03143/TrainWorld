@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace TrainWorld
 {
-    public enum Direction
+    public enum Direction8way
     {
         N,
         NE,
@@ -20,56 +20,56 @@ namespace TrainWorld
 
     public static class DirectionHelper
     {
-        public static Direction Next(Direction current)
+        public static Direction8way Next(Direction8way current)
         {
-            return (Direction)(((int)current + 1) % (int)Direction.DIRECTION_COUNT);
+            return (Direction8way)(((int)current + 1) % (int)Direction8way.DIRECTION_COUNT);
         }
 
-        public static Direction Prev(Direction current)
+        public static Direction8way Prev(Direction8way current)
         {
-            return (Direction)(((int)current - 1 + (int)Direction.DIRECTION_COUNT) % (int)Direction.DIRECTION_COUNT);
+            return (Direction8way)(((int)current - 1 + (int)Direction8way.DIRECTION_COUNT) % (int)Direction8way.DIRECTION_COUNT);
         }
 
-        public static Direction Opposite(Direction current)
+        public static Direction8way Opposite(Direction8way current)
         {
-            return (Direction)(((int)current + 4) % (int)Direction.DIRECTION_COUNT);
+            return (Direction8way)(((int)current + 4) % (int)Direction8way.DIRECTION_COUNT);
         }
 
-        public static bool IsDiagonal(Direction direction)
+        public static bool IsDiagonal(Direction8way direction)
         {
-            return direction == Direction.NE || direction == Direction.SE || direction == Direction.SW || direction == Direction.NW;
+            return direction == Direction8way.NE || direction == Direction8way.SE || direction == Direction8way.SW || direction == Direction8way.NW;
         }
 
-        public static Vector3Int ToDirectionalVector(Direction direction)
+        public static Vector3Int ToDirectionalVector(Direction8way direction)
         {
-            if(direction == Direction.N)
+            if(direction == Direction8way.N)
             {
                 return new Vector3Int(0, 0, 1);
             }
-            else if(direction == Direction.NE)
+            else if(direction == Direction8way.NE)
             {
                 return new Vector3Int(1, 0, 1);
             }
-            else if (direction == Direction.E)
+            else if (direction == Direction8way.E)
             {
                 return new Vector3Int(1, 0, 0);
             }
-            else if (direction == Direction.SE)
+            else if (direction == Direction8way.SE)
             {
                 return new Vector3Int(1, 0, -1);
-            }else if (direction == Direction.S)
+            }else if (direction == Direction8way.S)
             {
                 return new Vector3Int(0, 0, -1);
             }
-            else if (direction == Direction.SW)
+            else if (direction == Direction8way.SW)
             {
                 return new Vector3Int(-1, 0, -1);
             }
-            else if (direction == Direction.W)
+            else if (direction == Direction8way.W)
             {
                 return new Vector3Int(-1, 0, 0);
             }
-            else if (direction == Direction.NW)
+            else if (direction == Direction8way.NW)
             {
                 return new Vector3Int(-1, 0, 1);
             }
@@ -79,7 +79,7 @@ namespace TrainWorld
             }
         }
 
-        public static Vector3 ToEuler(Direction direction)
+        public static Vector3 ToEuler(Direction8way direction)
         {
             return new Vector3(0, 45 * (int)direction, 0);
         }
