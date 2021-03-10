@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2517549871071209630}
-  - component: {fileID: 2517549871071209631}
   m_Layer: 0
   m_Name: RailModel
   m_TagString: Untagged
@@ -31,21 +30,3 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2517549871071209631
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2517549871071209628}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1aadc6a2d18cdae4fb2a998e938fa65d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  straight: {fileID: 1452118978755660829, guid: af9cf033292e99949b33e9e4fe53eece, type: 3}
-  diagonal: {fileID: 2442804689552929874, guid: c7598567dd68cb84a8ae334269e02beb, type: 3}
-  deadend_straight: {fileID: 7396403275683496362, guid: 79e8d0eaa035c384e8670027f4243b7d, type: 3}
-  deadend_diagonal: {fileID: 8612315042668930780, guid: 10b59671c45115b40946e406d2610393, type: 3}
-  corner_left: {fileID: 8764105014242271527, guid: b52f6305e629667418fc7e9fc7675b3e, type: 3}
-  corner_right: {fileID: 3676521752726465445, guid: 1db12f06e42fdcd49aac9fe764617c75, type: 3}

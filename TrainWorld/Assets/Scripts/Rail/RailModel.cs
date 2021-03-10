@@ -66,7 +66,7 @@ namespace TrainWorld
                     if (DirectionHelper.IsDiagonal(direction))// if direction is diagonal
                     {
                         // make diagonal rail
-                        RailFactory.SpawnRail(RailType.Straight, position, direction, transform);
+                        RailFactory.SpawnRail(RailType.Diagonal, position, direction, transform);
                     }
                     else
                     {
@@ -106,6 +106,7 @@ namespace TrainWorld
 
         public void DestroyMyself()
         {
+            DestroyAllChild();
             Destroy(gameObject);
         }
     }

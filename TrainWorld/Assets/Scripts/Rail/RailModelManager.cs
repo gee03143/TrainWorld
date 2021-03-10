@@ -38,8 +38,9 @@ namespace TrainWorld {
 
         public void RemoveModelAt(Vector3Int position, Direction8way direction)
         {
-            if (this.railModels.ContainsKey((position, direction)) == false)
+            if (this.railModels.ContainsKey((position, direction)))
             {
+                Debug.Log("Destroy myself called at" + position.ToString() + direction.ToString());
                 this.railModels[(position, direction)].DestroyMyself();
                 this.railModels.Remove((position, direction));
             }

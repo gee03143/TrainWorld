@@ -8,13 +8,11 @@ namespace TrainWorld
     // Rail 배치에 대한 입력 정의
     // Dictionary에 새 Rail이 입력되도록 함
     // railGraph에 새로 입력된 Node, Edge를 전달함
-    // railObjectManager에 새 railObject를 저장하도록 함
+    // railModelManager 새 railModel 저장하도록 함
     // 
 
+    // 언젠가 맵 위에 레일 외의 오브젝트가 배치될 경우 변경될 가능성 있음
 
-    // TODO : 복수의 레일을 한꺼번에 배치, a* 알고리즘을 사용할 것
-    // placementmode에서 뒤 방향으로 커서가 이동할 경우 커서를 표시하지 않도록 만들기
-    // 8방향 Direction을 4방향으로 줄이는 방법?
     public class RailPlacementManager : MonoBehaviour
     {
 
@@ -65,6 +63,7 @@ namespace TrainWorld
             if (placementMode)
             {
                 CreateRailAtTempRailVertices();
+                railModelManager.RemoveTempModels();
                 tempRailVertices.Clear();
                 placementMode = false;
             }
@@ -115,6 +114,8 @@ namespace TrainWorld
             {
                 if (last != null)
                     AddRailAt(last.direction, Vector3Int.RoundToInt(last.Position), pos.direction, Vector3Int.RoundToInt(pos.Position));
+                else
+                    AddRailAt(placementStartDirection, placementStartPosition, pos.direction, Vector3Int.RoundToInt(pos.Position));
                 last = pos;
             }
         }
@@ -165,6 +166,7 @@ namespace TrainWorld
                 //clear temp rails
                 tempRailVertices.Clear();
                 tempRailVertices = railGraphPathfinder.AStarSearch(placementStartPosition, placementStartDirection, position);
+                tempRailVertices.Reverse();
                 railModelManager.RemoveTempModels();
 
                 //place temp rails
