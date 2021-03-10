@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-namespace TrainWorld
+namespace TrainWorld.Rail
 {
     public class RailGraph
     {

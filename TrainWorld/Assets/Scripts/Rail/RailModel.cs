@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TrainWorld
+namespace TrainWorld.Rail
 {
     public class RailModel : MonoBehaviour
     {
@@ -108,6 +108,11 @@ namespace TrainWorld
         {
             DestroyAllChild();
             Destroy(gameObject);
+        }
+
+        public override string ToString()
+        {
+            return position.ToString() + " " + direction.ToString();
         }
     }
 }

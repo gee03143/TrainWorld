@@ -97,6 +97,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 8e0aa66544716ad40841f33cad940f58, type: 3}
+      propertyPath: m_Icon
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8e0aa66544716ad40841f33cad940f58, type: 3}
       propertyPath: m_Name
       value: Diagonal
       objectReference: {fileID: 0}

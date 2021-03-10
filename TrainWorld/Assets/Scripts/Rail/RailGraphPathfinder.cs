@@ -7,7 +7,7 @@ using UnityEngine;
 /// Source https://github.com/lordjesus/Packt-Introduction-to-graph-algorithms-for-game-developers
 /// </summary>
 
-namespace TrainWorld
+namespace TrainWorld.Rail
 {
     public class RailGraphPathfinder
     {
@@ -93,6 +93,7 @@ namespace TrainWorld
                 path.Add(parent);
                 parent = parentsDictionary[parent];
             }
+            path.Reverse();
             return path;
         }
 

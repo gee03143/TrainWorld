@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using TrainWorld.Rail;
+
 namespace TrainWorld
 {
     // 각 Manager들을 통합하는 역할

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TrainWorld {
+namespace TrainWorld.Rail {
     public enum RailType
     {
         Corner_Left,

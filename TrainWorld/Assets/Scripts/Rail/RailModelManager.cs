@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace TrainWorld {
+namespace TrainWorld.Rail
+{
 
     // Rail의 모양을 고치는 클래스 Rail GameObject의 생성
     // 생성된 GameObject들의 레퍼런스는 railObjectManager에 보관됨
@@ -34,15 +35,23 @@ namespace TrainWorld {
             {
                 this.railModels[(position, direction)] = InitNewModel(position, direction);
             }
+            if (this.railModels.ContainsKey((position, DirectionHelper.Opposite(direction))) == false)
+            {
+                this.railModels[(position, DirectionHelper.Opposite(direction))] = InitNewModel(position, DirectionHelper.Opposite(direction));
+            }
         }
 
         public void RemoveModelAt(Vector3Int position, Direction8way direction)
         {
             if (this.railModels.ContainsKey((position, direction)))
             {
-                Debug.Log("Destroy myself called at" + position.ToString() + direction.ToString());
                 this.railModels[(position, direction)].DestroyMyself();
                 this.railModels.Remove((position, direction));
+            }
+            if (this.railModels.ContainsKey((position, DirectionHelper.Opposite(direction))))
+            {
+                this.railModels[(position, DirectionHelper.Opposite(direction))].DestroyMyself();
+                this.railModels.Remove((position, DirectionHelper.Opposite(direction)));
             }
         }
 
@@ -69,6 +78,10 @@ namespace TrainWorld {
             if (this.tempRailModels.ContainsKey((position, direction)) == false)
             {
                 this.tempRailModels[(position, direction)] = InitNewModel(position, direction);
+            }
+            if (this.tempRailModels.ContainsKey((position, DirectionHelper.Opposite(direction))) == false)
+            {
+                this.tempRailModels[(position, DirectionHelper.Opposite(direction))] = InitNewModel(position, DirectionHelper.Opposite(direction));
             }
         }
 
