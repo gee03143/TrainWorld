@@ -9,10 +9,12 @@ using UnityEngine;
 
 namespace TrainWorld.Rail
 {
-    public class RailGraphPathfinder
+    public static class RailGraphPathfinder
     {
-        internal List<Vertex> AStarSearch(Vector3Int placementStartPosition, Direction8way placementStartDirection, Vector3Int endPosition)
+        internal static List<Vertex> AStarSearch(Vector3Int placementStartPosition, Direction8way placementStartDirection, Vector3Int endPosition, bool isAgent = false, RailGraph railGraph = null)
         {
+            // isAgent가 true 일 경우 Adjascent 알고리즘을 다른 걸 사용해야 함
+            // agent는 이미 설치된 레일로만 이동함, agent가 아니라 레일 설치에 사용되는 경우 설치되지 않은 칸을 사용함
             List<Vertex> path = new List<Vertex>();
 
             List<Vertex> positionsTocheck = new List<Vertex>();
@@ -35,56 +37,63 @@ namespace TrainWorld.Rail
                     return path;
                 }
 
-                if(ManhattanDiscance(Vector3Int.RoundToInt(current.Position), placementStartPosition) > 5)
+                if(ManhattanDiscance(Vector3Int.RoundToInt(current.Position), placementStartPosition) > 5 && isAgent == false)
                 {
                     path = GeneratePath(parentsDictionary, current);
                     return path;
                 }
 
-                foreach (Vertex neighbour in GetAdjacentCells(current))
+                List<Vertex> nextPositions = isAgent ? GetNeighbourCells(current, railGraph) : GetAdjacentCells(current);
+
+                foreach (Vertex nextPos in nextPositions)
                 {
-                    float newCost = costDictionary[current] + GetCostOfEnteringCell(neighbour, current);
-                    if (!costDictionary.ContainsKey(neighbour) || newCost < costDictionary[neighbour])
+                    float newCost = costDictionary[current] + GetCostOfEnteringCell(nextPos, current);
+                    if (!costDictionary.ContainsKey(nextPos) || newCost < costDictionary[nextPos])
                     {
-                        costDictionary[neighbour] = newCost;
+                        costDictionary[nextPos] = newCost;
 
-                        float priority = newCost + ManhattanDiscance(endPosition, Vector3Int.RoundToInt(neighbour.Position));
-                        positionsTocheck.Add(neighbour);
-                        priorityDictionary[neighbour] = priority;
+                        float priority = newCost + ManhattanDiscance(endPosition, Vector3Int.RoundToInt(nextPos.Position));
+                        positionsTocheck.Add(nextPos);
+                        priorityDictionary[nextPos] = priority;
 
-                        parentsDictionary[neighbour] = current;
+                        parentsDictionary[nextPos] = current;
                     }
                 }
             }
             return path;
         }
 
-        private float ManhattanDiscance(Vector3Int endPosition, Vector3Int startPosition)
+        private static float ManhattanDiscance(Vector3Int endPosition, Vector3Int startPosition)
         {
             return Mathf.Abs(endPosition.x - startPosition.x) + Mathf.Abs(endPosition.z - startPosition.z);
         }
 
-        private float GetCostOfEnteringCell(Vertex neighbour, Vertex current)
+        private static float GetCostOfEnteringCell(Vertex neighbour, Vertex current)
         {
             return ManhattanDiscance(Vector3Int.RoundToInt(neighbour.Position), Vector3Int.RoundToInt(current.Position));
         }
 
-        private List<Vertex> GetAdjacentCells(Vertex current)
+        private static List<Vertex> GetAdjacentCells(Vertex current)
         {
             List<Vertex> AdjacentCells = new List<Vertex>();
 
-            Vector3Int front = DirectionHelper.ToDirectionalVector(current.direction);
-            Vector3Int left = DirectionHelper.ToDirectionalVector(DirectionHelper.Prev(current.direction));
-            Vector3Int right = DirectionHelper.ToDirectionalVector(DirectionHelper.Next(current.direction));
+            Vector3Int front = DirectionHelper.ToDirectionalVector(current.Direction);
+            Vector3Int left = DirectionHelper.ToDirectionalVector(DirectionHelper.Prev(current.Direction));
+            Vector3Int right = DirectionHelper.ToDirectionalVector(DirectionHelper.Next(current.Direction));
 
-            AdjacentCells.Add(new Vertex(current.Position + front, current.direction));
-            AdjacentCells.Add(new Vertex(current.Position + front + left, DirectionHelper.Prev(current.direction)));
-            AdjacentCells.Add(new Vertex(current.Position + front + right, DirectionHelper.Next(current.direction)));
+            AdjacentCells.Add(new Vertex(current.Position + front, current.Direction));
+            AdjacentCells.Add(new Vertex(current.Position + front + left, DirectionHelper.Prev(current.Direction)));
+            AdjacentCells.Add(new Vertex(current.Position + front + right, DirectionHelper.Next(current.Direction)));
 
             return AdjacentCells;
         }
 
-        private List<Vertex> GeneratePath(Dictionary<Vertex, Vertex> parentsDictionary, Vertex endState)
+        private static List<Vertex> GetNeighbourCells(Vertex current, RailGraph railGraph)
+        {
+            return railGraph.GetNeighboursAt(current.Position, current.Direction);
+        }
+
+        private static List<Vertex> GeneratePath(Dictionary<Vertex, Vertex> parentsDictionary, Vertex endState)
         {
             List<Vertex> path = new List<Vertex>();
             Vertex parent = endState;
@@ -97,7 +106,7 @@ namespace TrainWorld.Rail
             return path;
         }
 
-        private Vertex GetClosestVertex(List<Vertex> positionsTocheck, Dictionary<Vertex, float> priorityDictionary)
+        private static Vertex GetClosestVertex(List<Vertex> positionsTocheck, Dictionary<Vertex, float> priorityDictionary)
         {
             Vertex candidate = positionsTocheck[0];
             foreach (Vertex vertex in positionsTocheck)

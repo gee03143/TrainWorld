@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using TrainWorld.Station;
+
 namespace TrainWorld.Rail
 {
     public class RailModel : MonoBehaviour
@@ -25,9 +27,18 @@ namespace TrainWorld.Rail
             private set { direction = value; }
         }
 
+        [SerializeField]
+        private List<Vertex> neighbours;
+
+        [SerializeField]
+        private TrainStation stationSocket;
+
         public void FixModel(List<Vertex> neighbours)
         {
             DestroyAllChild();
+
+            this.neighbours.Clear();
+            this.neighbours.AddRange(neighbours);
 
             Vector3Int frontCandidatePos = position + DirectionHelper.ToDirectionalVector(direction);
             Vector3Int leftCandidatePos = frontCandidatePos + DirectionHelper.ToDirectionalVector(DirectionHelper.Prev(direction));
@@ -89,10 +100,25 @@ namespace TrainWorld.Rail
             }
         }
 
+        internal TrainStation AddStation(GameObject stationPrefab)
+        {
+            if (this.stationSocket == null)
+            {
+                GameObject obj = Instantiate(stationPrefab, position, Quaternion.Euler(DirectionHelper.ToEuler(direction))) as GameObject;
+                TrainStation station = obj.GetComponent<TrainStation>();
+                this.stationSocket = station;
+                station.Position = this.Position;
+                station.Direction = this.Direction;
+                return station;
+            }
+            return null;
+        }
+
         internal void Init(Vector3Int position, Direction8way direction)
         {
             this.position = position;
             this.direction = direction;
+            this.neighbours = new List<Vertex>();
         }
 
         private void DestroyAllChild()
@@ -106,6 +132,8 @@ namespace TrainWorld.Rail
 
         public void DestroyMyself()
         {
+            if(stationSocket != null)
+                stationSocket.DestroyMyself();
             DestroyAllChild();
             Destroy(gameObject);
         }
@@ -113,6 +141,18 @@ namespace TrainWorld.Rail
         public override string ToString()
         {
             return position.ToString() + " " + direction.ToString();
+        }
+
+        void OnDrawGizmosSelected()
+        {
+            foreach (var neighbour in neighbours)
+            {
+                if (this.Direction == Direction8way.N || this.Direction == Direction8way.NW ||
+                    this.Direction == Direction8way.NE || this.Direction == Direction8way.E)
+                    Debug.DrawLine(neighbour.Position, this.Position, Color.red);
+                else
+                    Debug.DrawLine(neighbour.Position, this.Position, Color.blue);
+            }
         }
     }
 }

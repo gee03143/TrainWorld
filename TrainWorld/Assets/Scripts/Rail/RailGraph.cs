@@ -34,7 +34,7 @@ namespace TrainWorld.Rail
 
         private bool CompareVerticies(Vertex x, Vector3 position, Direction8way direction)
         {
-            return Vector3.SqrMagnitude(position - x.Position) < 0.0001f && direction == x.direction;
+            return Vector3.SqrMagnitude(position - x.Position) < 0.0001f && direction == x.Direction;
         }
 
         private bool CompareVerticies(Vector3 position1, Direction8way direction1, Vector3 position2, Direction8way direction2)
@@ -58,17 +58,17 @@ namespace TrainWorld.Rail
             graph.Add(v, new List<Vertex>());
 
             //check adjascent
-            Vector3 adjascentPosition = v.Position + DirectionHelper.ToDirectionalVector(v.direction);
-            if (GetVertexAt(adjascentPosition, v.direction) != null)
+            Vector3 adjascentPosition = v.Position + DirectionHelper.ToDirectionalVector(v.Direction);
+            if (GetVertexAt(adjascentPosition, v.Direction) != null)
             {
                 // if has adjascent vertex
-                AddEdge(v.Position, adjascentPosition, v.direction, v.direction);
+                AddEdge(v.Position, adjascentPosition, v.Direction, v.Direction);
             }
-             adjascentPosition = v.Position - DirectionHelper.ToDirectionalVector(v.direction);
-            if (GetVertexAt(adjascentPosition, v.direction) != null)
+             adjascentPosition = v.Position - DirectionHelper.ToDirectionalVector(v.Direction);
+            if (GetVertexAt(adjascentPosition, v.Direction) != null)
             {
                 // if has adjascent vertex
-                AddEdge(v.Position, adjascentPosition, v.direction, v.direction);
+                AddEdge(v.Position, adjascentPosition, v.Direction, v.Direction);
             }
         }
 

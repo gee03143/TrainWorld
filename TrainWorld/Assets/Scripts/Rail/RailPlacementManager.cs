@@ -26,8 +26,7 @@ namespace TrainWorld.Rail
         [SerializeField]
         private RailCursor railCursor;
 
-        private RailGraph railGraph;
-        private RailGraphPathfinder railGraphPathfinder;
+        public RailGraph railGraph;
 
         private HashSet<Vertex> railsToFix;
         private List<Vertex> tempRailVertices;
@@ -39,7 +38,6 @@ namespace TrainWorld.Rail
         private void Awake()
         {
             railGraph = new RailGraph();
-            railGraphPathfinder = new RailGraphPathfinder();
             railsToFix = new HashSet<Vertex>();
             tempRailVertices = new List<Vertex>();
         }
@@ -111,9 +109,9 @@ namespace TrainWorld.Rail
             foreach (var pos in tempRailVertices)
             {
                 if (last != null)
-                    AddRailAt(last.direction, Vector3Int.RoundToInt(last.Position), pos.direction, Vector3Int.RoundToInt(pos.Position));
+                    AddRailAt(last.Direction, Vector3Int.RoundToInt(last.Position), pos.Direction, Vector3Int.RoundToInt(pos.Position));
                 else
-                    AddRailAt(pos.direction, Vector3Int.RoundToInt(pos.Position), pos.direction, Vector3Int.RoundToInt(pos.Position));
+                    AddRailAt(pos.Direction, Vector3Int.RoundToInt(pos.Position), pos.Direction, Vector3Int.RoundToInt(pos.Position));
                 last = pos;
             }
         }
@@ -146,8 +144,8 @@ namespace TrainWorld.Rail
         {
             foreach (var vertex in railsToFix)
             {
-                railModelManager.FixRailAtPosition(Vector3Int.RoundToInt(vertex.Position), vertex.direction,
-                    railGraph.GetNeighboursAt(vertex.Position, vertex.direction));
+                railModelManager.FixRailAtPosition(Vector3Int.RoundToInt(vertex.Position), vertex.Direction,
+                    railGraph.GetNeighboursAt(vertex.Position, vertex.Direction));
             }
 
             railsToFix.Clear();
@@ -163,7 +161,7 @@ namespace TrainWorld.Rail
                 //clear temp rails
                 railModelManager.RemoveTempModels();
                 tempRailVertices.Clear();
-                tempRailVertices = railGraphPathfinder.AStarSearch(placementStartPosition, placementStartDirection, position);
+                tempRailVertices = RailGraphPathfinder.AStarSearch(placementStartPosition, placementStartDirection, position);
 
                 //place temp rails
                 CreateTempRailModel();
@@ -196,13 +194,13 @@ namespace TrainWorld.Rail
                     neighbour.Add(tempRailVertices[i - 1]);
                 if (i != tempRailVertices.Count - 1)
                     neighbour.Add(tempRailVertices[i + 1]);
-                if (railGraph.GetVertexAt(tempRailVertices[i].Position, tempRailVertices[i].direction) != null)
-                    neighbour.AddRange(railGraph.GetNeighboursAt(tempRailVertices[i].Position, tempRailVertices[i].direction));
+                if (railGraph.GetVertexAt(tempRailVertices[i].Position, tempRailVertices[i].Direction) != null)
+                    neighbour.AddRange(railGraph.GetNeighboursAt(tempRailVertices[i].Position, tempRailVertices[i].Direction));
 
-                railModelManager.AddTempModelAt(Vector3Int.RoundToInt(tempRailVertices[i].Position), tempRailVertices[i].direction);
-                railModelManager.FixRailAtPosition(Vector3Int.RoundToInt(tempRailVertices[i].Position), tempRailVertices[i].direction, neighbour, true);
+                railModelManager.AddTempModelAt(Vector3Int.RoundToInt(tempRailVertices[i].Position), tempRailVertices[i].Direction);
+                railModelManager.FixRailAtPosition(Vector3Int.RoundToInt(tempRailVertices[i].Position), tempRailVertices[i].Direction, neighbour, true);
                 railModelManager.FixRailAtPosition(Vector3Int.RoundToInt(tempRailVertices[i].Position),
-                    DirectionHelper.Opposite(tempRailVertices[i].direction), neighbour, true);
+                    DirectionHelper.Opposite(tempRailVertices[i].Direction), neighbour, true);
             }
         }
 

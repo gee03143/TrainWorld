@@ -29,6 +29,16 @@ namespace TrainWorld.Rail
             tempRailModels = new Dictionary<(Vector3Int, Direction8way), RailModel>();
         }
 
+        public RailModel GetModelAt(Vector3Int position, Direction8way direction)
+        {
+            if (this.railModels.ContainsKey((position, direction)) == false)
+            {
+                Debug.Log("Don't have such key " + position.ToString() + direction.ToString());
+                return null;
+            }
+            return railModels[(position, direction)];
+        }
+
         public void AddModelAt(Vector3Int position, Direction8way direction)
         {
             if (this.railModels.ContainsKey((position, direction)) == false)

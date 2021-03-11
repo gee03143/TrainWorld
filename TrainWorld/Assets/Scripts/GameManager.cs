@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using TrainWorld.Rail;
+using TrainWorld.Station;
 
 namespace TrainWorld
 {
@@ -16,6 +17,8 @@ namespace TrainWorld
         private InputManager inputManager;
         [SerializeField]
         private RailPlacementManager railPlacementManager;
+        [SerializeField]
+        private StationPlacementManager stationPlacementManager;
         [SerializeField]
         private UiController uiController;
 
@@ -59,6 +62,10 @@ namespace TrainWorld
         void StationButtonHandler()
         {
             ClearInputActions();
+
+            inputManager.onMouseDown += stationPlacementManager.PlaceStation;
+            inputManager.onMouseMove += stationPlacementManager.MoveCursor;
+            inputManager.onRInput += stationPlacementManager.RotateCursor;
         }
 
         void TrafficButtonHandler()
