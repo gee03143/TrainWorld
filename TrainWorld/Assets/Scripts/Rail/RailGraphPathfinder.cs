@@ -90,7 +90,23 @@ namespace TrainWorld.Rail
 
         private static List<Vertex> GetNeighbourCells(Vertex current, RailGraph railGraph)
         {
-            return railGraph.GetNeighboursAt(current.Position, current.Direction);
+            List<Vertex> neighbourCells = new List<Vertex>();
+
+            Vector3Int front = DirectionHelper.ToDirectionalVector(current.Direction);
+            Vector3Int left = DirectionHelper.ToDirectionalVector(DirectionHelper.Prev(current.Direction));
+            Vector3Int right = DirectionHelper.ToDirectionalVector(DirectionHelper.Next(current.Direction));
+
+            Vertex frontVertex = railGraph.GetVertexAt(current.Position + front, current.Direction);
+            if (frontVertex != null)
+                neighbourCells.Add(frontVertex);
+            Vertex leftVertex = railGraph.GetVertexAt(current.Position + front + left, DirectionHelper.Prev(current.Direction));
+            if (leftVertex != null)
+                neighbourCells.Add(leftVertex);
+            Vertex rightVertex = railGraph.GetVertexAt(current.Position + front + right, DirectionHelper.Next(current.Direction));
+            if (rightVertex != null)
+                neighbourCells.Add(rightVertex);
+
+            return neighbourCells;
         }
 
         private static List<Vertex> GeneratePath(Dictionary<Vertex, Vertex> parentsDictionary, Vertex endState)

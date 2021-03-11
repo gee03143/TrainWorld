@@ -15,7 +15,8 @@ namespace TrainWorld
         [SerializeField]
         private float minMouseMovement;
 
-        public Action<Vector3Int> onMouseDown, onMouseMove;
+        public Action<Vector3Int> onMouseDown;
+        public Action<Vector3> onMouseMove;
         public Action onRInput, onEscInput;
 
         private LayerMask layerMask;
@@ -55,7 +56,7 @@ namespace TrainWorld
             {
                 Vector3? hitPosition = RaycastToGround();
                 if (hitPosition != null)
-                    onMouseMove?.Invoke(Vector3Int.RoundToInt((Vector3)hitPosition));
+                    onMouseMove?.Invoke((Vector3)hitPosition);
             }
         }
 

@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.Linq;
 
 namespace TrainWorld.Rail
 {
@@ -37,6 +37,33 @@ namespace TrainWorld.Rail
                 return null;
             }
             return railModels[(position, direction)];
+        }
+
+        public RailModel GetRailModelViaMousePosition(Vector3 mousePosition)
+        {
+            Vector3Int roundedPosition = Vector3Int.RoundToInt(mousePosition);
+            List<(Vector3Int, Direction8way)> modelsAtPosition = railModels.Keys.Where(x => roundedPosition == x.Item1).ToList();
+
+            if (modelsAtPosition.Count > 0)
+            {
+                Direction8way nearestDirection = modelsAtPosition[0].Item2;
+                float shortestDistance = Vector3.Distance(modelsAtPosition[0].Item1 + Vector3.Normalize(DirectionHelper.ToDirectionalVector(modelsAtPosition[0].Item2)),
+                    mousePosition);
+                foreach (var model in modelsAtPosition)
+                {
+                    float newDistance = Vector3.Distance(model.Item1 + Vector3.Normalize(DirectionHelper.ToDirectionalVector(model.Item2)), mousePosition);
+                    if (shortestDistance > newDistance)
+                    {
+                        shortestDistance = newDistance;
+                        nearestDirection = model.Item2;
+                    }
+                }
+                return railModels[(roundedPosition, nearestDirection)];
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public void AddModelAt(Vector3Int position, Direction8way direction)

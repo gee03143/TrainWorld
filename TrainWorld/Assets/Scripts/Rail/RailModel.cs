@@ -126,7 +126,9 @@ namespace TrainWorld.Rail
             //clear my children
             foreach (Transform child in transform)
             {
-                GameObject.Destroy(child.gameObject);
+                //child object가 레일 모델이라면
+                if(child.gameObject.GetComponent<RailTypeHolder>() != null)
+                    GameObject.Destroy(child.gameObject);
             }
         }
 

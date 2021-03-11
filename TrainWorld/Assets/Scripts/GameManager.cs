@@ -48,7 +48,7 @@ namespace TrainWorld
             }
 
             inputManager.onMouseDown += railPlacementManager.PlaceRail;
-            inputManager.onMouseMove += railPlacementManager.MoveCursor;
+            inputManager.onMouseMove += railPlacementManager.MoveCursorAtRailPlacement;
             inputManager.onRInput += railPlacementManager.RotateCursor;
         }
 
@@ -79,6 +79,7 @@ namespace TrainWorld
 
             inputManager.onMouseDown += railPlacementManager.DestroyRail;
             inputManager.onRInput += railPlacementManager.RotateCursor;
+            inputManager.onMouseMove += railPlacementManager.MoveCursorAtDestruction;
         }
     }
 }

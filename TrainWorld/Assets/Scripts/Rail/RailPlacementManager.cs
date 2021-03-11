@@ -23,8 +23,9 @@ namespace TrainWorld.Rail
 
         [SerializeField]
         private RailModelManager railModelManager;
+
         [SerializeField]
-        private RailCursor railCursor;
+        RailArrowUI railArrowUI;
 
         public RailGraph railGraph;
 
@@ -35,16 +36,19 @@ namespace TrainWorld.Rail
         private Vector3Int placementStartPosition;
         private Direction8way placementStartDirection;
 
+        private RailModel modelUnderCursor;
+
         private void Awake()
         {
             railGraph = new RailGraph();
             railsToFix = new HashSet<Vertex>();
             tempRailVertices = new List<Vertex>();
+            placementStartDirection = Direction8way.N;
         }
 
-        private bool isPositionEmpty(Vector3Int position)
+        private bool isPositionEmpty(Vector3Int position, Direction8way direction)
         {
-            return railGraph.GetVertexAt(position, railCursor.Direction) == null;
+            return railGraph.GetVertexAt(position, direction) == null;
         }
 
         private bool IsPositionOutOfBorder(Vector3Int position)
@@ -67,21 +71,21 @@ namespace TrainWorld.Rail
             }
             else
             {
-                if (isPositionEmpty(position))
+                if (isPositionEmpty(position, placementStartDirection))
                 {
-                    railGraph.AddVertexAtPosition(position, railCursor.Direction);
+                    railGraph.AddVertexAtPosition(position, placementStartDirection);
 
-                    railModelManager.AddModelAt(position, railCursor.Direction);
-                    AddPositionToRailsToFix(position, railCursor.Direction);
-                    AddAdjascentPositionsToRailsToFix(position, railCursor.Direction);
+                    railModelManager.AddModelAt(position, placementStartDirection);
+                    AddPositionToRailsToFix(position, placementStartDirection);
+                    AddAdjascentPositionsToRailsToFix(position, placementStartDirection);
 
                     FixRails();
                 }
                 else
                 {
                     placementMode = true;
-                    placementStartPosition = position;
-                    placementStartDirection = railCursor.Direction;
+                    placementStartPosition = modelUnderCursor.Position;
+                    placementStartDirection = modelUnderCursor.Direction;
                 }
             }
         }
@@ -89,17 +93,15 @@ namespace TrainWorld.Rail
         public void DestroyRail(Vector3Int position)
         {
             // if selected position is out of border or empty do nothing
-            if (IsPositionOutOfBorder(position) || isPositionEmpty(position))
+            if (IsPositionOutOfBorder(modelUnderCursor.Position) || isPositionEmpty(modelUnderCursor.Position, modelUnderCursor.Direction))
+                return;
+            if (railGraph.GetVertexAt(modelUnderCursor.Position, modelUnderCursor.Direction) == null)
                 return;
 
-            if (railGraph.GetVertexAt(position, railCursor.Direction) == null)
-                return;
-
-
-            AddAdjascentPositionsToRailsToFix(position, railCursor.Direction);
-
-            railGraph.DeleteVertexAtPosition(position, railCursor.Direction);
-            railModelManager.RemoveModelAt(position, railCursor.Direction);
+            Debug.Log(modelUnderCursor.ToString());
+            AddAdjascentPositionsToRailsToFix(modelUnderCursor.Position, modelUnderCursor.Direction);
+            railGraph.DeleteVertexAtPosition(modelUnderCursor.Position, modelUnderCursor.Direction);
+            railModelManager.RemoveModelAt(modelUnderCursor.Position, modelUnderCursor.Direction);
             FixRails();
         }
 
@@ -151,36 +153,49 @@ namespace TrainWorld.Rail
             railsToFix.Clear();
         }
 
-        internal void MoveCursor(Vector3Int position)
+        internal void MoveCursorAtRailPlacement(Vector3 cursorPosition)
         {
+            Vector3Int roundedPosition = Vector3Int.RoundToInt(cursorPosition);
+            ShowRailUI(cursorPosition);
             if (placementMode)
             {
-                railCursor.Move(placementStartPosition);
-                railCursor.ToggleCursorObject(true);
-
                 //clear temp rails
                 railModelManager.RemoveTempModels();
                 tempRailVertices.Clear();
-                tempRailVertices = RailGraphPathfinder.AStarSearch(placementStartPosition, placementStartDirection, position);
+                tempRailVertices = RailGraphPathfinder.AStarSearch(placementStartPosition, placementStartDirection, roundedPosition);
 
                 //place temp rails
                 CreateTempRailModel();
             }
             else
             {
-                railCursor.Move(position);
-                if (isPositionEmpty(position) == false)
-                {
-                    railCursor.ToggleCursorObject(true);
-                }
-                else
-                {
-                    railCursor.ToggleCursorObject(false);
-                }
+                placementStartPosition = roundedPosition;
+
                 railModelManager.RemoveTempModels();
                 tempRailVertices.Clear();
-                tempRailVertices.Add(new Vertex(railCursor.Position, railCursor.Direction));
+                tempRailVertices.Add(new Vertex(placementStartPosition, placementStartDirection));
+
                 CreateTempRailModel();
+            }
+        }
+
+        internal void MoveCursorAtDestruction(Vector3 cursorPosition)
+        {
+            ShowRailUI(cursorPosition);
+        }
+
+        private void ShowRailUI(Vector3 cursorPosition)
+        {
+            modelUnderCursor = railModelManager.GetRailModelViaMousePosition(cursorPosition);
+            if (modelUnderCursor != null)
+            {
+                railArrowUI.arrow.SetActive(true);
+                railArrowUI.arrow.transform.position = modelUnderCursor.Position;
+                railArrowUI.arrow.transform.rotation = Quaternion.Euler(DirectionHelper.ToEuler(modelUnderCursor.Direction));
+            }
+            else
+            {
+                railArrowUI.arrow.SetActive(false);
             }
         }
 
@@ -208,10 +223,10 @@ namespace TrainWorld.Rail
         {
             if (placementMode == false)
             {
-                railCursor.Rotate();
+                placementStartDirection = DirectionHelper.Next(placementStartDirection);
                 railModelManager.RemoveTempModels();
                 tempRailVertices.Clear();
-                tempRailVertices.Add(new Vertex(railCursor.Position, railCursor.Direction));
+                tempRailVertices.Add(new Vertex(placementStartPosition, placementStartDirection));
                 CreateTempRailModel();
             }
         }

@@ -38,8 +38,11 @@ namespace TrainWorld.Station
                 stations.Add(newStation);
         }
 
-        internal void MoveCursor(Vector3Int position)
+        internal void MoveCursor(Vector3 position)
         {
+            RailModel direction = railModelManager.GetRailModelViaMousePosition(position);
+
+            Debug.Log(direction.ToString());
         }
 
         internal void RotateCursor()
@@ -51,10 +54,17 @@ namespace TrainWorld.Station
                 TrainStation depart = stations[0];
                 TrainStation arrival = stations[1];
                 List<Vertex> path = RailGraphPathfinder.AStarSearch(depart.Position, depart.Direction, arrival.Position, true, railPlacementManager.railGraph);
-                foreach (Vertex vertex in path)
+                if (path.Count > 0)
                 {
-                    GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    cube.transform.position = vertex.Position;
+                    foreach (Vertex vertex in path)
+                    {
+                        GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                        cube.transform.position = vertex.Position;
+                    }
+                }
+                else
+                {
+                    Debug.Log("Non Reachable Position");
                 }
 
             }
