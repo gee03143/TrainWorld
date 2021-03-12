@@ -12147,6 +12147,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minMouseMovement: 0.01
+  minAxis: 0
+  minMouseScroll: 0
 --- !u!4 &1249476505
 Transform:
   m_ObjectHideFlags: 0
@@ -14941,6 +14943,7 @@ MonoBehaviour:
   railPlacementManager: {fileID: 2043687697}
   stationPlacementManager: {fileID: 1354900727}
   uiController: {fileID: 529094015}
+  cameraMovement: {fileID: 1901117315}
 --- !u!4 &1487864114
 Transform:
   m_ObjectHideFlags: 0
@@ -19180,6 +19183,7 @@ GameObject:
   - component: {fileID: 1901117314}
   - component: {fileID: 1901117317}
   - component: {fileID: 1901117316}
+  - component: {fileID: 1901117315}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -19230,6 +19234,22 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &1901117315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1901117313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7520e63b0100a6e47b9053e265285c9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraMovementSpeed: 5
+  minOrthoSize: 3
+  maxOrthoSize: 15
+  scrollSensitivity: 0.1
 --- !u!114 &1901117316
 MonoBehaviour:
   m_ObjectHideFlags: 0

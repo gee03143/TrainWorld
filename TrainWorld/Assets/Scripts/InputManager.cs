@@ -14,9 +14,14 @@ namespace TrainWorld
     {
         [SerializeField]
         private float minMouseMovement;
+        [SerializeField]
+        private float minAxis;
+        [SerializeField]
+        private float minMouseScroll;
 
         public Action<Vector3Int> onMouseDown;
-        public Action<Vector3> onMouseMove;
+        public Action<Vector3> onMouseMove, onAxisInput;
+        public Action<float> onMouseScroll;
         public Action onRInput, onEscInput;
 
         private LayerMask layerMask;
@@ -31,7 +36,28 @@ namespace TrainWorld
             CheckMouseDown();
             CheckMouseMove();
             CheckRInput();
+            CheckAxisInput();
+            CheckMouseScrollInput();
             CheckEscInput();
+        }
+
+        private void CheckMouseScrollInput()
+        {
+            float scrollDelta = Input.mouseScrollDelta.y;
+            if (Mathf.Abs(scrollDelta) > minMouseScroll)
+            {
+                onMouseScroll?.Invoke(scrollDelta);
+            }
+        }
+
+        private void CheckAxisInput()
+        {
+            float horizontal = Input.GetAxis("Horizontal");
+            float vertical = Input.GetAxis("Vertical");
+            if (Mathf.Abs(horizontal) > minAxis || Mathf.Abs(vertical) > minAxis)
+            {
+                onAxisInput?.Invoke(new Vector3(horizontal, 0, vertical));
+            }
         }
 
         private void CheckEscInput()

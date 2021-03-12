@@ -21,6 +21,8 @@ namespace TrainWorld
         private StationPlacementManager stationPlacementManager;
         [SerializeField]
         private UiController uiController;
+        [SerializeField]
+        private CameraMovement cameraMovement;
 
 
         private void Start()
@@ -30,6 +32,8 @@ namespace TrainWorld
             uiController.OnTrafficPlacement += TrafficButtonHandler;
             uiController.OnDestruction += DestructionButtonHandler;
             inputManager.onEscInput += HandleEscape;
+            inputManager.onAxisInput += cameraMovement.MoveCamera;
+            inputManager.onMouseScroll += cameraMovement.ChangeOrthoSize;
         }
 
         private void HandleEscape()
