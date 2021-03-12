@@ -71,7 +71,7 @@ namespace TrainWorld.Rail
             }
             else
             {
-                if (isPositionEmpty(position, placementStartDirection))
+                if (modelUnderCursor == null)
                 {
                     railGraph.AddVertexAtPosition(position, placementStartDirection);
 
@@ -156,6 +156,7 @@ namespace TrainWorld.Rail
         internal void MoveCursorAtRailPlacement(Vector3 cursorPosition)
         {
             Vector3Int roundedPosition = Vector3Int.RoundToInt(cursorPosition);
+            modelUnderCursor = railModelManager.GetRailModelViaMousePosition(cursorPosition);
             ShowRailUI(cursorPosition);
             if (placementMode)
             {
@@ -173,20 +174,23 @@ namespace TrainWorld.Rail
 
                 railModelManager.RemoveTempModels();
                 tempRailVertices.Clear();
-                tempRailVertices.Add(new Vertex(placementStartPosition, placementStartDirection));
+                if (modelUnderCursor == null)
+                {
+                    tempRailVertices.Add(new Vertex(placementStartPosition, placementStartDirection));
 
-                CreateTempRailModel();
+                    CreateTempRailModel();
+                }
             }
         }
 
         internal void MoveCursorAtDestruction(Vector3 cursorPosition)
         {
+            modelUnderCursor = railModelManager.GetRailModelViaMousePosition(cursorPosition);
             ShowRailUI(cursorPosition);
         }
 
         private void ShowRailUI(Vector3 cursorPosition)
         {
-            modelUnderCursor = railModelManager.GetRailModelViaMousePosition(cursorPosition);
             if (modelUnderCursor != null)
             {
                 railArrowUI.arrow.SetActive(true);
