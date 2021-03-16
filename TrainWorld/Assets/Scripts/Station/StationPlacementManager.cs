@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using TrainWorld.Rail;
+using TrainWorld.AI;
 
 namespace TrainWorld.Station
 {
@@ -20,7 +21,12 @@ namespace TrainWorld.Station
         [SerializeField]
         private GameObject stationPrefab;
 
+        [SerializeField]
+        private GameObject trainPrefab;
+
         List<TrainStation> stations;
+
+        RailModel railModelAtCursor;
 
         void Awake()
         {
@@ -29,9 +35,7 @@ namespace TrainWorld.Station
 
         internal void PlaceStation(Vector3Int position)
         {
-            RailModel modelAtPos = railModelManager.GetModelAt(position, placementStartDirection);
-
-            TrainStation newStation = modelAtPos.AddStation(stationPrefab);
+            TrainStation newStation = railModelAtCursor.AddStation(stationPrefab);
 
             //이미 station이 존재하는 위치일 경우 false 반환
             if (newStation != null)
@@ -40,26 +44,28 @@ namespace TrainWorld.Station
 
         internal void MoveCursor(Vector3 position)
         {
-            RailModel direction = railModelManager.GetRailModelViaMousePosition(position);
-
-            Debug.Log(direction.ToString());
+            railModelAtCursor = railModelManager.GetRailModelViaMousePosition(position);
         }
 
         internal void RotateCursor()
         {
             placementStartDirection = DirectionHelper.Next(placementStartDirection);
 
-            if(stations.Count > 2)
+            if(stations.Count >= 2)
             {
                 TrainStation depart = stations[0];
                 TrainStation arrival = stations[1];
                 List<Vertex> path = RailGraphPathfinder.AStarSearch(depart.Position, depart.Direction, arrival.Position, true, railPlacementManager.railGraph);
+                GameObject train = Instantiate(trainPrefab, depart.Position, Quaternion.Euler(DirectionHelper.ToEuler(depart.Direction))) as GameObject;
+                AiAgent ai = train.GetComponent<AiAgent>();
+                ai.Initialize(path, false);
+                
                 if (path.Count > 0)
                 {
                     foreach (Vertex vertex in path)
                     {
-                        GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                        cube.transform.position = vertex.Position;
+                        //GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                        //cube.transform.position = vertex.Position;
                     }
                 }
                 else

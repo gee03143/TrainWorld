@@ -13679,6 +13679,7 @@ MonoBehaviour:
   railPlacementManager: {fileID: 2043687697}
   railModelManager: {fileID: 416826001}
   stationPrefab: {fileID: 1340141908927854759, guid: 1d5b974d63304c840a4cee59b2234eae, type: 3}
+  trainPrefab: {fileID: 3574120905924366244, guid: 3f7b963aba9324346a0f7f3372cd2abd, type: 3}
 --- !u!4 &1354900728
 Transform:
   m_ObjectHideFlags: 0
