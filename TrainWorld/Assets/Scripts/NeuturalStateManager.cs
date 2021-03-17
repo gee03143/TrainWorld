@@ -6,9 +6,29 @@ namespace TrainWorld
 {
     public class NeuturalStateManager : MonoBehaviour, InputHandler
     {
+        [SerializeField]
+        private LayerMask layerMask;
+
         public void OnClick(Vector3Int position)
         {
-            Debug.Log("clicked Position" + position.ToString());
+            //raycast hit
+            ISelectableObject selectableObject = GetObjectFromPointer();
+            if (selectableObject != null)
+            {
+                selectableObject.ShowMyUI();
+            }
+        }
+
+        private ISelectableObject GetObjectFromPointer()
+        {
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
+            {
+                return hit.rigidbody.gameObject.GetComponent<ISelectableObject>();
+            }
+            return null;
         }
 
         public void OnEnter()

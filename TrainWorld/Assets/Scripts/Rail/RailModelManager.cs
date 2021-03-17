@@ -104,7 +104,7 @@ namespace TrainWorld.Rail
         public RailModel InitNewModel(Vector3Int position, Direction8way direction)
         {
             GameObject newGameObject = Instantiate(railModelPrefab, position, Quaternion.Euler(DirectionHelper.ToEuler(direction)), railFolder);
-            RailModel newModel = newGameObject.AddComponent<RailModel>();
+            RailModel newModel = newGameObject.GetComponent<RailModel>();
             newModel.Init(position, direction);
 
             return newModel;

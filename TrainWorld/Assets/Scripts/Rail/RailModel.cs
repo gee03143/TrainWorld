@@ -7,7 +7,8 @@ using TrainWorld.Station;
 
 namespace TrainWorld.Rail
 {
-    public class RailModel : MonoBehaviour
+    [RequireComponent(typeof(Rigidbody))]
+    public class RailModel : MonoBehaviour, ISelectableObject
     {
         [SerializeField]
         private Vector3Int position;
@@ -154,6 +155,16 @@ namespace TrainWorld.Rail
                 else
                     Debug.DrawLine(neighbour.Position, this.Position, Color.blue);
             }
+        }
+
+        public SelectableObjectType GetSelectableObjectType()
+        {
+            return SelectableObjectType.Rail;
+        }
+
+        public void ShowMyUI()
+        {
+            Debug.Log(this.ToString());
         }
     }
 }

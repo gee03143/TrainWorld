@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - GameManager
+  - Rail
+  - Agent
+  - Station
   layers:
   - Default
   - TransparentFX
@@ -16,7 +19,7 @@ TagManager:
   - 
   - Plane
   - Nature
-  - 
+  - Selectable
   - 
   - 
   - 

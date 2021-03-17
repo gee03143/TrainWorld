@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 349360602444684955}
   - component: {fileID: 7712926992762421120}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Rail_Right
-  m_TagString: Untagged
+  m_TagString: Rail
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -52,6 +52,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 349360602444684955}
     m_Modifications:
+    - target: {fileID: -8700617353114198275, guid: 0399d4492369db64f8071f61bca2496e, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0399d4492369db64f8071f61bca2496e, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -96,9 +100,33 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7029948723529949830, guid: 0399d4492369db64f8071f61bca2496e, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: -7029948723529949830, guid: 0399d4492369db64f8071f61bca2496e, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
+    - target: {fileID: -3464447691518478215, guid: 0399d4492369db64f8071f61bca2496e, type: 3}
+      propertyPath: m_Convex
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 65702495048144492, guid: 0399d4492369db64f8071f61bca2496e, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 0399d4492369db64f8071f61bca2496e, type: 3}
       propertyPath: m_Name
       value: CurvedRight
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 0399d4492369db64f8071f61bca2496e, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5148817236446094103, guid: 0399d4492369db64f8071f61bca2496e, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0399d4492369db64f8071f61bca2496e, type: 3}

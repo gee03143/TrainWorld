@@ -6,7 +6,7 @@ using UnityEngine;
 namespace TrainWorld.AI
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class AiAgent : MonoBehaviour
+    public class AiAgent : MonoBehaviour, ISelectableObject
     {
         public event Action OnDeath;
 
@@ -105,6 +105,16 @@ namespace TrainWorld.AI
         private void OnDestroy()
         {
             OnDeath?.Invoke();
+        }
+
+        public SelectableObjectType GetSelectableObjectType()
+        {
+            return SelectableObjectType.Agent;
+        }
+
+        public void ShowMyUI()
+        {
+            Debug.Log(transform.gameObject.name);
         }
     }
 }

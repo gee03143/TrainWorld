@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 5690701665309159359}
   - component: {fileID: -7819512728290534223}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Rail_Left
-  m_TagString: Untagged
+  m_TagString: Rail
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -52,6 +52,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5690701665309159359}
     m_Modifications:
+    - target: {fileID: -8700617353114198275, guid: 6a03518b798a08b49b0a5360b685a6b6, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6a03518b798a08b49b0a5360b685a6b6, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -96,11 +100,48 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7029948723529949830, guid: 6a03518b798a08b49b0a5360b685a6b6, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: -7029948723529949830, guid: 6a03518b798a08b49b0a5360b685a6b6, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
+    - target: {fileID: -3840361553397645466, guid: 6a03518b798a08b49b0a5360b685a6b6, type: 3}
+      propertyPath: m_Convex
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -3464447691518478215, guid: 6a03518b798a08b49b0a5360b685a6b6, type: 3}
+      propertyPath: m_Convex
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -3464447691518478215, guid: 6a03518b798a08b49b0a5360b685a6b6, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 65702495048144492, guid: 6a03518b798a08b49b0a5360b685a6b6, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 6a03518b798a08b49b0a5360b685a6b6, type: 3}
       propertyPath: m_Name
       value: CurvedLeft
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 919132149155446097, guid: 6a03518b798a08b49b0a5360b685a6b6, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5148817236446094103, guid: 6a03518b798a08b49b0a5360b685a6b6, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5148817236446094103, guid: 6a03518b798a08b49b0a5360b685a6b6, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: -3840361553397645466, guid: 6a03518b798a08b49b0a5360b685a6b6, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 6a03518b798a08b49b0a5360b685a6b6, type: 3}
 --- !u!4 &8574244360827505500 stripped
 Transform:
