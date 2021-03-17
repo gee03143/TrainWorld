@@ -8,7 +8,7 @@ using TrainWorld.AI;
 
 namespace TrainWorld.Station
 {
-    public class StationPlacementManager : MonoBehaviour
+    public class StationPlacementManager : MonoBehaviour, InputHandler
     {
         Direction8way placementStartDirection = Direction8way.N;
 
@@ -74,6 +74,16 @@ namespace TrainWorld.Station
                 }
 
             }
+        }
+
+        public void OnEnter()
+        {
+            Debug.Log("Station Placement Exit");
+        }
+
+        public void OnExit()
+        {
+            Debug.Log("Station Placement Exit");
         }
     }
 }

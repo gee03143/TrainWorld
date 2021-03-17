@@ -13,7 +13,7 @@ namespace TrainWorld.Rail
 
     // 언젠가 맵 위에 레일 외의 오브젝트가 배치될 경우 변경될 가능성 있음
 
-    public class RailPlacementManager : MonoBehaviour
+    public class RailPlacementManager : MonoBehaviour, InputHandler
     {
 
         [SerializeField]
@@ -238,6 +238,18 @@ namespace TrainWorld.Rail
         internal void RailPlacementEnter()
         {
             placementMode = false;
+        }
+
+        public void OnEnter()
+        {
+            Debug.Log("Rail Placement Enter");
+        }
+
+        public void OnExit()
+        {
+            railModelManager.RemoveTempModels();
+            tempRailVertices.Clear();
+            Debug.Log("Rail Placement Exit");
         }
     }
 }
