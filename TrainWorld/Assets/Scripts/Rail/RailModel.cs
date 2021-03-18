@@ -31,9 +31,6 @@ namespace TrainWorld.Rail
         [SerializeField]
         private List<Vertex> neighbours;
 
-        [SerializeField]
-        private TrainStation stationSocket;
-
         public void FixModel(List<Vertex> neighbours)
         {
             DestroyAllChild();
@@ -101,20 +98,6 @@ namespace TrainWorld.Rail
             }
         }
 
-        internal TrainStation AddStation(GameObject stationPrefab)
-        {
-            if (this.stationSocket == null)
-            {
-                GameObject obj = Instantiate(stationPrefab, position, Quaternion.Euler(DirectionHelper.ToEuler(direction))) as GameObject;
-                TrainStation station = obj.GetComponent<TrainStation>();
-                this.stationSocket = station;
-                station.Position = this.Position;
-                station.Direction = this.Direction;
-                return station;
-            }
-            return null;
-        }
-
         internal void Init(Vector3Int position, Direction8way direction)
         {
             this.position = position;
@@ -127,15 +110,13 @@ namespace TrainWorld.Rail
             //clear my children
             foreach (Transform child in transform)
             {
-                GameObject.Destroy(child.gameObject);
-
+                if(child.gameObject.GetComponent<RailTypeHolder>() != null)
+                    GameObject.Destroy(child.gameObject);
             }
         }
 
         public void DestroyMyself()
         {
-            if(stationSocket != null)
-                stationSocket.DestroyMyself();
             DestroyAllChild();
             Destroy(gameObject);
         }

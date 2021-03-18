@@ -14934,7 +14934,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1471700165}
   m_Layer: 0
-  m_Name: ForRail
+  m_Name: RailManagers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20684,6 +20684,8 @@ MonoBehaviour:
   maxHeight: 15
   railModelManager: {fileID: 416826001}
   railArrowUI: {fileID: 870011904}
+  railPrefab: {fileID: 9114745024669490336, guid: 578f40549eb490749b52ef1b4c0ff3fa, type: 3}
+  railParent: {fileID: 95283351}
 --- !u!4 &2043687698
 Transform:
   m_ObjectHideFlags: 0

@@ -66,15 +66,29 @@ namespace TrainWorld.Rail
             }
         }
 
-        public void AddModelAt(Vector3Int position, Direction8way direction)
+        public List<RailModel> GetRailModelsVisMousePosition(Vector3 mousePosition)
+        {
+            Vector3Int roundedPosition = Vector3Int.RoundToInt(mousePosition);
+            List<(Vector3Int, Direction8way)> modelsAtPosition = railModels.Keys.Where(x => roundedPosition == x.Item1).ToList();
+
+            List<RailModel> models = new List<RailModel>();
+            foreach (var position in modelsAtPosition)
+            {
+                models.Add(railModels[position]);
+            }
+
+            return models;
+        }
+
+        public void AddModelAt(Vector3Int position, Direction8way direction, Rail newRail)
         {
             if (this.railModels.ContainsKey((position, direction)) == false)
             {
-                this.railModels[(position, direction)] = InitNewModel(position, direction);
+                this.railModels[(position, direction)] = newRail.GetModel(false);
             }
             if (this.railModels.ContainsKey((position, DirectionHelper.Opposite(direction))) == false)
             {
-                this.railModels[(position, DirectionHelper.Opposite(direction))] = InitNewModel(position, DirectionHelper.Opposite(direction));
+                this.railModels[(position, DirectionHelper.Opposite(direction))] = newRail.GetModel(true);
             }
         }
 
@@ -101,24 +115,16 @@ namespace TrainWorld.Rail
             tempRailModels.Clear();
         }
 
-        public RailModel InitNewModel(Vector3Int position, Direction8way direction)
-        {
-            GameObject newGameObject = Instantiate(railModelPrefab, position, Quaternion.Euler(DirectionHelper.ToEuler(direction)), railFolder);
-            RailModel newModel = newGameObject.GetComponent<RailModel>();
-            newModel.Init(position, direction);
 
-            return newModel;
-        }
-
-        internal void AddTempModelAt(Vector3Int position, Direction8way direction)
+        internal void AddTempModelAt(Vector3Int position, Direction8way direction, Rail newRail)
         {
             if (this.tempRailModels.ContainsKey((position, direction)) == false)
             {
-                this.tempRailModels[(position, direction)] = InitNewModel(position, direction);
+                this.tempRailModels[(position, direction)] = newRail.GetModel(false);
             }
             if (this.tempRailModels.ContainsKey((position, DirectionHelper.Opposite(direction))) == false)
             {
-                this.tempRailModels[(position, DirectionHelper.Opposite(direction))] = InitNewModel(position, DirectionHelper.Opposite(direction));
+                this.tempRailModels[(position, DirectionHelper.Opposite(direction))] = newRail.GetModel(true);
             }
         }
 

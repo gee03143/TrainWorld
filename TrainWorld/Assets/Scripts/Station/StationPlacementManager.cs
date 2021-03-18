@@ -28,6 +28,8 @@ namespace TrainWorld.Station
 
         RailModel railModelAtCursor;
 
+        Transform placementTargetPos;
+
         void Awake()
         {
             stations = new List<TrainStation>();
@@ -35,16 +37,10 @@ namespace TrainWorld.Station
 
         internal void PlaceStation(Vector3Int position)
         {
-            TrainStation newStation = railModelAtCursor.AddStation(stationPrefab);
-
-            //이미 station이 존재하는 위치일 경우 false 반환
-            if (newStation != null)
-                stations.Add(newStation);
         }
 
-        internal void MoveCursor(Vector3 position)
+        internal void MoveCursor(Vector3 mousePosition)
         {
-            railModelAtCursor = railModelManager.GetRailModelViaMousePosition(position);
         }
 
         internal void RotateCursor()
