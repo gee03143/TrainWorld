@@ -110,7 +110,7 @@ namespace TrainWorld.Rail
             //clear my children
             foreach (Transform child in transform)
             {
-                if(child.gameObject.GetComponent<RailTypeHolder>() != null)
+                if (child.gameObject.GetComponent<RailTypeHolder>() != null)
                     GameObject.Destroy(child.gameObject);
             }
         }

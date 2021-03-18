@@ -18,9 +18,9 @@ namespace TrainWorld.Rail
         }
 
         [SerializeField]
-        private Direction8way direction;
+        private Direction4way direction;
 
-        public Direction8way Direction
+        public Direction4way Direction
         {
             get { return direction; }
             private set { direction = value; }
@@ -34,13 +34,13 @@ namespace TrainWorld.Rail
 
         private Dictionary<Transform, TrainStation> stations;
 
-        internal void Init(Vector3Int position, Direction8way direction)
+        internal void Init(Vector3Int position, Direction4way direction)
         {
             this.position = position;
             this.direction = direction;
 
-            models[0].Init(position, direction);
-            models[1].Init(position, DirectionHelper.Opposite(direction));
+            models[0].Init(position, (Direction8way)direction);
+            models[1].Init(position, (Direction8way)(direction + 4));
 
             this.stations = new Dictionary<Transform, TrainStation>();
             foreach (var transform in stationTransforms)
@@ -94,6 +94,11 @@ namespace TrainWorld.Rail
             }
             */
             return null;
+        }
+
+        public void DestroyMyself()
+        {
+            Destroy(gameObject);
         }
     }
 }

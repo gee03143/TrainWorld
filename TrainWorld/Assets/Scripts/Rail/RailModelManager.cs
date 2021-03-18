@@ -14,12 +14,6 @@ namespace TrainWorld.Rail
 
     public class RailModelManager : MonoBehaviour
     {
-        [SerializeField]
-        private GameObject railModelPrefab;
-
-        [SerializeField]
-        private Transform railFolder;
-
         private Dictionary<(Vector3Int, Direction8way), RailModel> railModels;
         private Dictionary<(Vector3Int, Direction8way), RailModel> tempRailModels;
 

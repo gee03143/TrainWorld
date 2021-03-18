@@ -19,9 +19,9 @@ MonoBehaviour:
     width: 1536
     height: 780.8
   m_ShowMode: 4
-  m_Title: Hierarchy
+  m_Title: Game
   m_RootView: {fileID: 2}
-  m_MinSize: {x: 875, y: 300}
+  m_MinSize: {x: 875, y: 663}
   m_MaxSize: {x: 10000, y: 10000}
   m_Maximized: 1
 --- !u!114 &2
@@ -120,10 +120,10 @@ MonoBehaviour:
     y: 30
     width: 1536
     height: 731
-  m_MinSize: {x: 708, y: 592}
-  m_MaxSize: {x: 18003, y: 18042}
+  m_MinSize: {x: 709, y: 613}
+  m_MaxSize: {x: 18004, y: 18063}
   vertical: 0
-  controlID: 156
+  controlID: 172
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -148,7 +148,7 @@ MonoBehaviour:
   m_MinSize: {x: 201, y: 442}
   m_MaxSize: {x: 4001, y: 8042}
   vertical: 1
-  controlID: 157
+  controlID: 147
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -168,8 +168,8 @@ MonoBehaviour:
     y: 0
     width: 764
     height: 383
-  m_MinSize: {x: 201, y: 221}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 15}
   m_Panes:
   - {fileID: 15}
@@ -197,8 +197,8 @@ MonoBehaviour:
     y: 383
     width: 764
     height: 348
-  m_MinSize: {x: 201, y: 221}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 14}
   m_Panes:
   - {fileID: 14}
@@ -226,10 +226,10 @@ MonoBehaviour:
     y: 0
     width: 495
     height: 731
-  m_MinSize: {x: 232, y: 592}
-  m_MaxSize: {x: 10002, y: 18042}
+  m_MinSize: {x: 232, y: 613}
+  m_MaxSize: {x: 10002, y: 18063}
   vertical: 1
-  controlID: 133
+  controlID: 173
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -459,9 +459,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -0.0004747808, y: 0.13340081, z: 0.0040080473}
+    m_Target: {x: 7, y: 0.09801132, z: 8}
     speed: 2
-    m_Value: {x: -0.0004747808, y: 0.13340081, z: 0.0040080473}
+    m_Value: {x: 7, y: 0.09801132, z: 8}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -508,13 +508,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: 0.41903552, y: 0.1112178, z: -0.05180341, w: 0.89964503}
+    m_Target: {x: 0.2476561, y: -0.6311744, z: 0.22319597, w: 0.70033884}
     speed: 2
-    m_Value: {x: 0.4190345, y: 0.11121753, z: -0.051803287, w: 0.8996429}
+    m_Value: {x: 0.24765542, y: -0.63117266, z: 0.22319536, w: 0.70033693}
   m_Size:
-    m_Target: 3.9106123
+    m_Target: 0.65247524
     speed: 2
-    m_Value: 3.9106123
+    m_Value: 0.65247524
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -679,9 +679,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 61}
-      m_SelectedIDs: 8ec2f9ff
-      m_LastClickedID: -408946
-      m_ExpandedIDs: 780cfaff860cfaffe695fbff48eefbffee83fcff60fbffff763f0000da41000008420000
+      m_SelectedIDs: e43c0000
+      m_LastClickedID: 0
+      m_ExpandedIDs: 16edf9ff1eedf9ff2cedf9ff3095faff3895faff4695faffd03efbfff03efbfff63efbff9e3ffbff0e71fbff1671fbff8e1cfcfff2a6fcff52b7feff4cd8ffff5ad8ffff60fbffff7a3f00000c420000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: Rail(Clone)
@@ -692,7 +692,7 @@ MonoBehaviour:
           y: 0
           width: 0
           height: 0
-        m_UserData: -258940
+        m_UserData: -398036
         m_IsWaitingForDelay: 0
         m_IsRenaming: 0
         m_OriginalEventType: 0
@@ -743,21 +743,21 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts/Station
+    - Assets/Scripts
     m_Globs: []
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Scripts/Station
+  - Assets/Scripts
   m_LastFoldersGridSize: 16
   m_LastProjectPath: C:\Users\gee03\Documents\GitHub\TrainWorld\TrainWorld
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: dc450000
-    m_LastClickedID: 17884
-    m_ExpandedIDs: 00000000c4450000c6450000c8450000ca450000cc450000ce450000d045000000ca9a3b
+    m_SelectedIDs: f4450000
+    m_LastClickedID: 17908
+    m_ExpandedIDs: 00000000ea450000ec450000ee450000f0450000f2450000f4450000f645000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -785,7 +785,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000c4450000c6450000c8450000ca450000cc450000ce450000d0450000
+    m_ExpandedIDs: 00000000ea450000ec450000ee450000f0450000f2450000f4450000f6450000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -816,15 +816,15 @@ MonoBehaviour:
     m_ExpandedInstanceIDs: 305400008c48000000000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: RailModel
-      m_OriginalName: RailModel
+      m_Name: Rail
+      m_OriginalName: Rail
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 17376
+      m_UserData: 17406
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
       m_OriginalEventType: 0
