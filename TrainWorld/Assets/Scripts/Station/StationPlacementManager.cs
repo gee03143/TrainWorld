@@ -10,13 +10,8 @@ namespace TrainWorld.Station
 {
     public class StationPlacementManager : MonoBehaviour, InputHandler
     {
-        Direction8way placementStartDirection = Direction8way.N;
-
         [SerializeField]
         private RailPlacementManager railPlacementManager;
-
-        [SerializeField]
-        private RailModelManager railModelManager;
 
         [SerializeField]
         private GameObject stationPrefab;
@@ -24,10 +19,10 @@ namespace TrainWorld.Station
         [SerializeField]
         private GameObject trainPrefab;
 
+        [SerializeField]
         List<TrainStation> stations;
 
-        RailModel railModelAtCursor;
-
+        Rail.Rail railAtCursor;
         Transform placementTargetPos;
 
         void Awake()
@@ -37,38 +32,41 @@ namespace TrainWorld.Station
 
         internal void PlaceStation(Vector3Int position)
         {
+            if(railAtCursor != null && placementTargetPos != null)
+            {
+                TrainStation newStation = railAtCursor.AddStation(stationPrefab, placementTargetPos);
+                if(newStation != null)
+                    stations.Add(newStation);
+            }
         }
 
         internal void MoveCursor(Vector3 mousePosition)
         {
+            List<Rail.Rail> rails = railPlacementManager.GetRailsAtPosition(Vector3Int.RoundToInt(mousePosition));
+            if (rails.Count != 1)
+            {
+                //do nothing
+                railAtCursor = null;
+                placementTargetPos = null;
+            }
+            else
+            {
+                railAtCursor = rails[0];
+                placementTargetPos = railAtCursor.GetClosestTrainSocket(mousePosition);
+            }
         }
 
         internal void RotateCursor()
         {
-            placementStartDirection = DirectionHelper.Next(placementStartDirection);
-
             if(stations.Count >= 2)
             {
                 TrainStation depart = stations[0];
                 TrainStation arrival = stations[1];
+                Debug.Log(depart.ToString() + arrival.ToString());
                 List<Vertex> path = RailGraphPathfinder.AStarSearch(depart.Position, depart.Direction, arrival.Position, true, railPlacementManager.railGraph);
                 GameObject train = Instantiate(trainPrefab, depart.Position, Quaternion.Euler(DirectionHelper.ToEuler(depart.Direction))) as GameObject;
                 AiAgent ai = train.GetComponent<AiAgent>();
                 ai.Initialize(path, false);
-                
-                if (path.Count > 0)
-                {
-                    foreach (Vertex vertex in path)
-                    {
-                        //GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                        //cube.transform.position = vertex.Position;
-                    }
-                }
-                else
-                {
-                    Debug.Log("Non Reachable Position");
-                }
-
             }
         }
 

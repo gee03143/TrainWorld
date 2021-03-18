@@ -35,6 +35,7 @@ namespace TrainWorld.Rail
         public RailGraph railGraph;
 
         private HashSet<Vertex> railsToFix;
+
         private List<Vertex> tempRailVertices;
 
         private Dictionary<(Vector3Int, Direction4way), Rail> rails;
@@ -54,6 +55,13 @@ namespace TrainWorld.Rail
             rails = new Dictionary<(Vector3Int, Direction4way), Rail>();
             tempRails = new List<Rail>();
             placementStartDirection = Direction8way.N;
+        }
+
+        internal List<Rail> GetRailsAtPosition(Vector3Int position)
+        {
+            List<Rail> railsAtPosition = rails.Where(x => position == x.Key.Item1).Select(x => x.Value).ToList();
+
+            return railsAtPosition;
         }
 
         private bool isPositionEmpty(Vector3Int position, Direction8way direction)

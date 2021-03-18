@@ -30,9 +30,14 @@ namespace TrainWorld.Rail
         private List<RailModel> models;
 
         [SerializeField]
-        private List<Transform> stationTransforms;
+        private Transform positiveStationTransform;
+        [SerializeField]
+        private Transform negativeStationTransform;
 
-        private Dictionary<Transform, TrainStation> stations;
+        [SerializeField]
+        private TrainStation positiveStation;
+        [SerializeField]
+        private TrainStation negativeStation;
 
         internal void Init(Vector3Int position, Direction4way direction)
         {
@@ -41,12 +46,6 @@ namespace TrainWorld.Rail
 
             models[0].Init(position, (Direction8way)direction);
             models[1].Init(position, (Direction8way)(direction + 4));
-
-            this.stations = new Dictionary<Transform, TrainStation>();
-            foreach (var transform in stationTransforms)
-            {
-                stations.Add(transform, null);
-            }
         }
 
         public RailModel GetModel(bool opposite)
@@ -59,41 +58,84 @@ namespace TrainWorld.Rail
 
         public Transform GetClosestTrainSocket(Vector3 position)
         {
-            float nearestDistance = float.PositiveInfinity;
-            Transform nearestTransform = null;
-
-            foreach (Transform currentTransform in stations.Keys)
+            float positiveDistance = Vector3.Distance(position, positiveStationTransform.position);
+            float negativeDistance = Vector3.Distance(position, negativeStationTransform.position);
+            if (positiveDistance < negativeDistance)
             {
-                Debug.Log(currentTransform);
-                float currentDistance = Vector3.Distance(currentTransform.position, position);
-                if (currentDistance < nearestDistance)
+                if (positiveStation == null)
                 {
-                    if (stations[currentTransform] != null)
-                    {
-                        nearestDistance = currentDistance;
-                        nearestTransform = currentTransform;
-                    }
+                    return positiveStationTransform;
+                }
+                else if(negativeStation == null)
+                {
+                    return negativeStationTransform;
+                }
+                else
+                {
+                    return null;
                 }
             }
-            return nearestTransform;
+            else
+            {
+                if (negativeStation == null)
+                {
+                    return negativeStationTransform;
+                }
+                else if (positiveStation == null)
+                {
+                    return positiveStationTransform;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
         }
 
         internal TrainStation AddStation(GameObject stationPrefab, Transform placementPosition)
         {
-            /*
-            if (this.stationSocket == null)
+            if(positiveStationTransform == placementPosition)
             {
-                GameObject obj = Instantiate(stationPrefab, placementPosition.position,
-                    Quaternion.Euler(DirectionHelper.ToEuler(direction))) as GameObject;
-                TrainStation station = obj.GetComponent<TrainStation>();
-                this.stationSocket = station;
-                station.Position = this.Position;
-                station.Direction = this.Direction;
-                stations[placementPosition] = station;
-                return station;
+                if(positiveStation == null)
+                {
+                    GameObject obj = Instantiate(stationPrefab, placementPosition.position,
+                    Quaternion.identity) as GameObject;
+                    TrainStation station = obj.GetComponent<TrainStation>();
+                    positiveStation = station;
+                    station.Position = Vector3Int.RoundToInt(this.position);
+
+                    station.Direction = (Direction8way)this.Direction;
+
+                    return station;
+                }
+                else
+                {
+                    return null;
+                }
+            }else if(negativeStationTransform == placementPosition)
+            {
+                if(negativeStation == null)
+                {
+                    GameObject obj = Instantiate(stationPrefab, placementPosition.position,
+                    Quaternion.identity) as GameObject;
+                    TrainStation station = obj.GetComponent<TrainStation>();
+                    negativeStation = station;
+                    station.Position = Vector3Int.RoundToInt(this.position);
+
+                    station.Direction = (Direction8way)this.Direction;
+
+                    return station;
+                }
+                else
+                {
+                    return null;
+                }
             }
-            */
-            return null;
+            else
+            {
+                return null;
+            }
         }
 
         public void DestroyMyself()

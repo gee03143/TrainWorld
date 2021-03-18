@@ -112,9 +112,8 @@ MonoBehaviour:
   models:
   - {fileID: 8644263771665967547}
   - {fileID: 7340974565329638085}
-  stationTransforms:
-  - {fileID: 7829880521943387566}
-  - {fileID: 3407426213463930540}
+  positiveStationTransform: {fileID: 7829880521943387566}
+  negativeStationTransform: {fileID: 3407426213463930540}
 --- !u!1001 &276411496870518117
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -50,6 +50,10 @@ namespace TrainWorld.AI
         public void Initialize(List<Vertex> path, bool isLoop)
         {
             this.path = path;
+            if (path.Count == 0)
+            { 
+                Debug.Log("Non Reachable Position");
+            }
             currentIndex = 1;
             currentTarget = path[currentIndex];
             move = true;

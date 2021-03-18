@@ -123,7 +123,7 @@ MonoBehaviour:
   m_MinSize: {x: 709, y: 613}
   m_MaxSize: {x: 18004, y: 18063}
   vertical: 0
-  controlID: 172
+  controlID: 170
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -148,7 +148,7 @@ MonoBehaviour:
   m_MinSize: {x: 201, y: 442}
   m_MaxSize: {x: 4001, y: 8042}
   vertical: 1
-  controlID: 147
+  controlID: 145
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -229,7 +229,7 @@ MonoBehaviour:
   m_MinSize: {x: 232, y: 613}
   m_MaxSize: {x: 10002, y: 18063}
   vertical: 1
-  controlID: 173
+  controlID: 171
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -459,9 +459,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 7, y: 0.09801132, z: 8}
+    m_Target: {x: 6.4396887, y: 2.1679106, z: 6.7611194}
     speed: 2
-    m_Value: {x: 7, y: 0.09801132, z: 8}
+    m_Value: {x: 6.4396887, y: 2.1679106, z: 6.7611194}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -508,13 +508,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: 0.2476561, y: -0.6311744, z: 0.22319597, w: 0.70033884}
+    m_Target: {x: 0.30317765, y: -0.30827996, z: 0.10435286, w: 0.8956362}
     speed: 2
-    m_Value: {x: 0.24765542, y: -0.63117266, z: 0.22319536, w: 0.70033693}
+    m_Value: {x: 0.3031766, y: -0.3082789, z: 0.104352504, w: 0.8956331}
   m_Size:
-    m_Target: 0.65247524
+    m_Target: 3.7858303
     speed: 2
-    m_Value: 0.65247524
+    m_Value: 3.4858303
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -678,21 +678,21 @@ MonoBehaviour:
   m_ViewDataDictionary: {fileID: 0}
   m_SceneHierarchy:
     m_TreeViewState:
-      scrollPos: {x: 0, y: 61}
-      m_SelectedIDs: e43c0000
+      scrollPos: {x: 0, y: 0}
+      m_SelectedIDs: f8430000
       m_LastClickedID: 0
-      m_ExpandedIDs: 16edf9ff1eedf9ff2cedf9ff3095faff3895faff4695faffd03efbfff03efbfff63efbff9e3ffbff0e71fbff1671fbff8e1cfcfff2a6fcff52b7feff4cd8ffff5ad8ffff60fbffff7a3f00000c420000
+      m_ExpandedIDs: 22e9f2ff60fbffff7a3f0000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
-        m_Name: Rail(Clone)
-        m_OriginalName: Rail(Clone)
+        m_Name: RailModel 02
+        m_OriginalName: RailModel 02
         m_EditFieldRect:
           serializedVersion: 2
           x: 0
           y: 0
           width: 0
           height: 0
-        m_UserData: -398036
+        m_UserData: -857844
         m_IsWaitingForDelay: 0
         m_IsRenaming: 0
         m_OriginalEventType: 0
@@ -743,21 +743,21 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts
+    - Assets/Resources/Prefabs/Station
     m_Globs: []
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Scripts
+  - Assets/Resources/Prefabs/Station
   m_LastFoldersGridSize: 16
   m_LastProjectPath: C:\Users\gee03\Documents\GitHub\TrainWorld\TrainWorld
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: f4450000
-    m_LastClickedID: 17908
-    m_ExpandedIDs: 00000000ea450000ec450000ee450000f0450000f2450000f4450000f645000000ca9a3b
+    scrollPos: {x: 0, y: 46}
+    m_SelectedIDs: 124b0000
+    m_LastClickedID: 19218
+    m_ExpandedIDs: 00000000ea450000ec450000ee450000f0450000f2450000f4450000f64500002846000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -816,15 +816,15 @@ MonoBehaviour:
     m_ExpandedInstanceIDs: 305400008c48000000000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: Rail
-      m_OriginalName: Rail
+      m_Name: Station
+      m_OriginalName: Station
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 17406
+      m_UserData: 19218
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
       m_OriginalEventType: 0
@@ -898,7 +898,7 @@ MonoBehaviour:
     m_ControlHash: -371814159
     m_PrefName: Preview_InspectorPreview
   m_LastInspectedObjectInstanceID: -1
-  m_LastVerticalScrollValue: 0
+  m_LastVerticalScrollValue: 48.799988
   m_AssetGUID: 
   m_InstanceID: 0
   m_LockTracker:

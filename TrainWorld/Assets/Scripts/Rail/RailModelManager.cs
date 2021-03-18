@@ -60,20 +60,6 @@ namespace TrainWorld.Rail
             }
         }
 
-        public List<RailModel> GetRailModelsVisMousePosition(Vector3 mousePosition)
-        {
-            Vector3Int roundedPosition = Vector3Int.RoundToInt(mousePosition);
-            List<(Vector3Int, Direction8way)> modelsAtPosition = railModels.Keys.Where(x => roundedPosition == x.Item1).ToList();
-
-            List<RailModel> models = new List<RailModel>();
-            foreach (var position in modelsAtPosition)
-            {
-                models.Add(railModels[position]);
-            }
-
-            return models;
-        }
-
         public void AddModelAt(Vector3Int position, Direction8way direction, Rail newRail)
         {
             if (this.railModels.ContainsKey((position, direction)) == false)
