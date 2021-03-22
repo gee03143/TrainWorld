@@ -5,6 +5,7 @@ using UnityEngine;
 
 using TrainWorld.Rail;
 using TrainWorld.AI;
+using System.Linq;
 
 namespace TrainWorld.Station
 {
@@ -12,6 +13,8 @@ namespace TrainWorld.Station
     {
         [SerializeField]
         private RailPlacementManager railPlacementManager;
+        [SerializeField]
+        private UiTrain uiTrain;
 
         [SerializeField]
         private GameObject stationPrefab;
@@ -46,10 +49,20 @@ namespace TrainWorld.Station
                 if (newStation != null)
                 {
                     newStation.StationName = (stations.Count).ToString();
-                    Debug.Log(newStation.StationName);
                     stations.Add(newStation.StationName, newStation);
+                    uiTrain.SetUpDropdown(stations.Keys.ToList());
                 }
             }
+        }
+
+        internal TrainStation GetStationOfName(string name)
+        {
+            if (stations.ContainsKey(name))
+            {
+                return stations[name];
+            }
+            else
+                return null;
         }
 
         internal bool TryChangeName(string from, string to, TrainStation selectedStation)
@@ -58,6 +71,7 @@ namespace TrainWorld.Station
             {
                 stations.Remove(from);
                 stations.Add(to, selectedStation);
+                uiTrain.SetUpDropdown(stations.Keys.ToList());
                 return true;
             }
             else if (stations.ContainsKey(from) == false)
@@ -70,6 +84,11 @@ namespace TrainWorld.Station
                 Debug.Log("station name : " + to + " is already taken");
                 return false;
             }
+        }
+
+        public RailGraph GetRailGraph()
+        {
+            return railPlacementManager.railGraph;
         }
 
         public void OnEnter()

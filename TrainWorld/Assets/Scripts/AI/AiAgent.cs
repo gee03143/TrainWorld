@@ -2,6 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.UI;
+
+using TrainWorld.Station;
+using TrainWorld.Rail;
 
 namespace TrainWorld.AI
 {
@@ -38,6 +43,15 @@ namespace TrainWorld.AI
             }
         }
 
+        internal void ChangeDestination(TrainStation dest1, TrainStation dest2, RailGraph railGraph)
+        {
+            Debug.Log("change destination called");
+            path = RailGraphPathfinder.AStarSearch(dest1.Position, dest1.Direction, dest2.Position, true, railGraph);
+            path.AddRange(RailGraphPathfinder.AStarSearch(dest2.Position, dest2.Direction, dest1.Position, true, railGraph));
+            currentTarget = path[0];
+            move = true;
+        }
+
         Rigidbody rb;
 
         private void Awake()
@@ -47,23 +61,9 @@ namespace TrainWorld.AI
             currentIndex = 0;
         }
 
-        public void Initialize(List<Vertex> path, bool isLoop)
-        {
-            this.path = path;
-            if (path.Count == 0)
-            { 
-                Debug.Log("Non Reachable Position");
-            }
-            currentIndex = 1;
-            currentTarget = path[currentIndex];
-            move = true;
-            stop = false;
-            loop = isLoop;
-        }
-
         private void Update()
         {
-            if(move && stop == false)
+            if(move)
             {
                 TimeStepping();
             }
