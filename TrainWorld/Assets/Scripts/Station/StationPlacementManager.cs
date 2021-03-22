@@ -29,33 +29,26 @@ namespace TrainWorld.Station
             stations = new Dictionary<string, TrainStation>();
         }
 
-        internal void PlaceStation(Vector3Int position)
-        {
-            if(railAtCursor != null && placementTargetPos != null)
-            {
-                TrainStation newStation = railAtCursor.AddStation(stationPrefab, placementTargetPos);
-                if (newStation != null)
-                {
-                    newStation.StationName = (stations.Count * 555).ToString();
-                    Debug.Log(newStation.StationName);
-                    stations.Add(newStation.StationName, newStation);
-                }
-            }
-        }
-
-        internal void MoveCursor(Vector3 mousePosition)
+        internal void PlaceStation(Vector3 mousePosition)
         {
             List<Rail.Rail> rails = railPlacementManager.GetRailsAtPosition(Vector3Int.RoundToInt(mousePosition));
             if (rails.Count != 1)
             {
+                //cannot place train on multiple rail 
                 //do nothing
-                railAtCursor = null;
-                placementTargetPos = null;
+                return;
             }
             else
             {
                 railAtCursor = rails[0];
                 placementTargetPos = railAtCursor.GetClosestTrainSocket(mousePosition);
+                TrainStation newStation = railAtCursor.AddStation(stationPrefab, placementTargetPos);
+                if (newStation != null)
+                {
+                    newStation.StationName = (stations.Count).ToString();
+                    Debug.Log(newStation.StationName);
+                    stations.Add(newStation.StationName, newStation);
+                }
             }
         }
 

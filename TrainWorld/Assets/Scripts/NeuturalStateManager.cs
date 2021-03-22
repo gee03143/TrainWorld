@@ -12,7 +12,7 @@ namespace TrainWorld
         [SerializeField]
         private UiStationData uiStationData;
 
-        public void OnClick(Vector3Int position)
+        public void OnClick(Vector3 position)
         {
             //raycast hit
             ISelectableObject selectableObject = GetObjectFromPointer();

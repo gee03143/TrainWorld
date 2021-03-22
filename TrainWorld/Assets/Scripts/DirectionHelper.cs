@@ -5,14 +5,6 @@ using UnityEngine;
 
 namespace TrainWorld
 {
-    public enum Direction4way
-    {
-        N, 
-        NE,
-        E,
-        SE,
-        DIRECTION_COUNT // 4 way direction system
-    }
     public enum Direction8way
     {
         N,
@@ -92,13 +84,13 @@ namespace TrainWorld
             return new Vector3(0, 45 * (int)direction, 0);
         }
 
-        public static Direction4way ToDirection4Way(Direction8way direction)
+        public static Direction8way ToDirection4Way(Direction8way direction)
         {
             if((int)direction > 3)
             {
                 direction = direction - 4;
             }
-            return (Direction4way)direction;
+            return direction;
         }
     }
 }

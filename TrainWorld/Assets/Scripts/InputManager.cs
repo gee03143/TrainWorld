@@ -19,8 +19,7 @@ namespace TrainWorld
         [SerializeField]
         private float minMouseScroll;
 
-        public Action<Vector3Int> onMouseDown;
-        public Action<Vector3> onMouseMove, onAxisInput;
+        public Action<Vector3> onMouseMove, onMouseDown, onAxisInput;
         public Action<float> onMouseScroll;
         public Action onRInput, onEscInput;
 
@@ -93,7 +92,7 @@ namespace TrainWorld
                 Vector3? hitPosition = RaycastToGround();
                 if (hitPosition != null)
                 {
-                    onMouseDown?.Invoke(Vector3Int.RoundToInt((Vector3)hitPosition));
+                    onMouseDown?.Invoke((Vector3)hitPosition);
                 }
             }
         }

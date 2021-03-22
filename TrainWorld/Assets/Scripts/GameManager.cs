@@ -5,6 +5,7 @@ using UnityEngine;
 
 using TrainWorld.Rail;
 using TrainWorld.Station;
+using TrainWorld.AI;
 
 namespace TrainWorld
 {
@@ -22,6 +23,8 @@ namespace TrainWorld
         [SerializeField]
         private StationPlacementManager stationPlacementManager;
         [SerializeField]
+        private TrainPlacementManager trainPlacementManager;
+        [SerializeField]
         private UiController uiController;
         [SerializeField]
         private CameraMovement cameraMovement;
@@ -33,6 +36,7 @@ namespace TrainWorld
             uiController.OnRailPlacement += RailButtonHandler;
             uiController.OnStationPlacement += StationButtonHandler;
             uiController.OnTrafficPlacement += TrafficButtonHandler;
+            uiController.OnTrainPlacement += TrainButtonHandler;
             uiController.OnDestruction += DestructionButtonHandler;
             inputManager.onEscInput = HandleEscape;
             inputManager.onAxisInput += cameraMovement.MoveCamera;
@@ -78,17 +82,23 @@ namespace TrainWorld
             inputManager.onMouseMove += railPlacementManager.MoveCursorAtRailPlacement;
             inputManager.onRInput += railPlacementManager.RotateCursor;
         }
-        void StationButtonHandler()
+        private void StationButtonHandler()
         {
             SwitchHandler(stationPlacementManager);
 
             inputManager.onMouseDown += stationPlacementManager.PlaceStation;
-            inputManager.onMouseMove += stationPlacementManager.MoveCursor;
         }
 
-        void TrafficButtonHandler()
+        private void TrafficButtonHandler()
         {
             SwitchHandler(null);
+        }
+
+        private void TrainButtonHandler()
+        {
+            SwitchHandler(trainPlacementManager);
+
+            inputManager.onMouseDown += trainPlacementManager.PlaceTrain;
         }
 
         private void DestructionButtonHandler()

@@ -10,8 +10,8 @@ namespace TrainWorld
     // 해당 버튼 클릭 시 Action을 Invoke 시킴
     public class UiController : MonoBehaviour
     {
-        public Action OnRailPlacement, OnStationPlacement, OnTrafficPlacement, OnDestruction;
-        public Button placeRailButton, placeStationButton, placeTrafficButton, destructionButton;
+        public Action OnRailPlacement, OnStationPlacement, OnTrafficPlacement, OnTrainPlacement, OnDestruction;
+        public Button placeRailButton, placeStationButton, placeTrafficButton, placeTrainButton, destructionButton;
 
         public Color outlineColor;
         List<Button> buttonList;
@@ -27,7 +27,7 @@ namespace TrainWorld
 
         private void Start()
         {
-            buttonList = new List<Button> { placeStationButton, placeRailButton, placeTrafficButton, destructionButton };
+            buttonList = new List<Button> { placeStationButton, placeRailButton, placeTrafficButton, placeTrainButton, destructionButton };
 
             placeRailButton.onClick.AddListener(() =>
             {
@@ -50,6 +50,14 @@ namespace TrainWorld
                 OnTrafficPlacement?.Invoke();
 
             });
+
+            placeTrainButton.onClick.AddListener(() =>
+            {
+                ResetButtonColor();
+                ModifyOutline(placeTrainButton);
+                OnTrainPlacement?.Invoke();
+            });
+
             destructionButton.onClick.AddListener(() =>
             {
                 ResetButtonColor();

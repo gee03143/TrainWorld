@@ -38,7 +38,7 @@ namespace TrainWorld.Rail
 
         private List<Vertex> tempRailVertices;
 
-        private Dictionary<(Vector3Int, Direction4way), Rail> rails;
+        private Dictionary<(Vector3Int, Direction8way), Rail> rails;
         private List<Rail> tempRails;
 
         private bool placementMode = false;
@@ -52,7 +52,7 @@ namespace TrainWorld.Rail
             railGraph = new RailGraph();
             railsToFix = new HashSet<Vertex>();
             tempRailVertices = new List<Vertex>();
-            rails = new Dictionary<(Vector3Int, Direction4way), Rail>();
+            rails = new Dictionary<(Vector3Int, Direction8way), Rail>();
             tempRails = new List<Rail>();
             placementStartDirection = Direction8way.N;
         }
@@ -74,10 +74,12 @@ namespace TrainWorld.Rail
             return position.x < 0 || position.x > maxWidth || position.z < 0 || position.z > maxHeight;
         }
 
-        internal void PlaceRail(Vector3Int position)
+        internal void PlaceRail(Vector3 position)
         {
+            Vector3Int roundedPosition = Vector3Int.RoundToInt(position);
+
             //해당 위치가 경계 바깥이면 종료 
-            if (IsPositionOutOfBorder(position))
+            if (IsPositionOutOfBorder(roundedPosition))
                 return;
 
             if (placementMode)
@@ -91,12 +93,12 @@ namespace TrainWorld.Rail
             {
                 if (modelUnderCursor == null)
                 {
-                    railGraph.AddVertexAtPosition(position, placementStartDirection);
+                    railGraph.AddVertexAtPosition(roundedPosition, placementStartDirection);
 
-                    InstantiateRailPrefab(position, placementStartDirection);
+                    InstantiateRailPrefab(roundedPosition, placementStartDirection);
 
-                    AddPositionToRailsToFix(position, placementStartDirection);
-                    AddAdjascentPositionsToRailsToFix(position, placementStartDirection);
+                    AddPositionToRailsToFix(roundedPosition, placementStartDirection);
+                    AddAdjascentPositionsToRailsToFix(roundedPosition, placementStartDirection);
 
                     FixRails();
                 }
@@ -109,7 +111,7 @@ namespace TrainWorld.Rail
             }
         }
 
-        public void DestroyRail(Vector3Int position)
+        public void DestroyRail(Vector3 position)
         {
             // if selected position is out of border or empty do nothing
             if (IsPositionOutOfBorder(modelUnderCursor.Position) || isPositionEmpty(modelUnderCursor.Position, modelUnderCursor.Direction))
@@ -120,8 +122,9 @@ namespace TrainWorld.Rail
             AddAdjascentPositionsToRailsToFix(modelUnderCursor.Position, modelUnderCursor.Direction);
             railGraph.DeleteVertexAtPosition(modelUnderCursor.Position, modelUnderCursor.Direction);
 
-            Direction4way direction4 = DirectionHelper.ToDirection4Way(modelUnderCursor.Direction);
-            if (rails.ContainsKey((modelUnderCursor.Position, direction4)))
+            Direction8way direction4 = DirectionHelper.ToDirection4Way(modelUnderCursor.Direction);
+            Direction8way opposite = DirectionHelper.Opposite(direction4);
+            if (rails.ContainsKey((modelUnderCursor.Position, modelUnderCursor.Direction)) || rails.ContainsKey((modelUnderCursor.Position, opposite)))
             {
                 railModelManager.RemoveModelAt(modelUnderCursor.Position, modelUnderCursor.Direction);
                 rails[(modelUnderCursor.Position, direction4)].DestroyMyself();
@@ -158,25 +161,25 @@ namespace TrainWorld.Rail
 
         private void InstantiateRailPrefab(Vector3Int position, Direction8way direction, bool isTemp = false)
         {
-            Direction4way direction4 = DirectionHelper.ToDirection4Way(direction);
+            Direction8way direction4 = DirectionHelper.ToDirection4Way(direction);
             if (isTemp == false)
             {
                 if (rails.ContainsKey((position, direction4)) == false)
                 {
-                    GameObject newObject = Instantiate(railPrefab, position, Quaternion.Euler(DirectionHelper.ToEuler(direction)), railParent) as GameObject;
+                    GameObject newObject = Instantiate(railPrefab, position, Quaternion.Euler(DirectionHelper.ToEuler(direction4)), railParent) as GameObject;
                     Rail newRail = newObject.GetComponent<Rail>();
                     newRail.Init(position, direction4);
                     rails.Add((position, direction4), newRail);
-                    railModelManager.AddModelAt(position, direction, newRail);
+                    railModelManager.AddModelAt(position, direction4, newRail);
                 }
             }
             else
             {
-                GameObject newObject = Instantiate(railPrefab, position, Quaternion.Euler(DirectionHelper.ToEuler(direction)), railParent) as GameObject;
+                GameObject newObject = Instantiate(railPrefab, position, Quaternion.Euler(DirectionHelper.ToEuler(direction4)), railParent) as GameObject;
                 Rail newRail = newObject.GetComponent<Rail>();
                 newRail.Init(position, direction4);
                 tempRails.Add(newRail);
-                railModelManager.AddTempModelAt(position, direction, newRail);
+                railModelManager.AddTempModelAt(position, direction4, newRail);
             }
         }
 
@@ -255,6 +258,7 @@ namespace TrainWorld.Rail
             {
                 railArrowUI.arrow.SetActive(true);
                 railArrowUI.arrow.transform.position = modelUnderCursor.Position;
+
                 railArrowUI.arrow.transform.rotation = Quaternion.Euler(DirectionHelper.ToEuler(modelUnderCursor.Direction));
             }
             else

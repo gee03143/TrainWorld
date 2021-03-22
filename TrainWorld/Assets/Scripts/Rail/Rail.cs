@@ -19,9 +19,9 @@ namespace TrainWorld.Rail
         }
 
         [SerializeField]
-        private Direction4way direction;
+        private Direction8way direction;
 
-        public Direction4way Direction
+        public Direction8way Direction
         {
             get { return direction; }
             private set { direction = value; }
@@ -40,13 +40,15 @@ namespace TrainWorld.Rail
         [SerializeField]
         private TrainStation negativeStation;
 
-        internal void Init(Vector3Int position, Direction4way direction)
+        internal void Init(Vector3Int position, Direction8way direction)
         {
-            this.position = position;
-            this.direction = direction;
+            Direction8way direction4 = DirectionHelper.ToDirection4Way(direction);
 
-            models[0].Init(position, (Direction8way)direction);
-            models[1].Init(position, (Direction8way)(direction + 4));
+            this.position = position;
+            this.direction = direction4;
+
+            models[0].Init(position, direction4);
+            models[1].Init(position, DirectionHelper.Opposite(direction4));
         }
 
         public RailModel GetModel(bool opposite)
