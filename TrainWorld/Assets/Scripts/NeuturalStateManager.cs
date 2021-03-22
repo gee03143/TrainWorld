@@ -9,13 +9,28 @@ namespace TrainWorld
         [SerializeField]
         private LayerMask layerMask;
 
+        [SerializeField]
+        private UiStationData uiStationData;
+
         public void OnClick(Vector3Int position)
         {
             //raycast hit
             ISelectableObject selectableObject = GetObjectFromPointer();
             if (selectableObject != null)
             {
-                selectableObject.ShowMyUI();
+                if (selectableObject.GetSelectableObjectType() == SelectableObjectType.Station)
+                {
+                    uiStationData.SetActive(true);
+                    uiStationData.GetStationReference(selectableObject);
+                }
+                else
+                {
+                    selectableObject.ShowMyUI();
+                }
+            }
+            else
+            {
+                Debug.Log("No Selectable object found");
             }
         }
 
@@ -29,6 +44,11 @@ namespace TrainWorld
                 return hit.rigidbody.gameObject.GetComponent<ISelectableObject>();
             }
             return null;
+        }
+
+        public void CloseUI()
+        {
+            uiStationData?.SetActive(false);
         }
 
         public void OnEnter()

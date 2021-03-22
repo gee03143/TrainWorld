@@ -17,7 +17,5 @@ namespace TrainWorld
         SelectableObjectType GetSelectableObjectType();
 
         void ShowMyUI();
-
-
     }
 }

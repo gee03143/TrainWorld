@@ -19,15 +19,14 @@ namespace TrainWorld.Station
         [SerializeField]
         private GameObject trainPrefab;
 
-        [SerializeField]
-        List<TrainStation> stations;
+        private Dictionary<String, TrainStation> stations;
 
         Rail.Rail railAtCursor;
         Transform placementTargetPos;
 
         void Awake()
         {
-            stations = new List<TrainStation>();
+            stations = new Dictionary<string, TrainStation>();
         }
 
         internal void PlaceStation(Vector3Int position)
@@ -35,8 +34,12 @@ namespace TrainWorld.Station
             if(railAtCursor != null && placementTargetPos != null)
             {
                 TrainStation newStation = railAtCursor.AddStation(stationPrefab, placementTargetPos);
-                if(newStation != null)
-                    stations.Add(newStation);
+                if (newStation != null)
+                {
+                    newStation.StationName = (stations.Count * 555).ToString();
+                    Debug.Log(newStation.StationName);
+                    stations.Add(newStation.StationName, newStation);
+                }
             }
         }
 
@@ -56,17 +59,23 @@ namespace TrainWorld.Station
             }
         }
 
-        internal void RotateCursor()
+        internal bool TryChangeName(string from, string to, TrainStation selectedStation)
         {
-            if(stations.Count >= 2)
+            if (stations.ContainsKey(to) == false)
             {
-                TrainStation depart = stations[0];
-                TrainStation arrival = stations[1];
-                Debug.Log(depart.ToString() + arrival.ToString());
-                List<Vertex> path = RailGraphPathfinder.AStarSearch(depart.Position, depart.Direction, arrival.Position, true, railPlacementManager.railGraph);
-                GameObject train = Instantiate(trainPrefab, depart.Position, Quaternion.Euler(DirectionHelper.ToEuler(depart.Direction))) as GameObject;
-                AiAgent ai = train.GetComponent<AiAgent>();
-                ai.Initialize(path, false);
+                stations.Remove(from);
+                stations.Add(to, selectedStation);
+                return true;
+            }
+            else if (stations.ContainsKey(from) == false)
+            {
+                Debug.Log("No station with name : " + from + " Failure at change name");
+                return false;
+            }
+            else
+            {
+                Debug.Log("station name : " + to + " is already taken");
+                return false;
             }
         }
 

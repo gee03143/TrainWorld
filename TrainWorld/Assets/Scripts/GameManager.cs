@@ -34,7 +34,7 @@ namespace TrainWorld
             uiController.OnStationPlacement += StationButtonHandler;
             uiController.OnTrafficPlacement += TrafficButtonHandler;
             uiController.OnDestruction += DestructionButtonHandler;
-            inputManager.onEscInput += HandleEscape;
+            inputManager.onEscInput = HandleEscape;
             inputManager.onAxisInput += cameraMovement.MoveCamera;
             inputManager.onMouseScroll += cameraMovement.ChangeOrthoSize;
             SwitchHandler(neuturalStateManager);
@@ -43,13 +43,15 @@ namespace TrainWorld
         private void HandleEscape()
         {
             SwitchHandler(neuturalStateManager);
-
+            inputManager.onMouseDown += neuturalStateManager.OnClick;
+            inputManager.onEscInput += neuturalStateManager.CloseUI;
             uiController.ResetButtonColor();
         }
 
-        public void SwitchHandler(InputHandler nextHandler)
+        private void SwitchHandler(InputHandler nextHandler)
         {
             ClearInputActions();
+            neuturalStateManager.CloseUI();
 
             if (currentHandler != nextHandler)
             {
@@ -57,8 +59,6 @@ namespace TrainWorld
                 nextHandler?.OnEnter();
 
                 currentHandler = nextHandler;
-                if (currentHandler == (InputHandler)neuturalStateManager)
-                    inputManager.onMouseDown = neuturalStateManager.OnClick;
             }
         }
 
@@ -67,8 +67,9 @@ namespace TrainWorld
             inputManager.onMouseDown = null;
             inputManager.onMouseMove = null;
             inputManager.onRInput = null;
+            inputManager.onEscInput = HandleEscape;
         }
-
+         
         void RailButtonHandler()
         {
             SwitchHandler(railPlacementManager);
@@ -83,7 +84,6 @@ namespace TrainWorld
 
             inputManager.onMouseDown += stationPlacementManager.PlaceStation;
             inputManager.onMouseMove += stationPlacementManager.MoveCursor;
-            inputManager.onRInput += stationPlacementManager.RotateCursor;
         }
 
         void TrafficButtonHandler()

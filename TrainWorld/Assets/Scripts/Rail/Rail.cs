@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using TrainWorld.Station;
+using System;
 
 namespace TrainWorld.Rail
 {
@@ -123,7 +124,7 @@ namespace TrainWorld.Rail
                     negativeStation = station;
                     station.Position = Vector3Int.RoundToInt(this.position);
 
-                    station.Direction = (Direction8way)this.Direction;
+                    station.Direction = (Direction8way)this.Direction + 4;
 
                     return station;
                 }
