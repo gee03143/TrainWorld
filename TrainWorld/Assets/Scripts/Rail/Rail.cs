@@ -4,6 +4,7 @@ using UnityEngine;
 
 using TrainWorld.Station;
 using System;
+using System.Linq;
 
 namespace TrainWorld.Rail
 {
@@ -27,8 +28,10 @@ namespace TrainWorld.Rail
             private set { direction = value; }
         }
 
+        private HashSet<(Vector3Int, Direction8way)> neighbourPositions;
+
         [SerializeField]
-        private List<RailModel> models;
+        private RailModel railModel;
 
         [SerializeField]
         private Transform positiveStationTransform;
@@ -42,21 +45,44 @@ namespace TrainWorld.Rail
 
         internal void Init(Vector3Int position, Direction8way direction)
         {
-            Direction8way direction4 = DirectionHelper.ToDirection4Way(direction);
-
             this.position = position;
-            this.direction = direction4;
+            this.direction = direction;
+            neighbourPositions = new HashSet<(Vector3Int, Direction8way)>();
 
-            models[0].Init(position, direction4);
-            models[1].Init(position, DirectionHelper.Opposite(direction4));
+            railModel.Init(position, direction);
+        }
+
+        public (Vector3Int, Direction8way) GetPosAndDirection()
+        {
+            return (Position, Direction);
+        }
+
+        public List<(Vector3Int, Direction8way)> GetNeighbourTuples()
+        {
+            return neighbourPositions.ToList();
+        }
+
+        public void RemoveNeighbourAt((Vector3Int, Direction8way) pos)
+        {
+            neighbourPositions.Remove(pos);
+        }
+
+        public void AddNeighbour((Vector3Int, Direction8way) neighbourPosition)
+        {
+            if(neighbourPositions.Contains(neighbourPosition) == false)
+            {
+                neighbourPositions.Add(neighbourPosition);
+            }            
+        }
+
+        public void AddNeighbours(List<(Vector3Int, Direction8way)> neighbourPositions)
+        {
+            neighbourPositions.Union(neighbourPositions);
         }
 
         public RailModel GetModel(bool opposite)
         {
-            if (opposite)
-                return models[1];
-            else
-                return models[0];
+            return railModel;
         }
 
         public Transform GetClosestTrainSocket(Vector3 position)
@@ -141,9 +167,28 @@ namespace TrainWorld.Rail
             }
         }
 
+        public void FixMyModel()
+        {
+            railModel.FixModel(neighbourPositions.ToList());
+        }
+
         public void DestroyMyself()
         {
+            neighbourPositions.Clear();
             Destroy(gameObject);
+        }
+
+        void OnDrawGizmosSelected()
+        {
+            Debug.Log(neighbourPositions.Count);
+            foreach (var neighbour in neighbourPositions)
+            {
+                if (this.Direction == Direction8way.N || this.Direction == Direction8way.NW ||
+                    this.Direction == Direction8way.NE || this.Direction == Direction8way.E)
+                    Debug.DrawLine(neighbour.Item1, this.Position, Color.red);
+                else
+                    Debug.DrawLine(neighbour.Item1, this.Position, Color.blue);
+            }
         }
     }
 }

@@ -29,9 +29,9 @@ namespace TrainWorld.Rail
         }
 
         [SerializeField]
-        private List<Vertex> neighbours;
+        private List<(Vector3Int, Direction8way)> neighbours;
 
-        public void FixModel(List<Vertex> neighbours)
+        public void FixModel(List<(Vector3Int, Direction8way)> neighbours)
         {
             DestroyAllChild();
 
@@ -43,9 +43,9 @@ namespace TrainWorld.Rail
             Vector3Int rightCandidatePos = frontCandidatePos + DirectionHelper.ToDirectionalVector(DirectionHelper.Next(direction));
 
             bool railCreated = false;
-            foreach (Vertex neighbour in neighbours)
+            foreach ((Vector3Int, Direction8way) neighbour in neighbours)
             {
-                if (Vector3Int.RoundToInt(neighbour.Position).Equals(leftCandidatePos))
+                if (neighbour.Item1.Equals(leftCandidatePos))
                 {
                     railCreated = true;
                     if (DirectionHelper.IsDiagonal(direction)) // if direction is diagonal
@@ -57,7 +57,7 @@ namespace TrainWorld.Rail
                         RailFactory.SpawnRail(RailType.Corner_Left, position, direction, transform);
                     }
                 }
-                else if (Vector3Int.RoundToInt(neighbour.Position).Equals(rightCandidatePos))
+                else if (neighbour.Item1.Equals(rightCandidatePos))
                 {
                     railCreated = true;
                     if (DirectionHelper.IsDiagonal(direction)) // if direction is diagonal
@@ -69,7 +69,7 @@ namespace TrainWorld.Rail
                         RailFactory.SpawnRail(RailType.Corner_Right, position, direction, transform);
                     }
                 }
-                else if (Vector3Int.RoundToInt(neighbour.Position).Equals(frontCandidatePos))
+                else if (neighbour.Item1.Equals(frontCandidatePos))
                 {
                     railCreated = true;
                     if (DirectionHelper.IsDiagonal(direction))// if direction is diagonal
@@ -102,7 +102,7 @@ namespace TrainWorld.Rail
         {
             this.position = position;
             this.direction = direction;
-            this.neighbours = new List<Vertex>();
+            this.neighbours = new List<(Vector3Int, Direction8way)>();
         }
 
         private void DestroyAllChild()
@@ -124,18 +124,6 @@ namespace TrainWorld.Rail
         public override string ToString()
         {
             return position.ToString() + " " + direction.ToString();
-        }
-
-        void OnDrawGizmosSelected()
-        {
-            foreach (var neighbour in neighbours)
-            {
-                if (this.Direction == Direction8way.N || this.Direction == Direction8way.NW ||
-                    this.Direction == Direction8way.NE || this.Direction == Direction8way.E)
-                    Debug.DrawLine(neighbour.Position, this.Position, Color.red);
-                else
-                    Debug.DrawLine(neighbour.Position, this.Position, Color.blue);
-            }
         }
 
         public SelectableObjectType GetSelectableObjectType()

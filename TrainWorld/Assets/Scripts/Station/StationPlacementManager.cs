@@ -86,11 +86,6 @@ namespace TrainWorld.Station
             }
         }
 
-        public RailGraph GetRailGraph()
-        {
-            return railPlacementManager.railGraph;
-        }
-
         public void OnEnter()
         {
             Debug.Log("Station Placement Exit");

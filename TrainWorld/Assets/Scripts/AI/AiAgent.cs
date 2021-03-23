@@ -43,14 +43,18 @@ namespace TrainWorld.AI
             }
         }
 
+        /*
         internal void ChangeDestination(TrainStation dest1, TrainStation dest2, RailGraph railGraph)
         {
+ 
             Debug.Log("change destination called");
             path = RailGraphPathfinder.AStarSearch(dest1.Position, dest1.Direction, dest2.Position, true, railGraph);
             path.AddRange(RailGraphPathfinder.AStarSearch(dest2.Position, dest2.Direction, dest1.Position, true, railGraph));
             currentTarget = path[0];
             move = true;
+
         }
+        */
 
         Rigidbody rb;
 

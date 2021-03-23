@@ -31,6 +31,7 @@ namespace TrainWorld
 
         private void ChangeDestinationHandler()
         {
+            /*
             TrainStation dest1 = stationPlacementManager.GetStationOfName(destination1.options[destination1.value].text);
             TrainStation dest2 = stationPlacementManager.GetStationOfName(destination2.options[destination2.value].text);
 
@@ -43,6 +44,7 @@ namespace TrainWorld
             {
                 Debug.Log("dest2 is null" + destination2.options[destination2.value].text);
             }
+            */
         }
 
         public void SetSelectedAi(ISelectableObject selected)
