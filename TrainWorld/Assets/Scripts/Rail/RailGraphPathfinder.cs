@@ -13,7 +13,8 @@ namespace TrainWorld.Rail
     {
         private static (Vector3Int, Direction8way) nullVertex = (Vector3Int.zero, Direction8way.DIRECTION_COUNT);
 
-        internal static List<(Vector3Int, Direction8way)> AStarSearch(Vector3Int placementStartPosition, Direction8way placementStartDirection, Vector3Int endPosition, bool isAgent = false, Dictionary<(Vector3Int, Direction8way), Rail> railGraph = null)
+        internal static List<(Vector3Int, Direction8way)> AStarSearch(Vector3Int placementStartPosition, Direction8way placementStartDirection,
+            Vector3Int endPosition, Direction8way endDirection = Direction8way.DIRECTION_COUNT, bool isAgent = false, Dictionary<(Vector3Int, Direction8way), Rail> railGraph = null)
         {
             // isAgent가 true 일 경우 Adjascent 알고리즘을 다른 걸 사용해야 함
             // agent는 이미 설치된 레일로만 이동함, agent가 아니라 레일 설치에 사용되는 경우 설치되지 않은 칸을 사용함
@@ -33,7 +34,7 @@ namespace TrainWorld.Rail
             {
                 (Vector3Int, Direction8way) current = GetClosestVertex(positionsTocheck, priorityDictionary);
                 positionsTocheck.Remove(current);
-                if (current.Item1.Equals(endPosition))
+                if (current.Item1.Equals(endPosition) && (current.Item2.Equals(endDirection) || isAgent == false))
                 {
                     path = GeneratePath(parentsDictionary, current);
                     return path;
@@ -93,23 +94,7 @@ namespace TrainWorld.Rail
         private static List<(Vector3Int, Direction8way)> GetNeighbourCells((Vector3Int, Direction8way) current, 
             Dictionary<(Vector3Int, Direction8way), Rail> railGraph)
         {
-            List<(Vector3Int, Direction8way)> neighbourCells = new List<(Vector3Int, Direction8way)>();
-
-            Vector3Int front = DirectionHelper.ToDirectionalVector(current.Item2);
-            Vector3Int left = DirectionHelper.ToDirectionalVector(DirectionHelper.Prev(current.Item2));
-            Vector3Int right = DirectionHelper.ToDirectionalVector(DirectionHelper.Next(current.Item2));
-
-            (Vector3Int, Direction8way) frontVertex = railGraph[(current.Item1 + front, current.Item2)].GetPosAndDirection();
-            if (frontVertex != nullVertex)
-                neighbourCells.Add(frontVertex);
-            (Vector3Int, Direction8way) leftVertex = railGraph[(current.Item1 + front + left, current.Item2)].GetPosAndDirection();
-            if (leftVertex != nullVertex)
-                neighbourCells.Add(leftVertex);
-            (Vector3Int, Direction8way) rightVertex = railGraph[(current.Item1 + front + right, current.Item2)].GetPosAndDirection();
-            if (rightVertex != nullVertex)
-                neighbourCells.Add(rightVertex);
-
-            return neighbourCells;
+            return railGraph[current].GetNeighbourTuples();
         }
 
         private static List<(Vector3Int, Direction8way)> GeneratePath(Dictionary<(Vector3Int, Direction8way),

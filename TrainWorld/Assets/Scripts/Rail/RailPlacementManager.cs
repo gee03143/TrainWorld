@@ -51,6 +51,11 @@ namespace TrainWorld.Rail
             placementStartDirection = Direction8way.N;
         }
 
+        public Dictionary<(Vector3Int, Direction8way), Rail> GetRails()
+        {
+            return rails;
+        }
+
         internal List<Rail> GetRailsAtPosition(Vector3Int position)
         {
             List<Rail> railsAtPosition = rails.Where(x => position == x.Key.Item1).Select(x => x.Value).ToList();
@@ -259,31 +264,44 @@ namespace TrainWorld.Rail
             }
         }
 
-        public Rail GetRailViaMousePosition(Vector3 mousePosition)
+        public Rail GetRailViaMousePosition(Vector3 mousePosition, bool findByTrafficSocket = false)
         {
-            Vector3Int roundedPosition = Vector3Int.RoundToInt(mousePosition);
-            List<(Vector3Int, Direction8way)> modelsAtPosition = rails.Keys.Where(x => roundedPosition == x.Item1).ToList();
+            // railModel 의 위치를 기준으로 찾는 방법과 trafficsocket의 위치를 기준으로 찾는 두 가지 모드 존재
 
-            if (modelsAtPosition.Count > 0)
+            Vector3Int roundedPosition = Vector3Int.RoundToInt(mousePosition);
+            List<Rail> railsAtPosition = rails.Values.Where(x => roundedPosition == x.Position).ToList();
+
+            if (railsAtPosition.Count > 0)
             {
-                Direction8way nearestDirection = modelsAtPosition[0].Item2;
-                float shortestDistance = Vector3.Distance(modelsAtPosition[0].Item1 + Vector3.Normalize(DirectionHelper.ToDirectionalVector(modelsAtPosition[0].Item2)),
-                    mousePosition);
-                foreach (var model in modelsAtPosition)
+                if (findByTrafficSocket)
                 {
-                    float newDistance = Vector3.Distance(model.Item1 + Vector3.Normalize(DirectionHelper.ToDirectionalVector(model.Item2)), mousePosition);
-                    if (shortestDistance > newDistance)
-                    {
-                        shortestDistance = newDistance;
-                        nearestDirection = model.Item2;
-                    }
+                    if(railsAtPosition.Count != 2)
+                        return null;
+                    if (Vector3.Distance(railsAtPosition[0].trafficSocketTransform.position, mousePosition) >
+                        Vector3.Distance(railsAtPosition[1].trafficSocketTransform.position, mousePosition))
+                        return railsAtPosition[1];
+                    else
+                        return railsAtPosition[0];
                 }
-                return rails[(roundedPosition, nearestDirection)];
+                else
+                {
+                    Direction8way nearestDirection = railsAtPosition[0].Direction;
+                    float shortestDistance = Vector3.Distance(railsAtPosition[0].Position + Vector3.Normalize(DirectionHelper.ToDirectionalVector(railsAtPosition[0].Direction)),
+                        mousePosition);
+                    foreach (var model in railsAtPosition)
+                    {
+                        float newDistance = Vector3.Distance(model.Position + Vector3.Normalize(DirectionHelper.ToDirectionalVector(model.Direction)),
+                            mousePosition);
+                        if (shortestDistance > newDistance)
+                        {
+                            shortestDistance = newDistance;
+                            nearestDirection = model.Direction;
+                        }
+                    }
+                    return rails[(roundedPosition, nearestDirection)];
+                }
             }
-            else
-            {
-                return null;
-            }
+            return null;
         }
 
         internal void MoveCursorAtDestruction(Vector3 cursorPosition)
@@ -336,6 +354,11 @@ namespace TrainWorld.Rail
                 tempRailVertices.Add((placementStartPosition, placementStartDirection));
                 CreateTempRailModel();
             }
+        }
+
+        internal List<(Vector3Int, Direction8way)> GetRailPath(Vector3Int startPosition, Direction8way startDirection, Vector3Int endPosition, Direction8way endDirection)
+        {
+            return RailGraphPathfinder.AStarSearch(startPosition, startDirection, endPosition, endDirection, true, rails);
         }
 
         internal void RailPlacementEnter()

@@ -87,6 +87,7 @@ namespace TrainWorld
             SwitchHandler(stationPlacementManager);
 
             inputManager.onMouseDown += stationPlacementManager.PlaceStation;
+            inputManager.onMouseMove += stationPlacementManager.MoveCursor;
         }
 
         private void TrafficButtonHandler()

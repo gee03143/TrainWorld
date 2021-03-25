@@ -9,7 +9,6 @@ namespace TrainWorld.AI
 {
     public class TrainPlacementManager : MonoBehaviour, InputHandler
     {
-
         [SerializeField]
         private RailPlacementManager railPlacementManager;
 
@@ -18,21 +17,23 @@ namespace TrainWorld.AI
 
         Rail.Rail railAtCursor;
 
+
         internal void PlaceTrain(Vector3 mousePosition)
         {
             List<Rail.Rail> rails = railPlacementManager.GetRailsAtPosition(Vector3Int.RoundToInt(mousePosition));
-            if (rails.Count != 1)
+            if (rails.Count != 2)
             {
                 return;
             }
             else
             {
-                railAtCursor = rails[0];
+                railAtCursor = railPlacementManager.GetRailViaMousePosition(mousePosition);
 
                 GameObject newObject = Instantiate(trainPrefab, railAtCursor.Position,
                     Quaternion.Euler(DirectionHelper.ToEuler(railAtCursor.Direction)));
 
                 AiAgent newAgent = newObject.GetComponent<AiAgent>();
+                newAgent.Init(railAtCursor.Position, railAtCursor.Direction, railPlacementManager);
 
             }
         }

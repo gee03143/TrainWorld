@@ -8,7 +8,7 @@ using TrainWorld.Station;
 namespace TrainWorld.Rail
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class RailModel : MonoBehaviour, ISelectableObject
+    public class RailModel : MonoBehaviour
     {
         [SerializeField]
         private Vector3Int position;
@@ -119,21 +119,6 @@ namespace TrainWorld.Rail
         {
             DestroyAllChild();
             Destroy(gameObject);
-        }
-
-        public override string ToString()
-        {
-            return position.ToString() + " " + direction.ToString();
-        }
-
-        public SelectableObjectType GetSelectableObjectType()
-        {
-            return SelectableObjectType.Rail;
-        }
-
-        public void ShowMyUI()
-        {
-            Debug.Log(this.ToString());
         }
     }
 }

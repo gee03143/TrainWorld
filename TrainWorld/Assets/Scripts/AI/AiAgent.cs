@@ -13,7 +13,26 @@ namespace TrainWorld.AI
     [RequireComponent(typeof(Rigidbody))]
     public class AiAgent : MonoBehaviour, ISelectableObject
     {
+        [SerializeField]
+        private Vector3Int position;
+
+        public Vector3Int Position
+        {
+            get { return position; }
+            private set { position = value; }
+        }
+
+        [SerializeField]
+        private Direction8way direction;
+
+        public Direction8way Direction
+        {
+            get { return direction; }
+            private set { direction = value; }
+        }
+
         public event Action OnDeath;
+        Rigidbody rb;
 
         [SerializeField]
         private float speed = 1.0f;
@@ -25,10 +44,6 @@ namespace TrainWorld.AI
         private bool move;
 
         private bool stop;
-
-        List<Vertex> path;
-        int currentIndex;
-        Vertex currentTarget;
 
         public bool Stop
         {
@@ -43,26 +58,56 @@ namespace TrainWorld.AI
             }
         }
 
-        /*
-        internal void ChangeDestination(TrainStation dest1, TrainStation dest2, RailGraph railGraph)
+        private RailPlacementManager railPlacementManager;
+
+        List<TrainStation> trainStationsInSchedule;
+        int stationIndex;
+
+        List<(Vector3Int, Direction8way)> path;
+
+        int pathIndex;
+        (Vector3Int, Direction8way) currentTarget;
+
+        internal void Init(Vector3Int position, Direction8way direction, RailPlacementManager railPlacementManager)
         {
- 
-            Debug.Log("change destination called");
-            path = RailGraphPathfinder.AStarSearch(dest1.Position, dest1.Direction, dest2.Position, true, railGraph);
-            path.AddRange(RailGraphPathfinder.AStarSearch(dest2.Position, dest2.Direction, dest1.Position, true, railGraph));
-            currentTarget = path[0];
-            move = true;
-
+            this.position = position;
+            this.direction = direction;
+            this.railPlacementManager = railPlacementManager;
         }
-        */
 
-        Rigidbody rb;
+        public void SetUpSchedule(List<TrainStation> schedule)
+        {
+            pathIndex = 0;
+            stationIndex = 0;
+            trainStationsInSchedule = schedule;
+            move = true;
+            if(trainStationsInSchedule.Count > 1)
+            {
+                SetUpPath(stationIndex);
+            }
+        }
+
+        private void SetUpPath(int nextStationIndex)
+        {
+            Debug.Log(this.Position.ToString() + this.direction.ToString());
+            Debug.Log(trainStationsInSchedule[stationIndex].Position.ToString() + trainStationsInSchedule[stationIndex].Direction.ToString());
+            path = railPlacementManager.GetRailPath(this.position, this.direction, 
+                trainStationsInSchedule[stationIndex].Position, trainStationsInSchedule[stationIndex].Direction);
+            if(path == null)
+            {
+                Debug.Log("No Path");
+            }
+            pathIndex = 0;
+            currentTarget = path[pathIndex];
+        }
 
         private void Awake()
         {
             rb = GetComponent<Rigidbody>();
-            path = new List<Vertex>();
-            currentIndex = 0;
+            path = new List<(Vector3Int, Direction8way)>();
+            trainStationsInSchedule = new List<TrainStation>();
+            stationIndex = 0;
+            pathIndex = 0;
         }
 
         private void Update()
@@ -75,26 +120,26 @@ namespace TrainWorld.AI
 
         private void TimeStepping()
         {
-            if(path.Count > currentIndex)
+            if(path.Count > pathIndex)
             {
                 float remainingDistance = MoveAgent();
                 if(remainingDistance < 0.1f)
                 {
+                    this.Position = currentTarget.Item1;
+                    this.Direction = currentTarget.Item2;
                     // step to next position
-                    currentIndex++;
-                    if(currentIndex >= path.Count)
+                    pathIndex++;
+                    if(pathIndex >= path.Count)
                     {
-                        if (loop)
-                        {
-                            currentIndex = 0;
-                        }
-                        else
-                        {
-                            move = false;
-                            return;
-                        }
+                        //search new path
+                        int nextStationIndex = (stationIndex + 1) % trainStationsInSchedule.Count;
+                        Debug.Log(trainStationsInSchedule.Count);
+                        move = false;
+                        SetUpPath(nextStationIndex);
+                        move = true;
+                        stationIndex = nextStationIndex;
                     }
-                    currentTarget = path[currentIndex];
+                    currentTarget = path[pathIndex];
                 }
             }
         }
@@ -102,12 +147,24 @@ namespace TrainWorld.AI
         private float MoveAgent()
         {
             float step = speed * Time.deltaTime;
-            transform.position = Vector3.MoveTowards(transform.position, currentTarget.Position, step);
+            transform.position = Vector3.MoveTowards(transform.position, currentTarget.Item1, step);
             rb.velocity = transform.forward * speed;
 
-            Vector3 lookDirection = currentTarget.Position - transform.position;
+            Vector3 lookDirection = currentTarget.Item1 - transform.position;
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookDirection), Time.deltaTime * rotationSpeed);
-            return Vector3.Distance(transform.position, currentTarget.Position);
+            return Vector3.Distance(transform.position, currentTarget.Item1);
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            if (path == null)
+                return;
+
+            for (int i = 0; i < path.Count - 1; i++)
+            {
+                Debug.DrawLine(path[i].Item1 + new Vector3(0,1,0), path[i + 1].Item1 + new Vector3(0, 1, 0), Color.red);
+            }
+
         }
 
         private void OnDestroy()

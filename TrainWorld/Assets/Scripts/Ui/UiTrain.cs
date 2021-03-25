@@ -22,6 +22,9 @@ namespace TrainWorld
         [SerializeField]
         Button changeDestinationButton;
 
+        [SerializeField]
+        private PathVisualizer pathVisualizer;
+
         AiAgent selectedAi;
 
         private void Awake()
@@ -31,20 +34,21 @@ namespace TrainWorld
 
         private void ChangeDestinationHandler()
         {
-            /*
             TrainStation dest1 = stationPlacementManager.GetStationOfName(destination1.options[destination1.value].text);
             TrainStation dest2 = stationPlacementManager.GetStationOfName(destination2.options[destination2.value].text);
 
             if (selectedAi != null && dest1 != null && dest2 != null)
-                selectedAi.ChangeDestination(dest1, dest2, stationPlacementManager.GetRailGraph());
+            {
+                selectedAi.SetUpSchedule(new List<TrainStation> { dest1, dest2 });
+            }
             else if (dest1 == null)
             {
                 Debug.Log("dest1 is null" + destination1.options[destination1.value].text);
-            }else if(dest2 == null)
+            }
+            else if (dest2 == null)
             {
                 Debug.Log("dest2 is null" + destination2.options[destination2.value].text);
             }
-            */
         }
 
         public void SetSelectedAi(ISelectableObject selected)

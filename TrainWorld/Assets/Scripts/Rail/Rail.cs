@@ -8,7 +8,8 @@ using System.Linq;
 
 namespace TrainWorld.Rail
 {
-    public class Rail : MonoBehaviour
+    [RequireComponent(typeof(Rigidbody))]
+    public class Rail : MonoBehaviour, ISelectableObject
     {
         [SerializeField]
         private Vector3Int position;
@@ -25,7 +26,9 @@ namespace TrainWorld.Rail
         public Direction8way Direction
         {
             get { return direction; }
-            private set { direction = value; }
+            private set { 
+                direction = value; 
+            }
         }
 
         private HashSet<(Vector3Int, Direction8way)> neighbourPositions;
@@ -34,14 +37,10 @@ namespace TrainWorld.Rail
         private RailModel railModel;
 
         [SerializeField]
-        private Transform positiveStationTransform;
-        [SerializeField]
-        private Transform negativeStationTransform;
+        public Transform trafficSocketTransform;
 
         [SerializeField]
-        private TrainStation positiveStation;
-        [SerializeField]
-        private TrainStation negativeStation;
+        private TrafficSocket trafficSocket;
 
         internal void Init(Vector3Int position, Direction8way direction)
         {
@@ -80,92 +79,25 @@ namespace TrainWorld.Rail
             neighbourPositions.Union(neighbourPositions);
         }
 
-        public RailModel GetModel(bool opposite)
+        public bool IsTrafficSocketEmpty()
         {
-            return railModel;
+            return trafficSocket.Type == TrafficSocketType.Empty;
         }
 
-        public Transform GetClosestTrainSocket(Vector3 position)
+        internal TrainStation AddStation(string name)
         {
-            float positiveDistance = Vector3.Distance(position, positiveStationTransform.position);
-            float negativeDistance = Vector3.Distance(position, negativeStationTransform.position);
-            if (positiveDistance < negativeDistance)
-            {
-                if (positiveStation == null)
-                {
-                    return positiveStationTransform;
-                }
-                else if(negativeStation == null)
-                {
-                    return negativeStationTransform;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            else
-            {
-                if (negativeStation == null)
-                {
-                    return negativeStationTransform;
-                }
-                else if (positiveStation == null)
-                {
-                    return positiveStationTransform;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-
+            trafficSocket.Type = TrafficSocketType.Station;
+            TrainStation station = trafficSocket.GetStation();
+            station.Init(this.Position, this.Direction, name);
+            return trafficSocket.GetStation();
         }
 
-        internal TrainStation AddStation(GameObject stationPrefab, Transform placementPosition)
+        public TrainStation AddTempStation()
         {
-            if(positiveStationTransform == placementPosition)
-            {
-                if(positiveStation == null)
-                {
-                    GameObject obj = Instantiate(stationPrefab, placementPosition.position,
-                    Quaternion.identity) as GameObject;
-                    TrainStation station = obj.GetComponent<TrainStation>();
-                    positiveStation = station;
-                    station.Position = Vector3Int.RoundToInt(this.position);
-
-                    station.Direction = (Direction8way)this.Direction;
-
-                    return station;
-                }
-                else
-                {
-                    return null;
-                }
-            }else if(negativeStationTransform == placementPosition)
-            {
-                if(negativeStation == null)
-                {
-                    GameObject obj = Instantiate(stationPrefab, placementPosition.position,
-                    Quaternion.identity) as GameObject;
-                    TrainStation station = obj.GetComponent<TrainStation>();
-                    negativeStation = station;
-                    station.Position = Vector3Int.RoundToInt(this.position);
-
-                    station.Direction = (Direction8way)this.Direction + 4;
-
-                    return station;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            else
-            {
-                return null;
-            }
+            trafficSocket.SetMyGameObject(TrafficSocketType.Station);
+            return trafficSocket.GetStation();
         }
+
 
         public void FixMyModel()
         {
@@ -180,7 +112,6 @@ namespace TrainWorld.Rail
 
         void OnDrawGizmosSelected()
         {
-            Debug.Log(neighbourPositions.Count);
             foreach (var neighbour in neighbourPositions)
             {
                 if (this.Direction == Direction8way.N || this.Direction == Direction8way.NW ||
@@ -189,6 +120,21 @@ namespace TrainWorld.Rail
                 else
                     Debug.DrawLine(neighbour.Item1, this.Position, Color.blue);
             }
+        }
+
+        public SelectableObjectType GetSelectableObjectType()
+        {
+            return SelectableObjectType.Rail;
+        }
+
+        public override string ToString()
+        {
+            return position.ToString() + " " + direction.ToString();
+        }
+
+        public void ShowMyUI()
+        {
+            Debug.Log(this.ToString());
         }
     }
 }
