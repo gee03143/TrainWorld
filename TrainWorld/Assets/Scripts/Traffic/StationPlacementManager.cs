@@ -25,7 +25,12 @@ namespace TrainWorld.Station
             stations = new Dictionary<string, TrainStation>();
         }
 
-        internal void PlaceStation(Vector3 mousePosition)
+        public void OnMouseDown(Vector3 mousePosition)
+        {
+            PlaceStation(mousePosition);
+        }
+
+        private void PlaceStation(Vector3 mousePosition)
         {
             ClearTempStations();
             Rail.Rail railAtCursor = railPlacementManager.GetRailViaMousePosition(mousePosition, true);
@@ -36,9 +41,14 @@ namespace TrainWorld.Station
                 if (newStation != null)
                 {
                     stations.Add(newStation.StationName, newStation);
-                    uiTrain.SetUpDropdown(stations.Keys.ToList());
+                    uiTrain.SetStationNameList(stations.Keys.ToList());
                 }
             }
+        }
+
+        public void OnMouseMove(Vector3 mousePosition)
+        {
+            MoveCursor(mousePosition);
         }
 
         public void MoveCursor(Vector3 mousePosition)
@@ -59,7 +69,37 @@ namespace TrainWorld.Station
             tempStation = null;
         }
 
-        internal TrainStation GetStationOfName(string name)
+        public void OnRInput()
+        {
+            //throw new NotImplementedException();
+        }
+
+        public void SetDestinationToAgent(List<string> stationNames, AiAgent target)
+        {
+            List<TrainStation> stations = new List<TrainStation>();
+            foreach (string name in stationNames)
+            {
+                TrainStation station = GetStationOfName(name);
+                if (station != null)
+                    stations.Add(station);
+                else
+                {
+                    Debug.Log("station with this name is null" + name);
+                    return;
+                }
+            }
+
+            if (target == null)
+            {
+                Debug.Log("Target Agent is null");
+                return;
+            }
+
+            target.SetUpSchedule(stations);
+
+        }
+
+        private TrainStation GetStationOfName(string name)
         {
             if (stations.ContainsKey(name))
             {
@@ -75,7 +115,7 @@ namespace TrainWorld.Station
             {
                 stations.Remove(from);
                 stations.Add(to, selectedStation);
-                uiTrain.SetUpDropdown(stations.Keys.ToList());
+                uiTrain.SetStationNameList(stations.Keys.ToList());
                 return true;
             }
             else if (stations.ContainsKey(from) == false)

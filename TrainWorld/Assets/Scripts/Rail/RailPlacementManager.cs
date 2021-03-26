@@ -31,7 +31,7 @@ namespace TrainWorld.Rail
 
         private HashSet<(Vector3Int, Direction8way)> railsToFix;
 
-        private List<(Vector3Int, Direction8way)> tempRailVertices;
+        private List<(Vector3Int, Direction8way)> tempRailPositions;
 
         private Dictionary<(Vector3Int, Direction8way), Rail> rails;
         private Dictionary<(Vector3Int, Direction8way), Rail> tempRails;
@@ -45,7 +45,7 @@ namespace TrainWorld.Rail
         private void Awake()
         {
             railsToFix = new HashSet<(Vector3Int, Direction8way)>();
-            tempRailVertices = new List<(Vector3Int, Direction8way)>();
+            tempRailPositions = new List<(Vector3Int, Direction8way)>();
             rails = new Dictionary<(Vector3Int, Direction8way), Rail>();
             tempRails = new Dictionary<(Vector3Int, Direction8way), Rail>();
             placementStartDirection = Direction8way.N;
@@ -73,7 +73,12 @@ namespace TrainWorld.Rail
             return position.x < 0 || position.x > maxWidth || position.z < 0 || position.z > maxHeight;
         }
 
-        internal void PlaceRail(Vector3 position)
+        public void OnMouseDown(Vector3 mousePosition)
+        {
+            PlaceRail(mousePosition);
+        }
+
+        private void PlaceRail(Vector3 position)
         {
             Vector3Int roundedPosition = Vector3Int.RoundToInt(position);
 
@@ -81,18 +86,17 @@ namespace TrainWorld.Rail
             if (IsPositionOutOfBorder(roundedPosition))
                 return;
 
-            if (placementMode)
+            if (placementMode)  //  confirm rail placement, place rail at temp rail positions
             {
-                CreateRailAtTempRailVertices();
+                CreateRailAtTempRailPositions();
                 RemoveTempRails();
-                tempRailVertices.Clear();
+                tempRailPositions.Clear();
                 placementMode = false;
             }
             else
             {
                 if (railUnderCursor == null)
                 {
-
                     InstantiateRailPrefab((roundedPosition, placementStartDirection));
                     InstantiateRailPrefab((roundedPosition, DirectionHelper.Opposite(placementStartDirection)));
 
@@ -110,42 +114,10 @@ namespace TrainWorld.Rail
             }
         }
 
-        public void DestroyRail(Vector3 position)
-        {
-            (Vector3Int, Direction8way) cursorPos = (railUnderCursor.Position, railUnderCursor.Direction);
-            (Vector3Int, Direction8way) opposite = (railUnderCursor.Position, DirectionHelper.Opposite(railUnderCursor.Direction));
-
-            // if selected position is out of border or empty do nothing
-            if (IsPositionOutOfBorder(railUnderCursor.Position) || isPositionEmpty(railUnderCursor.Position, railUnderCursor.Direction))
-                return;
-
-            AddAdjascentPositionsToRailsToFix(railUnderCursor.Position, railUnderCursor.Direction);
-
-
-            if (rails.ContainsKey(cursorPos) || rails.ContainsKey(opposite))
-            {
-                foreach (var neighbour in rails[cursorPos].GetNeighbourTuples())
-                {
-                    rails[(neighbour.Item1, DirectionHelper.Opposite(neighbour.Item2))].RemoveNeighbourAt(opposite);
-                }
-
-                foreach (var neighbour in rails[opposite].GetNeighbourTuples())
-                {
-                    rails[(neighbour.Item1, DirectionHelper.Opposite(neighbour.Item2))].RemoveNeighbourAt(cursorPos);
-                }
-                rails[cursorPos].DestroyMyself();
-                rails.Remove(cursorPos);
-                rails[opposite].DestroyMyself();
-                rails.Remove(opposite);
-            }
-
-            FixRails();
-        }
-
-        private void CreateRailAtTempRailVertices()
+        private void CreateRailAtTempRailPositions()
         {
             (Vector3Int, Direction8way) lastTuple = (Vector3Int.zero, Direction8way.DIRECTION_COUNT);
-            foreach (var pos in tempRailVertices)
+            foreach (var pos in tempRailPositions)
             {
                 if (lastTuple != (Vector3Int.zero, Direction8way.DIRECTION_COUNT))
                     AddRailAt(lastTuple, pos);
@@ -198,7 +170,7 @@ namespace TrainWorld.Rail
                 newRail.Init(position.Item1, position.Item2);
                 tempRails.Add(position, newRail);
 
-                newRail.AddNeighbours(tempRailVertices);
+                newRail.AddNeighbours(tempRailPositions);
             }
         }
 
@@ -234,7 +206,12 @@ namespace TrainWorld.Rail
             tempRails.Clear();
         }
 
-        internal void MoveCursorAtRailPlacement(Vector3 cursorPosition)
+        public void OnMouseMove(Vector3 mousePosition)
+        {
+            MoveCursorAtRailPlacement(mousePosition);
+        }
+
+        private void MoveCursorAtRailPlacement(Vector3 cursorPosition)
         {
             Vector3Int roundedPosition = Vector3Int.RoundToInt(cursorPosition);
             railUnderCursor = GetRailViaMousePosition(cursorPosition);
@@ -243,8 +220,8 @@ namespace TrainWorld.Rail
             {
                 //clear temp rails
                 RemoveTempRails();
-                tempRailVertices.Clear();
-                tempRailVertices = RailGraphPathfinder.AStarSearch(placementStartPosition, placementStartDirection, roundedPosition);
+                tempRailPositions.Clear();
+                tempRailPositions = RailGraphPathfinder.AStarSearch(placementStartPosition, placementStartDirection, roundedPosition);
 
                 //place temp rails
                 CreateTempRailModel();
@@ -254,10 +231,10 @@ namespace TrainWorld.Rail
                 placementStartPosition = roundedPosition;
 
                 RemoveTempRails();
-                tempRailVertices.Clear();
+                tempRailPositions.Clear();
                 if (railUnderCursor == null)
                 {
-                    tempRailVertices.Add((placementStartPosition, placementStartDirection));
+                    tempRailPositions.Add((placementStartPosition, placementStartDirection));
 
                     CreateTempRailModel();
                 }
@@ -304,6 +281,38 @@ namespace TrainWorld.Rail
             return null;
         }
 
+        public void RemoveRail(Vector3 position)
+        {
+            (Vector3Int, Direction8way) cursorPos = (railUnderCursor.Position, railUnderCursor.Direction);
+            (Vector3Int, Direction8way) opposite = (railUnderCursor.Position, DirectionHelper.Opposite(railUnderCursor.Direction));
+
+            // if selected position is out of border or empty do nothing
+            if (IsPositionOutOfBorder(railUnderCursor.Position) || isPositionEmpty(railUnderCursor.Position, railUnderCursor.Direction))
+                return;
+
+            AddAdjascentPositionsToRailsToFix(railUnderCursor.Position, railUnderCursor.Direction);
+
+
+            if (rails.ContainsKey(cursorPos) || rails.ContainsKey(opposite))
+            {
+                foreach (var neighbour in rails[cursorPos].GetNeighbourTuples())
+                {
+                    rails[(neighbour.Item1, DirectionHelper.Opposite(neighbour.Item2))].RemoveNeighbourAt(opposite);
+                }
+
+                foreach (var neighbour in rails[opposite].GetNeighbourTuples())
+                {
+                    rails[(neighbour.Item1, DirectionHelper.Opposite(neighbour.Item2))].RemoveNeighbourAt(cursorPos);
+                }
+                rails[cursorPos].DestroyMyself();
+                rails.Remove(cursorPos);
+                rails[opposite].DestroyMyself();
+                rails.Remove(opposite);
+            }
+
+            FixRails();
+        }
+
         internal void MoveCursorAtDestruction(Vector3 cursorPosition)
         {
             railUnderCursor = GetRailViaMousePosition(cursorPosition);
@@ -321,21 +330,26 @@ namespace TrainWorld.Rail
             }
             else
             {
-                railArrowUI.arrow.SetActive(false);
+                HideRailArrowUI();
             }
+        }
+
+        public void HideRailArrowUI()
+        {
+            railArrowUI.arrow.SetActive(false);
         }
 
         private void CreateTempRailModel()
         {
-            for (int i = 0; i < tempRailVertices.Count; i++)
+            for (int i = 0; i < tempRailPositions.Count; i++)
             {
-                InstantiateRailPrefab((tempRailVertices[i].Item1, tempRailVertices[i].Item2), true);
-                InstantiateRailPrefab((tempRailVertices[i].Item1, DirectionHelper.Opposite(tempRailVertices[i].Item2)), true);
+                InstantiateRailPrefab((tempRailPositions[i].Item1, tempRailPositions[i].Item2), true);
+                InstantiateRailPrefab((tempRailPositions[i].Item1, DirectionHelper.Opposite(tempRailPositions[i].Item2)), true);
                 if (i != 0)
                 {
-                    tempRails[tempRailVertices[i - 1]].AddNeighbour(tempRailVertices[i]);
-                    tempRails[(tempRailVertices[i ].Item1, DirectionHelper.Opposite(tempRailVertices[i].Item2))]
-                        .AddNeighbour((tempRailVertices[i - 1].Item1, DirectionHelper.Opposite(tempRailVertices[i - 1].Item2)));
+                    tempRails[tempRailPositions[i - 1]].AddNeighbour(tempRailPositions[i]);
+                    tempRails[(tempRailPositions[i ].Item1, DirectionHelper.Opposite(tempRailPositions[i].Item2))]
+                        .AddNeighbour((tempRailPositions[i - 1].Item1, DirectionHelper.Opposite(tempRailPositions[i - 1].Item2)));
                 }
             }
             foreach (var item in tempRails)
@@ -344,14 +358,18 @@ namespace TrainWorld.Rail
             }
         }
 
-        internal void RotateCursor()
+        public void OnRInput()
+        {
+            RotateCursor();
+        }
+        private void RotateCursor()
         {
             if (placementMode == false)
             {
                 placementStartDirection = DirectionHelper.Next(placementStartDirection);
                 RemoveTempRails();
-                tempRailVertices.Clear();
-                tempRailVertices.Add((placementStartPosition, placementStartDirection));
+                tempRailPositions.Clear();
+                tempRailPositions.Add((placementStartPosition, placementStartDirection));
                 CreateTempRailModel();
             }
         }
@@ -374,7 +392,7 @@ namespace TrainWorld.Rail
         public void OnExit()
         {
             RemoveTempRails();
-            tempRailVertices.Clear();
+            tempRailPositions.Clear();
             railArrowUI.arrow.SetActive(false);
             placementMode = false;
             Debug.Log("Rail Placement Exit");

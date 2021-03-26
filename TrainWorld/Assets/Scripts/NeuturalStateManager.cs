@@ -7,18 +7,15 @@ namespace TrainWorld
     public class NeuturalStateManager : MonoBehaviour, InputHandler
     {
         [SerializeField]
-        private LayerMask layerMask;
-
-        [SerializeField]
         private UiStationData uiStationData;
 
         [SerializeField]
         private UiTrain uiTrain;
 
-        public void OnClick(Vector3 position)
+        public void OnMouseDown(Vector3 position)
         {
             //raycast hit
-            ISelectableObject selectableObject = GetObjectFromPointer();
+            ISelectableObject selectableObject = ObjectSelector.GetObjectFromPointer();
             if (selectableObject != null)
             {
                 if (selectableObject.GetSelectableObjectType() == SelectableObjectType.Station)
@@ -42,16 +39,14 @@ namespace TrainWorld
             }
         }
 
-        private ISelectableObject GetObjectFromPointer()
+        public void OnMouseMove(Vector3 mousePosition)
         {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            //throw new System.NotImplementedException();
+        }
 
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
-            {
-                return hit.rigidbody.gameObject.GetComponent<ISelectableObject>();
-            }
-            return null;
+        public void OnRInput()
+        {
+            //throw new System.NotImplementedException();
         }
 
         public void CloseUI()

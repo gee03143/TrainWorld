@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 using TrainWorld.Station;
 using TrainWorld.AI;
+using System;
 
 namespace TrainWorld
 {
@@ -14,58 +15,97 @@ namespace TrainWorld
         StationPlacementManager stationPlacementManager;
 
         [SerializeField]
-        Dropdown destination1;
+        private GameObject uiTrainRow;
+
+        private List<UiTrainRow> uiTrainRows;
+        private List<string> stationNames;
 
         [SerializeField]
-        Dropdown destination2;
+        Button addRowButton;
 
         [SerializeField]
         Button changeDestinationButton;
-
-        [SerializeField]
-        private PathVisualizer pathVisualizer;
 
         AiAgent selectedAi;
 
         private void Awake()
         {
+            uiTrainRows = new List<UiTrainRow>();
+            stationNames = new List<string>();
+            addRowButton.onClick.AddListener(AddRowHandler);
             changeDestinationButton.onClick.AddListener( ChangeDestinationHandler);
+        }
+
+        private void AddRowHandler()
+        {
+            GameObject newObject = Instantiate(uiTrainRow, gameObject.transform);
+            UiTrainRow row = newObject.GetComponent<UiTrainRow>();
+            newObject.transform.SetAsLastSibling();
+            uiTrainRows.Add(row);
+            row.SetDropdownOptions(stationNames);
+            row.onDestroy += RemoveRowFromList;
+
+            addRowButton.transform.SetAsLastSibling();
+            changeDestinationButton.transform.SetAsLastSibling();
+
+        }
+
+        private void RemoveRowFromList(UiTrainRow row)
+        {
+            uiTrainRows.Remove(row);
         }
 
         private void ChangeDestinationHandler()
         {
-            TrainStation dest1 = stationPlacementManager.GetStationOfName(destination1.options[destination1.value].text);
-            TrainStation dest2 = stationPlacementManager.GetStationOfName(destination2.options[destination2.value].text);
+            List<string> destinations = new List<string>();
+            foreach (var rows in uiTrainRows)
+            {
+                destinations.Add(rows.GetDropdownSelected());
+            }
 
-            if (selectedAi != null && dest1 != null && dest2 != null)
-            {
-                selectedAi.SetUpSchedule(new List<TrainStation> { dest1, dest2 });
-            }
-            else if (dest1 == null)
-            {
-                Debug.Log("dest1 is null" + destination1.options[destination1.value].text);
-            }
-            else if (dest2 == null)
-            {
-                Debug.Log("dest2 is null" + destination2.options[destination2.value].text);
-            }
+            stationPlacementManager.SetDestinationToAgent(destinations, selectedAi);
         }
 
         public void SetSelectedAi(ISelectableObject selected)
         {
             selectedAi = (AiAgent)selected;
+
+            ClearAllRows();
+
+            var stationsInSchedule = selectedAi.trainStationsInSchedule;
+
+            if (stationsInSchedule != null)
+            {
+                foreach (var item in selectedAi.trainStationsInSchedule)
+                {
+                    GameObject newObject = Instantiate(uiTrainRow, gameObject.transform);
+                    UiTrainRow row = newObject.GetComponent<UiTrainRow>();
+                    uiTrainRows.Add(row);
+                    row.SetDropdownSelected(item.StationName);
+                }
+            }
         }
 
-        public void SetUpDropdown(List<string> stationNameList)
+        private void ClearAllRows()
         {
-            destination1.ClearOptions();
-            destination2.ClearOptions();
-            foreach (var name in stationNameList)
+            foreach (var row in uiTrainRows)
             {
-                Dropdown.OptionData option = new Dropdown.OptionData();
-                option.text = name;
-                destination1.options.Add(option);
-                destination2.options.Add(option);
+                row.DestroyMyself();
+            }
+            uiTrainRows.Clear();
+        }
+
+        public void SetStationNameList(List<string> stationNameList)
+        {
+            stationNames = stationNameList;
+            SetUpDropdown();
+        }
+
+        private void SetUpDropdown()
+        {
+            foreach (var item in uiTrainRows)
+            {
+                item.SetDropdownOptions(stationNames);
             }
         }
 

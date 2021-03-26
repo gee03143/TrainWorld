@@ -60,7 +60,7 @@ namespace TrainWorld.AI
 
         private RailPlacementManager railPlacementManager;
 
-        List<TrainStation> trainStationsInSchedule;
+        public List<TrainStation> trainStationsInSchedule;
         int stationIndex;
 
         List<(Vector3Int, Direction8way)> path;
@@ -77,6 +77,7 @@ namespace TrainWorld.AI
 
         public void SetUpSchedule(List<TrainStation> schedule)
         {
+
             pathIndex = 0;
             stationIndex = 0;
             trainStationsInSchedule = schedule;
@@ -89,8 +90,6 @@ namespace TrainWorld.AI
 
         private void SetUpPath(int nextStationIndex)
         {
-            Debug.Log(this.Position.ToString() + this.direction.ToString());
-            Debug.Log(trainStationsInSchedule[stationIndex].Position.ToString() + trainStationsInSchedule[stationIndex].Direction.ToString());
             path = railPlacementManager.GetRailPath(this.position, this.direction, 
                 trainStationsInSchedule[stationIndex].Position, trainStationsInSchedule[stationIndex].Direction);
             if(path == null)

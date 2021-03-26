@@ -7,7 +7,6 @@ using TrainWorld.Station;
 
 namespace TrainWorld.Rail
 {
-    [RequireComponent(typeof(Rigidbody))]
     public class RailModel : MonoBehaviour
     {
         [SerializeField]

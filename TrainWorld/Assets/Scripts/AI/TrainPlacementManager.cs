@@ -11,14 +11,24 @@ namespace TrainWorld.AI
     {
         [SerializeField]
         private RailPlacementManager railPlacementManager;
-
         [SerializeField]
         private GameObject trainPrefab;
 
-        Rail.Rail railAtCursor;
+        private List<AiAgent> trains;
 
+        private Rail.Rail railAtCursor;
 
-        internal void PlaceTrain(Vector3 mousePosition)
+        private void Awake()
+        {
+            trains = new List<AiAgent>();
+        }
+
+        public void OnMouseDown(Vector3 mousePosition)
+        {
+            PlaceTrain(mousePosition);
+        }
+
+        private void PlaceTrain(Vector3 mousePosition)
         {
             List<Rail.Rail> rails = railPlacementManager.GetRailsAtPosition(Vector3Int.RoundToInt(mousePosition));
             if (rails.Count != 2)
@@ -34,8 +44,14 @@ namespace TrainWorld.AI
 
                 AiAgent newAgent = newObject.GetComponent<AiAgent>();
                 newAgent.Init(railAtCursor.Position, railAtCursor.Direction, railPlacementManager);
-
+                trains.Add(newAgent);
             }
+        }
+
+        public void RemoveAgent(AiAgent removeTarget)
+        {
+            trains.Remove(removeTarget);
+            Destroy(removeTarget.gameObject);
         }
 
         public void OnEnter()
@@ -46,6 +62,16 @@ namespace TrainWorld.AI
         public void OnExit()
         {
             Debug.Log("Train Placement Exit");
+        }
+
+        public void OnMouseMove(Vector3 mousePosition)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public void OnRInput()
+        {
+           // throw new NotImplementedException();
         }
     }
 }

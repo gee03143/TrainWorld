@@ -128,7 +128,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0, z: 0}
   direction: 0
-  speed: 5
+  speed: 3
   rotationSpeed: 10
   loop: 0
 --- !u!1001 &9222096960897364499

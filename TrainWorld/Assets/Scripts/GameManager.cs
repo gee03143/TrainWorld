@@ -25,6 +25,8 @@ namespace TrainWorld
         [SerializeField]
         private TrainPlacementManager trainPlacementManager;
         [SerializeField]
+        private DestructionManager destructionManager;
+        [SerializeField]
         private UiController uiController;
         [SerializeField]
         private CameraMovement cameraMovement;
@@ -38,6 +40,7 @@ namespace TrainWorld
             uiController.OnTrafficPlacement += TrafficButtonHandler;
             uiController.OnTrainPlacement += TrainButtonHandler;
             uiController.OnDestruction += DestructionButtonHandler;
+
             inputManager.onEscInput = HandleEscape;
             inputManager.onAxisInput += cameraMovement.MoveCamera;
             inputManager.onMouseScroll += cameraMovement.ChangeOrthoSize;
@@ -47,7 +50,6 @@ namespace TrainWorld
         private void HandleEscape()
         {
             SwitchHandler(neuturalStateManager);
-            inputManager.onMouseDown += neuturalStateManager.OnClick;
             inputManager.onEscInput += neuturalStateManager.CloseUI;
             uiController.ResetButtonColor();
         }
@@ -63,6 +65,9 @@ namespace TrainWorld
                 nextHandler?.OnEnter();
 
                 currentHandler = nextHandler;
+                inputManager.onMouseDown += currentHandler.OnMouseDown;
+                inputManager.onMouseMove += currentHandler.OnMouseMove;
+                inputManager.onRInput += currentHandler.OnRInput;
             }
         }
 
@@ -77,17 +82,10 @@ namespace TrainWorld
         void RailButtonHandler()
         {
             SwitchHandler(railPlacementManager);
-
-            inputManager.onMouseDown += railPlacementManager.PlaceRail;
-            inputManager.onMouseMove += railPlacementManager.MoveCursorAtRailPlacement;
-            inputManager.onRInput += railPlacementManager.RotateCursor;
         }
         private void StationButtonHandler()
         {
             SwitchHandler(stationPlacementManager);
-
-            inputManager.onMouseDown += stationPlacementManager.PlaceStation;
-            inputManager.onMouseMove += stationPlacementManager.MoveCursor;
         }
 
         private void TrafficButtonHandler()
@@ -98,21 +96,21 @@ namespace TrainWorld
         private void TrainButtonHandler()
         {
             SwitchHandler(trainPlacementManager);
-
-            inputManager.onMouseDown += trainPlacementManager.PlaceTrain;
         }
 
         private void DestructionButtonHandler()
         {
-            SwitchHandler(null);
-
-            inputManager.onMouseDown += railPlacementManager.DestroyRail;
-            inputManager.onRInput += railPlacementManager.RotateCursor;
-            inputManager.onMouseMove += railPlacementManager.MoveCursorAtDestruction;
+            SwitchHandler(destructionManager);
         }
     }
 
     public interface InputHandler{
+
+        void OnMouseDown(Vector3 mousePosition);
+
+        void OnMouseMove(Vector3 mousePosition);
+
+        void OnRInput();
 
         void OnEnter();
 
