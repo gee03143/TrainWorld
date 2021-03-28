@@ -12,7 +12,7 @@ namespace TrainWorld.Station
     public class StationPlacementManager : MonoBehaviour, InputHandler
     {
         [SerializeField]
-        private RailPlacementManager railPlacementManager;
+        private PlacementManager placementManager;
         [SerializeField]
         private UiTrain uiTrain;
 
@@ -33,7 +33,7 @@ namespace TrainWorld.Station
         private void PlaceStation(Vector3 mousePosition)
         {
             ClearTempStations();
-            Rail.Rail railAtCursor = railPlacementManager.GetRailViaMousePosition(mousePosition, true);
+            Rail.Rail railAtCursor = placementManager.GetRailViaMousePosition(mousePosition, true);
 
             if (railAtCursor != null && railAtCursor.IsTrafficSocketEmpty())
             {
@@ -55,7 +55,7 @@ namespace TrainWorld.Station
         {
             ClearTempStations();
 
-            Rail.Rail railAtCursor = railPlacementManager.GetRailViaMousePosition(mousePosition, true);
+            Rail.Rail railAtCursor = placementManager.GetRailViaMousePosition(mousePosition, true);
 
             if(railAtCursor != null && railAtCursor.IsTrafficSocketEmpty())
             {

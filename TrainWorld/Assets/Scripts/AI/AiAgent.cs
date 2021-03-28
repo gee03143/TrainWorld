@@ -58,7 +58,7 @@ namespace TrainWorld.AI
             }
         }
 
-        private RailPlacementManager railPlacementManager;
+        private PlacementManager placementManager;
 
         public List<TrainStation> trainStationsInSchedule;
         int stationIndex;
@@ -68,11 +68,11 @@ namespace TrainWorld.AI
         int pathIndex;
         (Vector3Int, Direction8way) currentTarget;
 
-        internal void Init(Vector3Int position, Direction8way direction, RailPlacementManager railPlacementManager)
+        internal void Init(Vector3Int position, Direction8way direction, PlacementManager placementManager)
         {
             this.position = position;
             this.direction = direction;
-            this.railPlacementManager = railPlacementManager;
+            this.placementManager = placementManager;
         }
 
         public void SetUpSchedule(List<TrainStation> schedule)
@@ -90,7 +90,7 @@ namespace TrainWorld.AI
 
         private void SetUpPath(int nextStationIndex)
         {
-            path = railPlacementManager.GetRailPath(this.position, this.direction, 
+            path = placementManager.GetRailPathForAgent(this.position, this.direction, 
                 trainStationsInSchedule[stationIndex].Position, trainStationsInSchedule[stationIndex].Direction);
             if(path == null)
             {
