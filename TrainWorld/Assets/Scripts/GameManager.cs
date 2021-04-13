@@ -50,6 +50,7 @@ namespace TrainWorld
         private void HandleEscape()
         {
             SwitchHandler(neuturalStateManager);
+            inputManager.onMouseDown += neuturalStateManager.OnMouseDown;
             inputManager.onEscInput += neuturalStateManager.CloseUI;
             uiController.ResetButtonColor();
         }

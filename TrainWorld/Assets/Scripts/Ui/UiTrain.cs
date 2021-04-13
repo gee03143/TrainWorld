@@ -81,7 +81,18 @@ namespace TrainWorld
                     GameObject newObject = Instantiate(uiTrainRow, gameObject.transform);
                     UiTrainRow row = newObject.GetComponent<UiTrainRow>();
                     uiTrainRows.Add(row);
-                    row.SetDropdownSelected(item.StationName);
+                }
+            }
+            addRowButton.transform.SetAsLastSibling();
+            changeDestinationButton.transform.SetAsLastSibling();
+            SetUpDropdown();
+            int index = 0;
+            if (stationsInSchedule != null)
+            {
+                foreach (var row in uiTrainRows)
+                {
+                    row.SetDropdownSelected(selectedAi.trainStationsInSchedule[index].StationName);
+                    index++;
                 }
             }
         }

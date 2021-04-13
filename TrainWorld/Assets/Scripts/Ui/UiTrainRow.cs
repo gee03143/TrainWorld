@@ -28,7 +28,9 @@ namespace TrainWorld
 
         internal void SetDropdownSelected(string stationName)
         {
+            Debug.Log(stationName);
             dropdown.value = dropdown.options.Select(option => option.text).ToList().IndexOf(stationName);
+            Debug.Log(dropdown.value);
         }
 
         internal string GetDropdownSelected()

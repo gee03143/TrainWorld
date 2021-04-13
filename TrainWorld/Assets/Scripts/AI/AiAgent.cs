@@ -132,7 +132,6 @@ namespace TrainWorld.AI
                     {
                         //search new path
                         int nextStationIndex = (stationIndex + 1) % trainStationsInSchedule.Count;
-                        Debug.Log(trainStationsInSchedule.Count);
                         move = false;
                         SetUpPath(nextStationIndex);
                         move = true;
