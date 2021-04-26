@@ -6,7 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 using TrainWorld.Station;
-using TrainWorld.Rail;
+using TrainWorld.Rails;
 
 namespace TrainWorld.AI
 {
@@ -58,8 +58,6 @@ namespace TrainWorld.AI
             }
         }
 
-        private PlacementManager placementManager;
-
         public List<TrainStation> trainStationsInSchedule;
         int stationIndex;
 
@@ -68,11 +66,10 @@ namespace TrainWorld.AI
         int pathIndex;
         (Vector3Int, Direction8way) currentTarget;
 
-        internal void Init(Vector3Int position, Direction8way direction, PlacementManager placementManager)
+        internal void Init(Vector3Int position, Direction8way direction)
         {
             this.position = position;
             this.direction = direction;
-            this.placementManager = placementManager;
         }
 
         public void SetUpSchedule(List<TrainStation> schedule)
@@ -90,7 +87,7 @@ namespace TrainWorld.AI
 
         private void SetUpPath(int nextStationIndex)
         {
-            path = placementManager.GetRailPathForAgent(this.position, this.direction, 
+            path = PlacementManager.GetRailPathForAgent(this.position, this.direction,
                 trainStationsInSchedule[stationIndex].Position, trainStationsInSchedule[stationIndex].Direction);
             if(path == null)
             {

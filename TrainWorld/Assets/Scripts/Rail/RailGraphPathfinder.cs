@@ -7,7 +7,7 @@ using UnityEngine;
 /// Source https://github.com/lordjesus/Packt-Introduction-to-graph-algorithms-for-game-developers
 /// </summary>
 
-namespace TrainWorld.Rail
+namespace TrainWorld.Rails
 {
     public static class RailGraphPathfinder
     {

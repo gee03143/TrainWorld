@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using TrainWorld.Rail;
+using TrainWorld.Rails;
 using TrainWorld.AI;
 using System.Linq;
 
@@ -11,8 +11,6 @@ namespace TrainWorld.Station
 {
     public class StationPlacementManager : MonoBehaviour, InputHandler
     {
-        [SerializeField]
-        private PlacementManager placementManager;
         [SerializeField]
         private UiTrain uiTrain;
 
@@ -33,7 +31,7 @@ namespace TrainWorld.Station
         private void PlaceStation(Vector3 mousePosition)
         {
             ClearTempStations();
-            Rail.Rail railAtCursor = placementManager.GetRailViaMousePosition(mousePosition, true);
+            Rails.Rail railAtCursor = PlacementManager.GetRailViaMousePosition(mousePosition, true);
 
             if (railAtCursor != null && railAtCursor.IsTrafficSocketEmpty())
             {
@@ -55,7 +53,7 @@ namespace TrainWorld.Station
         {
             ClearTempStations();
 
-            Rail.Rail railAtCursor = placementManager.GetRailViaMousePosition(mousePosition, true);
+            Rails.Rail railAtCursor = PlacementManager.GetRailViaMousePosition(mousePosition, true);
 
             if(railAtCursor != null && railAtCursor.IsTrafficSocketEmpty())
             {
@@ -132,11 +130,12 @@ namespace TrainWorld.Station
 
         public void OnEnter()
         {
-            Debug.Log("Station Placement Exit");
+            Debug.Log("Station Placement Enter");
         }
 
         public void OnExit()
         {
+            ClearTempStations();
             Debug.Log("Station Placement Exit");
         }
     }

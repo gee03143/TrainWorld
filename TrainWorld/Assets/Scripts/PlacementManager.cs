@@ -4,33 +4,33 @@ using System.Linq;
 using UnityEngine;
 
 
-namespace TrainWorld.Rail
+namespace TrainWorld.Rails
 {
-    public class PlacementManager : MonoBehaviour
+    public class PlacementManager
     {
-        private Dictionary<(Vector3Int, Direction8way), Rail> placementData;
+        private static Dictionary<(Vector3Int, Direction8way), Rail> placementData;
 
-        private void Awake()
+        static PlacementManager()
         {
             placementData = new Dictionary<(Vector3Int, Direction8way), Rail>();
         }
 
-        public bool IsEmpty(Vector3Int position, Direction8way direction)
+        public static bool IsEmpty(Vector3Int position, Direction8way direction)
         {
             return placementData.ContainsKey((position, direction)) == false;
         }
 
-        public bool IsEmpty((Vector3Int, Direction8way) position)
+        public static bool IsEmpty((Vector3Int, Direction8way) position)
         {
             return placementData.ContainsKey(position) == false;
         }
 
-        public void AddRailAt((Vector3Int, Direction8way) position, Rail newRail)
+        public static void AddRailAt((Vector3Int, Direction8way) position, Rail newRail)
         {
             placementData.Add((position), newRail);
         }
 
-        public Rail GetRailAt(Vector3Int position, Direction8way direction)
+        public static Rail GetRailAt(Vector3Int position, Direction8way direction)
         {
             if (placementData.ContainsKey((position, direction)) == false)
                 return null;
@@ -38,7 +38,7 @@ namespace TrainWorld.Rail
             return placementData[(position, direction)];
         }
 
-        public Rail GetRailAt((Vector3Int, Direction8way) position)
+        public static Rail GetRailAt((Vector3Int, Direction8way) position)
         {
             if (placementData.ContainsKey((position)) == false)
                 return null;
@@ -46,20 +46,20 @@ namespace TrainWorld.Rail
             return placementData[(position)];
         }
 
-        public void RemoveRailAt((Vector3Int, Direction8way) position)
+        public static void RemoveRailAt((Vector3Int, Direction8way) position)
         {
             placementData.Remove(position);
         }
 
 
-        internal List<Rail> GetRailsAtPosition(Vector3Int position)
+        public static List<Rail> GetRailsAtPosition(Vector3Int position)
         {
             List<Rail> railsAtPosition = placementData.Where(x => position == x.Key.Item1).Select(x => x.Value).ToList();
 
             return railsAtPosition;
         }
 
-        public Rail GetRailViaMousePosition(Vector3 mousePosition, bool findByTrafficSocket = false)
+        public static Rail GetRailViaMousePosition(Vector3 mousePosition, bool findByTrafficSocket = false)
         {
             // railModel 의 위치를 기준으로 찾는 방법과 trafficsocket의 위치를 기준으로 찾는 두 가지 모드 존재
 
@@ -99,7 +99,7 @@ namespace TrainWorld.Rail
             return null;
         }
 
-        internal List<(Vector3Int, Direction8way)> GetRailPathForAgent(Vector3Int startPosition, Direction8way startDirection, Vector3Int endPosition, Direction8way endDirection)
+        public static List<(Vector3Int, Direction8way)> GetRailPathForAgent(Vector3Int startPosition, Direction8way startDirection, Vector3Int endPosition, Direction8way endDirection)
         {
             return RailGraphPathfinder.AStarSearch(startPosition, startDirection, endPosition, endDirection, true, placementData);
         }

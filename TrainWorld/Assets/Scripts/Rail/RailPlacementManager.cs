@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace TrainWorld.Rail
+using TrainWorld.Traffic;
+
+namespace TrainWorld.Rails
 {
     // Rail 배치에 대한 입력 정의
     // Dictionary에 새 Rail이 입력되도록 함
@@ -22,8 +24,6 @@ namespace TrainWorld.Rail
         int maxHeight;
 
         [SerializeField]
-        private PlacementManager placementManager;
-        [SerializeField]
         private RailArrowUI railArrowUI;
         [SerializeField]
         private GameObject railPrefab;
@@ -33,6 +33,8 @@ namespace TrainWorld.Rail
         private HashSet<(Vector3Int, Direction8way)> railsToFix;
 
         private List<(Vector3Int, Direction8way)> tempRailPositions;
+
+        private RailBlock railBlock;
 
        // private Dictionary<(Vector3Int, Direction8way), Rail> rails;
         private Dictionary<(Vector3Int, Direction8way), Rail> tempRails;
@@ -47,6 +49,7 @@ namespace TrainWorld.Rail
         {
             railsToFix = new HashSet<(Vector3Int, Direction8way)>();
             tempRailPositions = new List<(Vector3Int, Direction8way)>();
+            railBlock = new RailBlock();
            // rails = new Dictionary<(Vector3Int, Direction8way), Rail>();
             tempRails = new Dictionary<(Vector3Int, Direction8way), Rail>();
             placementStartDirection = Direction8way.N;
@@ -116,8 +119,8 @@ namespace TrainWorld.Rail
             InstantiateRailPrefab(next);
             InstantiateRailPrefab((next.Item1, DirectionHelper.Opposite(next.Item2)));
             if(start != next){
-                placementManager.GetRailAt(start).AddNeighbour(next);
-                placementManager.GetRailAt((next.Item1, DirectionHelper.Opposite(next.Item2)))
+                PlacementManager.GetRailAt(start).AddNeighbour(next);
+                PlacementManager.GetRailAt((next.Item1, DirectionHelper.Opposite(next.Item2)))
                     .AddNeighbour((start.Item1, DirectionHelper.Opposite(start.Item2)));
             }
 
@@ -130,22 +133,23 @@ namespace TrainWorld.Rail
         {
             if (isTemp == false)
             {
-                if (placementManager.IsEmpty(position))
+                if (PlacementManager.IsEmpty(position))
                 {
                     GameObject newObject = Instantiate(railPrefab, position.Item1, Quaternion.Euler(DirectionHelper.ToEuler(position.Item2)), railParent) as GameObject;
                     Rail newRail = newObject.GetComponent<Rail>();
-                    newRail.Init(position.Item1, position.Item2);
-                    placementManager.AddRailAt(position, newRail);
+                    newRail.Init(position.Item1, position.Item2, railBlock);
+                    PlacementManager.AddRailAt(position, newRail);
+                    railBlock.AddRail(position);
 
                     (Vector3Int, Direction8way) frontPos = (position.Item1 + DirectionHelper.ToDirectionalVector(position.Item2), position.Item2);
-                    if (placementManager.IsEmpty(frontPos) == false)
+                    if (PlacementManager.IsEmpty(frontPos) == false)
                     {
                         newRail.AddNeighbour(frontPos);
                     }
                     (Vector3Int, Direction8way) rearPos = (position.Item1 - DirectionHelper.ToDirectionalVector(position.Item2), position.Item2);
-                    if (placementManager.IsEmpty(rearPos) == false)
+                    if (PlacementManager.IsEmpty(rearPos) == false)
                     {
-                        placementManager.GetRailAt(rearPos).AddNeighbour(position);
+                        PlacementManager.GetRailAt(rearPos).AddNeighbour(position);
                     }
                 }
             }
@@ -153,7 +157,7 @@ namespace TrainWorld.Rail
             {
                 GameObject newObject = Instantiate(railPrefab, position.Item1, Quaternion.Euler(DirectionHelper.ToEuler(position.Item2)), railParent) as GameObject;
                 Rail newRail = newObject.GetComponent<Rail>();
-                newRail.Init(position.Item1, position.Item2);
+                newRail.Init(position.Item1, position.Item2, railBlock);
                 tempRails.Add(position, newRail);
 
                 newRail.AddNeighbours(tempRailPositions);
@@ -168,16 +172,16 @@ namespace TrainWorld.Rail
 
         private void AddAdjascentPositionsToRailsToFix(Vector3Int position, Direction8way direction)
         {
-            railsToFix.UnionWith(placementManager.GetRailAt(position, direction).GetNeighbourTuples());
-            railsToFix.UnionWith(placementManager.GetRailAt(position, DirectionHelper.Opposite(direction)).GetNeighbourTuples());
+            railsToFix.UnionWith(PlacementManager.GetRailAt(position, direction).GetNeighbourTuples());
+            railsToFix.UnionWith(PlacementManager.GetRailAt(position, DirectionHelper.Opposite(direction)).GetNeighbourTuples());
         }
 
         private void FixRails()
         {
             foreach (var railToFix in railsToFix)
             {
-                placementManager.GetRailAt(railToFix).FixMyModel();
-                placementManager.GetRailAt(railToFix.Item1, DirectionHelper.Opposite(railToFix.Item2)).FixMyModel();
+                PlacementManager.GetRailAt(railToFix).FixMyModel();
+                PlacementManager.GetRailAt(railToFix.Item1, DirectionHelper.Opposite(railToFix.Item2)).FixMyModel();
             }
 
             railsToFix.Clear();
@@ -200,7 +204,7 @@ namespace TrainWorld.Rail
         private void MoveCursorAtRailPlacement(Vector3 cursorPosition)
         {
             Vector3Int roundedPosition = Vector3Int.RoundToInt(cursorPosition);
-            railUnderCursor = placementManager.GetRailViaMousePosition(cursorPosition);
+            railUnderCursor = PlacementManager.GetRailViaMousePosition(cursorPosition);
             ShowRailUI(cursorPosition);
             if (placementMode)
             {
@@ -233,27 +237,27 @@ namespace TrainWorld.Rail
             (Vector3Int, Direction8way) opposite = (railUnderCursor.Position, DirectionHelper.Opposite(railUnderCursor.Direction));
 
             // if selected position is out of border or empty do nothing
-            if (IsPositionOutOfBorder(railUnderCursor.Position) || placementManager.IsEmpty(railUnderCursor.Position, railUnderCursor.Direction))
+            if (IsPositionOutOfBorder(railUnderCursor.Position) || PlacementManager.IsEmpty(railUnderCursor.Position, railUnderCursor.Direction))
                 return;
 
             AddAdjascentPositionsToRailsToFix(railUnderCursor.Position, railUnderCursor.Direction);
 
 
-            if (placementManager.IsEmpty(cursorPos) == false || placementManager.IsEmpty(opposite) == false)
+            if (PlacementManager.IsEmpty(cursorPos) == false || PlacementManager.IsEmpty(opposite) == false)
             {
-                foreach (var neighbour in placementManager.GetRailAt(cursorPos).GetNeighbourTuples())
+                foreach (var neighbour in PlacementManager.GetRailAt(cursorPos).GetNeighbourTuples())
                 {
-                    placementManager.GetRailAt((neighbour.Item1, DirectionHelper.Opposite(neighbour.Item2))).RemoveNeighbourAt(opposite);
+                    PlacementManager.GetRailAt((neighbour.Item1, DirectionHelper.Opposite(neighbour.Item2))).RemoveNeighbourAt(opposite);
                 }
 
-                foreach (var neighbour in placementManager.GetRailAt(opposite).GetNeighbourTuples())
+                foreach (var neighbour in PlacementManager.GetRailAt(opposite).GetNeighbourTuples())
                 {
-                    placementManager.GetRailAt((neighbour.Item1, DirectionHelper.Opposite(neighbour.Item2))).RemoveNeighbourAt(cursorPos);
+                    PlacementManager.GetRailAt((neighbour.Item1, DirectionHelper.Opposite(neighbour.Item2))).RemoveNeighbourAt(cursorPos);
                 }
-                placementManager.GetRailAt(cursorPos).DestroyMyself();
-                placementManager.RemoveRailAt(cursorPos);
-                placementManager.GetRailAt(opposite).DestroyMyself();
-                placementManager.RemoveRailAt(opposite);
+                PlacementManager.GetRailAt(cursorPos).DestroyMyself();
+                PlacementManager.RemoveRailAt(cursorPos);
+                PlacementManager.GetRailAt(opposite).DestroyMyself();
+                PlacementManager.RemoveRailAt(opposite);
             }
 
             FixRails();
@@ -261,7 +265,7 @@ namespace TrainWorld.Rail
 
         internal void MoveCursorAtDestruction(Vector3 cursorPosition)
         {
-            railUnderCursor = placementManager.GetRailViaMousePosition(cursorPosition);
+            railUnderCursor = PlacementManager.GetRailViaMousePosition(cursorPosition);
             ShowRailUI(cursorPosition);
         }
 

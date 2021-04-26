@@ -5,7 +5,7 @@ using UnityEngine;
 
 using TrainWorld.Station;
 
-namespace TrainWorld.Rail
+namespace TrainWorld.Rails
 {
     public class RailModel : MonoBehaviour
     {

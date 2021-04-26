@@ -7842,49 +7842,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3970261373664373580, guid: b251aac2e265df74f91db1dee1baee73, type: 3}
   m_PrefabInstance: {fileID: 1894438991}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &706614773
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 706614775}
-  - component: {fileID: 706614774}
-  m_Layer: 0
-  m_Name: PlacementManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &706614774
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 706614773}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c421d8d0583bc4c4b96a30ab4e48bc28, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &706614775
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 706614773}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 9
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &715497322
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7980,6 +7937,49 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1880490119515231572, guid: aed2aed4bcf2ca849b78ed9886eb775b, type: 3}
   m_PrefabInstance: {fileID: 857746247}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &721606357
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 721606358}
+  - component: {fileID: 721606359}
+  m_Layer: 0
+  m_Name: TrafficPlacementManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &721606358
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 721606357}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 793661545}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &721606359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 721606357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14d3b431c142a294fa03d193c3493269, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &724105396
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8651,6 +8651,7 @@ Transform:
   - {fileID: 1354900728}
   - {fileID: 1793073999}
   - {fileID: 1471700165}
+  - {fileID: 721606358}
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -14920,7 +14921,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20141381f90db5b45b0a25c4fe84135d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  placementManager: {fileID: 706614774}
   uiTrain: {fileID: 930900345}
 --- !u!4 &1354900728
 Transform:
@@ -16265,6 +16265,7 @@ MonoBehaviour:
   railPlacementManager: {fileID: 2043687697}
   stationPlacementManager: {fileID: 1354900727}
   trainPlacementManager: {fileID: 1793073998}
+  trafficPlacementManager: {fileID: 721606359}
   destructionManager: {fileID: 12620977}
   uiController: {fileID: 529094015}
   cameraMovement: {fileID: 1901117315}
@@ -19649,7 +19650,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a52523e83cfd6d41a4df5c6cf0458e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  placementManager: {fileID: 706614774}
   trainPrefab: {fileID: 3574120905924366244, guid: 3f7b963aba9324346a0f7f3372cd2abd, type: 3}
 --- !u!4 &1793073999
 Transform:
@@ -22285,7 +22285,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxWidth: 15
   maxHeight: 15
-  placementManager: {fileID: 706614774}
   railArrowUI: {fileID: 870011904}
   railPrefab: {fileID: 9114745024669490336, guid: 578f40549eb490749b52ef1b4c0ff3fa, type: 3}
   railParent: {fileID: 95283351}

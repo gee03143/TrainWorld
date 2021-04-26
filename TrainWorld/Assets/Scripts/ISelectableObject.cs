@@ -9,7 +9,8 @@ namespace TrainWorld
     {
         Rail,
         Agent,
-        Station
+        Station,
+        Traffic
     }
 
     public interface ISelectableObject

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TrainWorld.Rail
+namespace TrainWorld.Rails
 {
     public class RailFactory
     {

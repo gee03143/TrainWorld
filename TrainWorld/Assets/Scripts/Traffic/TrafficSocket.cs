@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using TrainWorld.Traffic;
+
 namespace TrainWorld.Station
 {
     public enum TrafficSocketType
@@ -44,9 +46,9 @@ namespace TrainWorld.Station
             return stationObject.GetComponent<TrainStation>();
         }
 
-        public TrainStation GetTraffic()
+        public TrafficSignal GetTraffic()
         {
-            throw new NotImplementedException();
+            return trafficObject.GetComponent<TrafficSignal>();
         }
 
         public void SetMyGameObject(TrafficSocketType value)

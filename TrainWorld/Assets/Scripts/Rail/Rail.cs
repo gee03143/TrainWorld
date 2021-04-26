@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-using TrainWorld.Station;
 using System;
 using System.Linq;
 
-namespace TrainWorld.Rail
+using TrainWorld.Station;
+using TrainWorld.Traffic;
+
+namespace TrainWorld.Rails
 {
     [RequireComponent(typeof(Rigidbody))]
     public class Rail : MonoBehaviour, ISelectableObject
@@ -42,10 +43,13 @@ namespace TrainWorld.Rail
         [SerializeField]
         private TrafficSocket trafficSocket;
 
-        internal void Init(Vector3Int position, Direction8way direction)
+        private RailBlock myRailblock;
+
+        internal void Init(Vector3Int position, Direction8way direction, RailBlock block)
         {
             this.position = position;
             this.direction = direction;
+            this.myRailblock = block;
             neighbourPositions = new HashSet<(Vector3Int, Direction8way)>();
 
             railModel.Init(position, direction);
@@ -79,6 +83,11 @@ namespace TrainWorld.Rail
             neighbourPositions.Union(neighbourPositions);
         }
 
+        public bool HasTraffic()
+        {
+            return trafficSocket.Type == TrafficSocketType.Traffic;
+        }
+
         public bool IsTrafficSocketEmpty()
         {
             return trafficSocket.Type == TrafficSocketType.Empty;
@@ -96,6 +105,21 @@ namespace TrainWorld.Rail
         {
             trafficSocket.SetMyGameObject(TrafficSocketType.Station);
             return trafficSocket.GetStation();
+        }
+
+        internal TrafficSignal AddTrafficSignal()
+        {
+            trafficSocket.Type = TrafficSocketType.Traffic;
+            TrafficSignal traffic = trafficSocket.GetTraffic();
+            traffic.Init(this.Position, this.Direction);
+            myRailblock.Divide((this.Position, this.Direction));
+            return trafficSocket.GetTraffic();
+        }
+
+        public TrafficSignal AddTempTrafficSignal()
+        {
+            trafficSocket.SetMyGameObject(TrafficSocketType.Traffic);
+            return trafficSocket.GetTraffic();
         }
 
 

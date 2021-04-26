@@ -3,20 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using TrainWorld.Rail;
+using TrainWorld.Rails;
 
 namespace TrainWorld.AI
 {
     public class TrainPlacementManager : MonoBehaviour, InputHandler
     {
         [SerializeField]
-        private PlacementManager placementManager;
-        [SerializeField]
         private GameObject trainPrefab;
 
         private List<AiAgent> trains;
 
-        private Rail.Rail railAtCursor;
+        private Rails.Rail railAtCursor;
 
         private void Awake()
         {
@@ -30,20 +28,20 @@ namespace TrainWorld.AI
 
         private void PlaceTrain(Vector3 mousePosition)
         {
-            List<Rail.Rail> rails = placementManager.GetRailsAtPosition(Vector3Int.RoundToInt(mousePosition));
+            List<Rails.Rail> rails = PlacementManager.GetRailsAtPosition(Vector3Int.RoundToInt(mousePosition));
             if (rails.Count != 2)
             {
                 return;
             }
             else
             {
-                railAtCursor = placementManager.GetRailViaMousePosition(mousePosition);
+                railAtCursor = PlacementManager.GetRailViaMousePosition(mousePosition);
 
                 GameObject newObject = Instantiate(trainPrefab, railAtCursor.Position,
                     Quaternion.Euler(DirectionHelper.ToEuler(railAtCursor.Direction)));
 
                 AiAgent newAgent = newObject.GetComponent<AiAgent>();
-                newAgent.Init(railAtCursor.Position, railAtCursor.Direction, placementManager);
+                newAgent.Init(railAtCursor.Position, railAtCursor.Direction);
                 trains.Add(newAgent);
             }
         }

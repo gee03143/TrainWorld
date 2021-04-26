@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-using TrainWorld.Rail;
+using TrainWorld.Rails;
 using TrainWorld.Station;
 using TrainWorld.AI;
 

@@ -3,9 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using TrainWorld.Rail;
+using TrainWorld.Rails;
 using TrainWorld.Station;
 using TrainWorld.AI;
+using TrainWorld.Traffic;
 
 namespace TrainWorld
 {
@@ -24,6 +25,8 @@ namespace TrainWorld
         private StationPlacementManager stationPlacementManager;
         [SerializeField]
         private TrainPlacementManager trainPlacementManager;
+        [SerializeField]
+        private TrafficPlacementManager trafficPlacementManager;
         [SerializeField]
         private DestructionManager destructionManager;
         [SerializeField]
@@ -91,7 +94,7 @@ namespace TrainWorld
 
         private void TrafficButtonHandler()
         {
-            SwitchHandler(null);
+            SwitchHandler(trafficPlacementManager);
         }
 
         private void TrainButtonHandler()
