@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using TrainWorld.Rails;
 
 namespace TrainWorld.Traffic {
     public class RailBlock
@@ -33,7 +34,7 @@ namespace TrainWorld.Traffic {
 
         public (RailBlock, RailBlock) Divide((Vector3Int, Direction8way) startPosition)
         {
-            RailBlock groupA = new RailBlock(BFSSearcher.BFSSearch(startPosition, this));
+            RailBlock groupA = new RailBlock(BFSSearcher.BFSSearch(startPosition));
             HashSet<(Vector3Int, Direction8way)> clone = new HashSet<(Vector3Int, Direction8way)>(rails);
             clone.ExceptWith(groupA.GetRails());
             RailBlock groupB = new RailBlock(clone);
@@ -56,9 +57,27 @@ namespace TrainWorld.Traffic {
             }
         }
 
+        public void Merge(RailBlock other)
+        {
+            rails.UnionWith(other.GetRails());
+        }
+
         public bool CompareBlock(RailBlock other)
         {
             return rails.SetEquals(other.GetRails());
+        }
+
+        public void RemoveMyself()
+        {
+            rails.Clear();
+        }
+
+        public void UpdateRailsBlockReference()
+        {
+            foreach ((Vector3Int, Direction8way) position in rails)
+            {
+                PlacementManager.GetRailAt(position).myRailblock = this;
+            }
         }
     }
 }

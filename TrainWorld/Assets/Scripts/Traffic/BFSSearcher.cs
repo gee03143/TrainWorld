@@ -9,7 +9,7 @@ namespace TrainWorld.Traffic
 {
     public static class BFSSearcher
     {
-        public static HashSet<(Vector3Int, Direction8way)> BFSSearch((Vector3Int, Direction8way) startRail, RailBlock block)
+        public static HashSet<(Vector3Int, Direction8way)> BFSSearch((Vector3Int, Direction8way) startRail)
         {
             Queue<(Vector3Int, Direction8way)> railsToCheck = new Queue<(Vector3Int, Direction8way)>();
 

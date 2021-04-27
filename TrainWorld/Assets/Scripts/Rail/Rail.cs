@@ -43,13 +43,13 @@ namespace TrainWorld.Rails
         [SerializeField]
         private TrafficSocket trafficSocket;
 
-        private RailBlock myRailblock;
+        public RailBlock myRailblock;
 
-        internal void Init(Vector3Int position, Direction8way direction, RailBlock block)
+        internal void Init(Vector3Int position, Direction8way direction)
         {
             this.position = position;
             this.direction = direction;
-            this.myRailblock = block;
+            this.myRailblock = null;
             neighbourPositions = new HashSet<(Vector3Int, Direction8way)>();
 
             railModel.Init(position, direction);
@@ -112,7 +112,17 @@ namespace TrainWorld.Rails
             trafficSocket.Type = TrafficSocketType.Traffic;
             TrafficSignal traffic = trafficSocket.GetTraffic();
             traffic.Init(this.Position, this.Direction);
-            myRailblock.Divide((this.Position, this.Direction));
+            RailBlock railBlockA;
+            RailBlock railBlockB;
+            if(myRailblock == null)
+            {
+                Debug.Log("myrailblock is null");
+            }
+            (railBlockA, railBlockB) = myRailblock.Divide((this.Position, this.Direction));
+            myRailblock.RemoveMyself();
+            railBlockA.UpdateRailsBlockReference();
+            railBlockB.UpdateRailsBlockReference();
+
             return trafficSocket.GetTraffic();
         }
 
