@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using TrainWorld.Rails;
+using System;
 
 namespace TrainWorld.Traffic {
     public class RailBlock
@@ -77,6 +78,14 @@ namespace TrainWorld.Traffic {
             foreach ((Vector3Int, Direction8way) position in rails)
             {
                 PlacementManager.GetRailAt(position).myRailblock = this;
+            }
+        }
+
+        public void ChangeColor(Color color)
+        {
+            foreach ((Vector3Int, Direction8way) position in rails)
+            {
+                PlacementManager.GetRailAt(position).railGroupDisplay.material.color = color;
             }
         }
     }

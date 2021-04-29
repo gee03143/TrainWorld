@@ -7980,6 +7980,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14d3b431c142a294fa03d193c3493269, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  railBlockManager: {fileID: 1915662686}
 --- !u!1001 &724105396
 PrefabInstance:
   m_ObjectHideFlags: 0

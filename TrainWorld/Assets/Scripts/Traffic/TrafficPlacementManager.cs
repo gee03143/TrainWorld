@@ -9,6 +9,8 @@ namespace TrainWorld.Traffic
 {
     public class TrafficPlacementManager : MonoBehaviour, InputHandler
     {
+        [SerializeField]
+        RailBlockManager railBlockManager;
 
         private Dictionary<(Vector3Int, Direction8way), TrafficSignal> signals;
 
@@ -31,10 +33,33 @@ namespace TrainWorld.Traffic
 
             if (railAtCursor != null && railAtCursor.IsTrafficSocketEmpty())
             {
-                TrafficSignal newStation = railAtCursor.AddTrafficSignal();
-                if (newStation != null)
+                TrafficSignal newSignal = railAtCursor.AddTrafficSignal();
+                if (newSignal != null)
                 {
-                    signals.Add((railAtCursor.Position, railAtCursor.Direction), newStation);
+                    signals.Add((railAtCursor.Position, railAtCursor.Direction), newSignal);
+
+                    RailBlock railBlockA;
+                    RailBlock railBlockB;
+                    if (railAtCursor.myRailblock == null)
+                    {
+                        Debug.Log("myrailblock is null");
+                    }
+                    (railBlockA, railBlockB) = railAtCursor.myRailblock.Divide((railAtCursor.Position, railAtCursor.Direction));
+
+                    if (railBlockA == null && railBlockB == null) // fail to divide railblock
+                    {
+                        //do nothing
+                    }
+                    else
+                    {
+                        railBlockManager.railBlocks.Remove(railAtCursor.myRailblock);
+                        railBlockManager.railBlocks.Add(railBlockA);
+                        railBlockManager.railBlocks.Add(railBlockB);
+
+                        railAtCursor.myRailblock.RemoveMyself();
+                        railBlockA.UpdateRailsBlockReference();
+                        railBlockB.UpdateRailsBlockReference();
+                    }
                 }
             }
 

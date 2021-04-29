@@ -7,33 +7,24 @@ namespace TrainWorld.Traffic
 {
     public class RailBlockManager : MonoBehaviour
     {
-        private Dictionary<int, RailBlock> railBlocks;
+        public List<RailBlock> railBlocks;
+
+        private List<Color> colors;
 
         private void Awake()
         {
-            railBlocks = new Dictionary<int, RailBlock>();
+            railBlocks = new List<RailBlock>();
+            colors = new List<Color> { Color.red, Color.yellow, Color.green, Color.blue, Color.white, Color.cyan };
         }
 
-        void AddRailBlock(RailBlock newBlock)
+        void OnDrawGizmosSelected()
         {
-            railBlocks.Add(railBlocks.Count, newBlock);
-        }
-
-        RailBlock GetRailBlockOfID(int id)
-        {
-            if (railBlocks.ContainsKey(id) == false)
-                return null;
-
-            return railBlocks[id];
-        }
-
-        void RemoveRailBlockOfID(int id)
-        {
-            if (railBlocks.ContainsKey(id) == false)
-                return;
-
-            railBlocks[id].RemoveMyself();
-            railBlocks.Remove(id);
+            int i = 0;
+            foreach (var railBlock in railBlocks)
+            {
+                railBlock.ChangeColor(colors[i % 6]);
+                i++;
+            }
         }
     }
 }

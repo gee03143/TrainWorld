@@ -121,7 +121,7 @@ namespace TrainWorld.Rails
             }
 
             List<RailBlock> adjascentRailBlocks = GetAllAdjascentRailBlocks(placeAt, railAtPosition, railAtOpposite);
-            if(adjascentRailBlocks.Count == 0)
+            if(adjascentRailBlocks.Count == 0) // 근처 railblock 이 없다면 새 railblock을 만듬
             {
                 RailBlock newBlock = new RailBlock();
                 newBlock.AddRail(placeAt);
@@ -129,7 +129,7 @@ namespace TrainWorld.Rails
                 railAtPosition.myRailblock = newBlock;
                 railAtOpposite.myRailblock = newBlock;
             }
-            else if(adjascentRailBlocks.Count == 1)
+            else if(adjascentRailBlocks.Count == 1) // 근처 railblock 에게 병합됨
             {
                 RailBlock adjascentBlock = adjascentRailBlocks[0];
                 adjascentBlock.AddRail(placeAt);
@@ -137,10 +137,18 @@ namespace TrainWorld.Rails
                 railAtPosition.myRailblock = adjascentBlock;
                 railAtOpposite.myRailblock = adjascentBlock;
             }
-            else
+            else // 근처 railblock이 2개 이상일 경우 근처의 모든 railblock을 합침
             {
-                Debug.Log(adjascentRailBlocks.Count);
-                //some merge functions
+                RailBlock newBlock = new RailBlock();
+                newBlock.AddRail(placeAt);
+                newBlock.AddRail((placeAt.Item1, DirectionHelper.Opposite(placeAt.Item2)));
+                foreach (var railBlock in adjascentRailBlocks)
+                {
+                    newBlock.Merge(railBlock);
+                    railBlockManager.railBlocks.Remove(railBlock);
+                }
+                railBlockManager.railBlocks.Add(newBlock);
+                newBlock.UpdateRailsBlockReference(); // 근처 모든 block들의 소속을 바꿈
             }
 
             AddPositionToRailsToFix(placeAt.Item1, placeAt.Item2);

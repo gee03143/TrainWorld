@@ -43,6 +43,9 @@ namespace TrainWorld.Rails
         [SerializeField]
         private TrafficSocket trafficSocket;
 
+        [SerializeField]
+        public Renderer railGroupDisplay;
+
         public RailBlock myRailblock;
 
         internal void Init(Vector3Int position, Direction8way direction)
@@ -112,16 +115,6 @@ namespace TrainWorld.Rails
             trafficSocket.Type = TrafficSocketType.Traffic;
             TrafficSignal traffic = trafficSocket.GetTraffic();
             traffic.Init(this.Position, this.Direction);
-            RailBlock railBlockA;
-            RailBlock railBlockB;
-            if(myRailblock == null)
-            {
-                Debug.Log("myrailblock is null");
-            }
-            (railBlockA, railBlockB) = myRailblock.Divide((this.Position, this.Direction));
-            myRailblock.RemoveMyself();
-            railBlockA.UpdateRailsBlockReference();
-            railBlockB.UpdateRailsBlockReference();
 
             return trafficSocket.GetTraffic();
         }
@@ -148,11 +141,7 @@ namespace TrainWorld.Rails
         {
             foreach (var neighbour in neighbourPositions)
             {
-                if (this.Direction == Direction8way.N || this.Direction == Direction8way.NW ||
-                    this.Direction == Direction8way.NE || this.Direction == Direction8way.E)
-                    Debug.DrawLine(neighbour.Item1, this.Position, Color.red);
-                else
-                    Debug.DrawLine(neighbour.Item1, this.Position, Color.blue);
+                Debug.DrawLine(neighbour.Item1, this.Position, Color.red);
             }
         }
 
