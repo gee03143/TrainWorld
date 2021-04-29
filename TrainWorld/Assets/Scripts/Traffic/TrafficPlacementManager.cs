@@ -37,13 +37,12 @@ namespace TrainWorld.Traffic
                 if (newSignal != null)
                 {
                     signals.Add((railAtCursor.Position, railAtCursor.Direction), newSignal);
-
-                    RailBlock railBlockA;
-                    RailBlock railBlockB;
                     if (railAtCursor.myRailblock == null)
                     {
                         Debug.Log("myrailblock is null");
                     }
+                    RailBlock railBlockA;
+                    RailBlock railBlockB;
                     (railBlockA, railBlockB) = railAtCursor.myRailblock.Divide((railAtCursor.Position, railAtCursor.Direction));
 
                     if (railBlockA == null && railBlockB == null) // fail to divide railblock

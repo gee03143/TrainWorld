@@ -115,8 +115,7 @@ namespace TrainWorld.Rails
             trafficSocket.Type = TrafficSocketType.Traffic;
             TrafficSignal traffic = trafficSocket.GetTraffic();
             traffic.Init(this.Position, this.Direction);
-
-            return trafficSocket.GetTraffic();
+            return traffic;
         }
 
         public TrafficSignal AddTempTrafficSignal()

@@ -8,6 +8,8 @@ using System;
 namespace TrainWorld.Traffic {
     public class RailBlock
     {
+        public bool hasAgent = false;
+
         private HashSet<(Vector3Int, Direction8way)> rails;
 
         public HashSet<(Vector3Int, Direction8way)> GetRails()
@@ -27,7 +29,6 @@ namespace TrainWorld.Traffic {
         {
             if (rails == null)
             {
-                Debug.Log("rails was null");
                 rails = new HashSet<(Vector3Int, Direction8way)>();
             }
             rails.Add(position);
@@ -43,17 +44,11 @@ namespace TrainWorld.Traffic {
 
             if (groupB.GetRails().Count == 0)    //  if two are equal = cannot divide with startPosition
             {
-                Debug.Log(rails.Count);
-                Debug.Log(groupA.GetRails().Count);
-                Debug.Log(groupB.GetRails().Count);
                 Debug.Log("Cannot Divide");
                 return (null, null);
             }
             else
             {
-                Debug.Log(rails.Count);
-                Debug.Log(groupA.GetRails().Count);
-                Debug.Log(groupB.GetRails().Count);
                 return (groupA, groupB);
             }
         }
@@ -61,11 +56,6 @@ namespace TrainWorld.Traffic {
         public void Merge(RailBlock other)
         {
             rails.UnionWith(other.GetRails());
-        }
-
-        public bool CompareBlock(RailBlock other)
-        {
-            return rails.SetEquals(other.GetRails());
         }
 
         public void RemoveMyself()

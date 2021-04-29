@@ -21,7 +21,7 @@ MonoBehaviour:
   m_ShowMode: 4
   m_Title: Hierarchy
   m_RootView: {fileID: 4}
-  m_MinSize: {x: 875, y: 300}
+  m_MinSize: {x: 875, y: 663}
   m_MaxSize: {x: 10000, y: 10000}
   m_Maximized: 1
 --- !u!114 &2
@@ -174,7 +174,7 @@ MonoBehaviour:
   m_MinSize: {x: 709, y: 613}
   m_MaxSize: {x: 18004, y: 18063}
   vertical: 0
-  controlID: 140
+  controlID: 49
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -459,9 +459,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 9, y: 0, z: 4}
+    m_Target: {x: 8.048269, y: 0.25052428, z: 4.669076}
     speed: 2
-    m_Value: {x: 9, y: 0, z: 4}
+    m_Value: {x: 8.048269, y: 0.25052428, z: 4.669076}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -512,9 +512,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: -0.5805817, y: 0.026122188, z: -0.018641638, w: -0.81356937}
   m_Size:
-    m_Target: 1.0732052
+    m_Target: 1.9732051
     speed: 2
-    m_Value: 1.0732052
+    m_Value: 1.9732051
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -678,24 +678,24 @@ MonoBehaviour:
   m_ViewDataDictionary: {fileID: 0}
   m_SceneHierarchy:
     m_TreeViewState:
-      scrollPos: {x: 0, y: 93}
-      m_SelectedIDs: 80420000
-      m_LastClickedID: 17024
-      m_ExpandedIDs: 563ff4ff6235f8ffb459fbff60fbffffb03f000038410000
+      scrollPos: {x: 0, y: 0}
+      m_SelectedIDs: a2430000
+      m_LastClickedID: 17314
+      m_ExpandedIDs: 1623cbff2823cbff2e9fccff409fccff0649fdff1849fdfff8cdfeff0acefeff18bdffff58bdffff6abdffff60fbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
-        m_Name: RailGroupDisplay
-        m_OriginalName: RailGroupDisplay
+        m_Name: 
+        m_OriginalName: 
         m_EditFieldRect:
           serializedVersion: 2
           x: 0
           y: 0
           width: 0
           height: 0
-        m_UserData: -304724
+        m_UserData: 0
         m_IsWaitingForDelay: 0
         m_IsRenaming: 0
-        m_OriginalEventType: 0
+        m_OriginalEventType: 11
         m_IsRenamingFilename: 0
         m_ClientGUIView: {fileID: 10}
       m_SearchString: 
@@ -754,24 +754,24 @@ MonoBehaviour:
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 62}
-    m_SelectedIDs: c6470000
-    m_LastClickedID: 18374
-    m_ExpandedIDs: 00000000b2470000b4470000b6470000b8470000ba470000bc470000be47000000ca9a3b
+    scrollPos: {x: 0, y: 66}
+    m_SelectedIDs: d4470000
+    m_LastClickedID: 18388
+    m_ExpandedIDs: 00000000c0470000c2470000c4470000c6470000c8470000ca470000cc470000d447000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: Rail
-      m_OriginalName: Rail
+      m_Name: 
+      m_OriginalName: 
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 26726
+      m_UserData: 0
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 0
+      m_OriginalEventType: 11
       m_IsRenamingFilename: 1
       m_ClientGUIView: {fileID: 11}
     m_SearchString: 
@@ -785,7 +785,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000b2470000b4470000b6470000b8470000ba470000bc470000be470000
+    m_ExpandedIDs: 00000000c0470000c2470000c4470000c6470000c8470000ca470000cc470000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -824,7 +824,7 @@ MonoBehaviour:
         y: 0
         width: 0
         height: 0
-      m_UserData: 17622
+      m_UserData: 17620
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
       m_OriginalEventType: 0

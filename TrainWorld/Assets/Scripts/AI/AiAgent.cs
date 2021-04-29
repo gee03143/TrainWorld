@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 using TrainWorld.Station;
 using TrainWorld.Rails;
+using TrainWorld.Traffic;
 
 namespace TrainWorld.AI
 {
@@ -30,6 +31,8 @@ namespace TrainWorld.AI
             get { return direction; }
             private set { direction = value; }
         }
+
+        RailBlock lastBlock;
 
         public event Action OnDeath;
         Rigidbody rb;
@@ -70,11 +73,11 @@ namespace TrainWorld.AI
         {
             this.position = position;
             this.direction = direction;
+            this.lastBlock = null;
         }
 
         public void SetUpSchedule(List<TrainStation> schedule)
         {
-
             pathIndex = 0;
             stationIndex = 0;
             trainStationsInSchedule = schedule;
@@ -108,7 +111,15 @@ namespace TrainWorld.AI
 
         private void Update()
         {
-            if(move)
+            Rail rail = PlacementManager.GetRailAt(this.Position, this.Direction);
+            if(lastBlock != rail.myRailblock && lastBlock != null) // if it moved to next block
+            {
+                lastBlock.hasAgent = false;
+            }
+            lastBlock = rail.myRailblock;
+            lastBlock.hasAgent = true;
+
+            if (move)
             {
                 TimeStepping();
             }
