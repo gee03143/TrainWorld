@@ -37,9 +37,9 @@ namespace TrainWorld.Rails
             this.neighbours.Clear();
             this.neighbours.AddRange(neighbours);
 
-            Vector3Int frontCandidatePos = position + DirectionHelper.ToDirectionalVector(direction);
-            Vector3Int leftCandidatePos = frontCandidatePos + DirectionHelper.ToDirectionalVector(DirectionHelper.Prev(direction));
-            Vector3Int rightCandidatePos = frontCandidatePos + DirectionHelper.ToDirectionalVector(DirectionHelper.Next(direction));
+            Vector3Int frontCandidatePos = position + direction.ToDirectionalVector();
+            Vector3Int leftCandidatePos = frontCandidatePos + direction.Prev().ToDirectionalVector();
+            Vector3Int rightCandidatePos = frontCandidatePos + direction.Next().ToDirectionalVector();
 
             bool railCreated = false;
             foreach ((Vector3Int, Direction8way) neighbour in neighbours)
@@ -47,7 +47,7 @@ namespace TrainWorld.Rails
                 if (neighbour.Item1.Equals(leftCandidatePos))
                 {
                     railCreated = true;
-                    if (DirectionHelper.IsDiagonal(direction)) // if direction is diagonal
+                    if (direction.IsDiagonal()) // if direction is diagonal
                     {
                         continue;   // do nothing
                     }
@@ -59,7 +59,7 @@ namespace TrainWorld.Rails
                 else if (neighbour.Item1.Equals(rightCandidatePos))
                 {
                     railCreated = true;
-                    if (DirectionHelper.IsDiagonal(direction)) // if direction is diagonal
+                    if (direction.IsDiagonal()) // if direction is diagonal
                     {
                         continue;   // do nothing
                     }
@@ -71,7 +71,7 @@ namespace TrainWorld.Rails
                 else if (neighbour.Item1.Equals(frontCandidatePos))
                 {
                     railCreated = true;
-                    if (DirectionHelper.IsDiagonal(direction))// if direction is diagonal
+                    if (direction.IsDiagonal())// if direction is diagonal
                     {
                         // make diagonal rail
                         RailFactory.SpawnRail(RailType.Diagonal, position, direction, transform);
@@ -86,7 +86,7 @@ namespace TrainWorld.Rails
 
             if (railCreated == false)
             {
-                if (DirectionHelper.IsDiagonal(direction))
+                if (direction.IsDiagonal())
                 {
                     RailFactory.SpawnRail(RailType.Diagonal_Deadend, position, direction, transform);
                 }

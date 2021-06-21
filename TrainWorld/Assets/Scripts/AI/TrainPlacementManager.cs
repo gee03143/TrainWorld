@@ -38,7 +38,7 @@ namespace TrainWorld.AI
                 railAtCursor = PlacementManager.GetRailViaMousePosition(mousePosition);
 
                 GameObject newObject = Instantiate(trainPrefab, railAtCursor.Position,
-                    Quaternion.Euler(DirectionHelper.ToEuler(railAtCursor.Direction)));
+                    Quaternion.Euler(railAtCursor.Direction.ToEuler()));
 
                 AiAgent newAgent = newObject.GetComponent<AiAgent>();
                 newAgent.Init(railAtCursor.Position, railAtCursor.Direction);

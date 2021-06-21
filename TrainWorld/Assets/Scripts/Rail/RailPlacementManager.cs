@@ -109,15 +109,15 @@ namespace TrainWorld.Rails
         private void AddRailAt((Vector3Int, Direction8way) startFrom, (Vector3Int, Direction8way) placeAt)
         {
             InstantiateRailPrefab(placeAt);
-            InstantiateRailPrefab((placeAt.Item1, DirectionHelper.Opposite(placeAt.Item2)));
+            InstantiateRailPrefab((placeAt.Item1, placeAt.Item2.Opposite()));
 
             Rail railAtPosition = PlacementManager.GetRailAt(placeAt);
-            Rail railAtOpposite = PlacementManager.GetRailAt(placeAt.Item1, DirectionHelper.Opposite(placeAt.Item2));
+            Rail railAtOpposite = PlacementManager.GetRailAt(placeAt.Item1, placeAt.Item2.Opposite());
 
             if (startFrom != placeAt){
                 PlacementManager.GetRailAt(startFrom).AddNeighbour(placeAt);
-                PlacementManager.GetRailAt((placeAt.Item1, DirectionHelper.Opposite(placeAt.Item2)))
-                    .AddNeighbour((startFrom.Item1, DirectionHelper.Opposite(startFrom.Item2)));
+                PlacementManager.GetRailAt((placeAt.Item1, placeAt.Item2.Opposite()))
+                    .AddNeighbour((startFrom.Item1, startFrom.Item2.Opposite()));
             }
 
             List<RailBlock> adjascentRailBlocks = GetAllAdjascentRailBlocks(placeAt, railAtPosition, railAtOpposite);
@@ -125,7 +125,7 @@ namespace TrainWorld.Rails
             {
                 RailBlock newBlock = new RailBlock();
                 newBlock.AddRail(placeAt);
-                newBlock.AddRail((placeAt.Item1, DirectionHelper.Opposite(placeAt.Item2)));
+                newBlock.AddRail((placeAt.Item1, placeAt.Item2.Opposite()));
                 railAtPosition.myRailblock = newBlock;
                 railAtOpposite.myRailblock = newBlock;
             }
@@ -133,7 +133,7 @@ namespace TrainWorld.Rails
             {
                 RailBlock adjascentBlock = adjascentRailBlocks[0];
                 adjascentBlock.AddRail(placeAt);
-                adjascentBlock.AddRail((placeAt.Item1, DirectionHelper.Opposite(placeAt.Item2)));
+                adjascentBlock.AddRail((placeAt.Item1, placeAt.Item2.Opposite()));
                 railAtPosition.myRailblock = adjascentBlock;
                 railAtOpposite.myRailblock = adjascentBlock;
             }
@@ -141,7 +141,7 @@ namespace TrainWorld.Rails
             {
                 RailBlock newBlock = new RailBlock();
                 newBlock.AddRail(placeAt);
-                newBlock.AddRail((placeAt.Item1, DirectionHelper.Opposite(placeAt.Item2)));
+                newBlock.AddRail((placeAt.Item1, placeAt.Item2.Opposite()));
                 foreach (var railBlock in adjascentRailBlocks)
                 {
                     newBlock.Merge(railBlock);
@@ -161,8 +161,8 @@ namespace TrainWorld.Rails
             List<RailBlock> adjascentRailBlocks = new List<RailBlock>();
             List<(Vector3Int, Direction8way)> adjascentTuples = new List<(Vector3Int, Direction8way)>();
 
-            adjascentTuples.AddRange(railAtPosition.GetNeighbourTuples().Select(x => (x.Item1, DirectionHelper.Opposite(x.Item2))).ToList());
-            adjascentTuples.AddRange(railAtOpposite.GetNeighbourTuples().Select(x => (x.Item1, DirectionHelper.Opposite(x.Item2))).ToList());
+            adjascentTuples.AddRange(railAtPosition.GetNeighbourTuples().Select(x => (x.Item1, x.Item2.Opposite())).ToList());
+            adjascentTuples.AddRange(railAtOpposite.GetNeighbourTuples().Select(x => (x.Item1, x.Item2.Opposite())).ToList());
             adjascentTuples.AddRange(PlacementManager.GetRailsAtPosition(position.Item1).Select(x => (x.Position, x.Direction)).ToList());
 
             foreach (var tuple in adjascentTuples)
@@ -181,12 +181,12 @@ namespace TrainWorld.Rails
             {
                 if (PlacementManager.IsEmpty(position))
                 {
-                    GameObject newObject = Instantiate(railPrefab, position.Item1, Quaternion.Euler(DirectionHelper.ToEuler(position.Item2)), railParent) as GameObject;
+                    GameObject newObject = Instantiate(railPrefab, position.Item1, Quaternion.Euler(position.Item2.ToEuler()), railParent) as GameObject;
                     Rail newRail = newObject.GetComponent<Rail>();
                     newRail.Init(position.Item1, position.Item2);
 
-                    (Vector3Int, Direction8way) frontPos = (position.Item1 + DirectionHelper.ToDirectionalVector(position.Item2), position.Item2);
-                    (Vector3Int, Direction8way) rearPos = (position.Item1 - DirectionHelper.ToDirectionalVector(position.Item2), position.Item2);
+                    (Vector3Int, Direction8way) frontPos = (position.Item1 + position.Item2.ToDirectionalVector(), position.Item2);
+                    (Vector3Int, Direction8way) rearPos = (position.Item1 - position.Item2.ToDirectionalVector(), position.Item2);
 
                     //search nearby rails, if adjascent add to neighbour
                     if (PlacementManager.IsEmpty(frontPos) == false)
@@ -203,7 +203,7 @@ namespace TrainWorld.Rails
             }
             else
             {
-                GameObject newObject = Instantiate(railPrefab, position.Item1, Quaternion.Euler(DirectionHelper.ToEuler(position.Item2)), railParent) as GameObject;
+                GameObject newObject = Instantiate(railPrefab, position.Item1, Quaternion.Euler(position.Item2.ToEuler()), railParent) as GameObject;
                 Rail newRail = newObject.GetComponent<Rail>();
                 newRail.Init(position.Item1, position.Item2);
                 tempRails.Add(position, newRail);
@@ -215,13 +215,13 @@ namespace TrainWorld.Rails
         private void AddPositionToRailsToFix(Vector3Int position, Direction8way direction)
         {
             railsToFix.Add((position, direction));
-            railsToFix.Add((position, DirectionHelper.Opposite(direction)));
+            railsToFix.Add((position, direction.Opposite()));
         }
 
         private void AddAdjascentPositionsToRailsToFix(Vector3Int position, Direction8way direction)
         {
             railsToFix.UnionWith(PlacementManager.GetRailAt(position, direction).GetNeighbourTuples());
-            railsToFix.UnionWith(PlacementManager.GetRailAt(position, DirectionHelper.Opposite(direction)).GetNeighbourTuples());
+            railsToFix.UnionWith(PlacementManager.GetRailAt(position, direction.Opposite()).GetNeighbourTuples());
         }
 
         private void FixRails()
@@ -229,7 +229,7 @@ namespace TrainWorld.Rails
             foreach (var railToFix in railsToFix)
             {
                 PlacementManager.GetRailAt(railToFix).FixMyModel();
-                PlacementManager.GetRailAt(railToFix.Item1, DirectionHelper.Opposite(railToFix.Item2)).FixMyModel();
+                PlacementManager.GetRailAt(railToFix.Item1, railToFix.Item2.Opposite()).FixMyModel();
             }
 
             railsToFix.Clear();
@@ -282,7 +282,7 @@ namespace TrainWorld.Rails
         public void RemoveRail(Vector3 position)
         {
             (Vector3Int, Direction8way) cursorPos = (railUnderCursor.Position, railUnderCursor.Direction);
-            (Vector3Int, Direction8way) opposite = (railUnderCursor.Position, DirectionHelper.Opposite(railUnderCursor.Direction));
+            (Vector3Int, Direction8way) opposite = (railUnderCursor.Position, railUnderCursor.Direction.Opposite());
 
             // if selected position is out of border or empty do nothing
             if (IsPositionOutOfBorder(railUnderCursor.Position) || PlacementManager.IsEmpty(railUnderCursor.Position, railUnderCursor.Direction))
@@ -295,12 +295,12 @@ namespace TrainWorld.Rails
             {
                 foreach (var neighbour in PlacementManager.GetRailAt(cursorPos).GetNeighbourTuples())
                 {
-                    PlacementManager.GetRailAt((neighbour.Item1, DirectionHelper.Opposite(neighbour.Item2))).RemoveNeighbourAt(opposite);
+                    PlacementManager.GetRailAt((neighbour.Item1, neighbour.Item2.Opposite())).RemoveNeighbourAt(opposite);
                 }
 
                 foreach (var neighbour in PlacementManager.GetRailAt(opposite).GetNeighbourTuples())
                 {
-                    PlacementManager.GetRailAt((neighbour.Item1, DirectionHelper.Opposite(neighbour.Item2))).RemoveNeighbourAt(cursorPos);
+                    PlacementManager.GetRailAt((neighbour.Item1, neighbour.Item2.Opposite())).RemoveNeighbourAt(cursorPos);
                 }
                 PlacementManager.GetRailAt(cursorPos).DestroyMyself();
                 PlacementManager.RemoveRailAt(cursorPos);
@@ -324,7 +324,7 @@ namespace TrainWorld.Rails
                 railArrowUI.arrow.SetActive(true);
                 railArrowUI.arrow.transform.position = railUnderCursor.Position;
 
-                railArrowUI.arrow.transform.rotation = Quaternion.Euler(DirectionHelper.ToEuler(railUnderCursor.Direction));
+                railArrowUI.arrow.transform.rotation = Quaternion.Euler(railUnderCursor.Direction.ToEuler());
             }
             else
             {
@@ -342,12 +342,12 @@ namespace TrainWorld.Rails
             for (int i = 0; i < tempRailPositions.Count; i++)
             {
                 InstantiateRailPrefab((tempRailPositions[i].Item1, tempRailPositions[i].Item2), true);
-                InstantiateRailPrefab((tempRailPositions[i].Item1, DirectionHelper.Opposite(tempRailPositions[i].Item2)), true);
+                InstantiateRailPrefab((tempRailPositions[i].Item1, tempRailPositions[i].Item2.Opposite()), true);
                 if (i != 0)
                 {
                     tempRails[tempRailPositions[i - 1]].AddNeighbour(tempRailPositions[i]);
-                    tempRails[(tempRailPositions[i ].Item1, DirectionHelper.Opposite(tempRailPositions[i].Item2))]
-                        .AddNeighbour((tempRailPositions[i - 1].Item1, DirectionHelper.Opposite(tempRailPositions[i - 1].Item2)));
+                    tempRails[(tempRailPositions[i ].Item1, tempRailPositions[i].Item2.Opposite())]
+                        .AddNeighbour((tempRailPositions[i - 1].Item1, tempRailPositions[i - 1].Item2.Opposite()));
                 }
             }
             foreach (var item in tempRails)
@@ -364,7 +364,7 @@ namespace TrainWorld.Rails
         {
             if (placementMode == false)
             {
-                placementStartDirection = DirectionHelper.Next(placementStartDirection);
+                placementStartDirection = placementStartDirection.Next();
                 RemoveTempRails();
                 tempRailPositions.Clear();
                 tempRailPositions.Add((placementStartPosition, placementStartDirection));

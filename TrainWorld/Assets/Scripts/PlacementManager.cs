@@ -81,11 +81,11 @@ namespace TrainWorld.Rails
                 else
                 {
                     Direction8way nearestDirection = railsAtPosition[0].Direction;
-                    float shortestDistance = Vector3.Distance(railsAtPosition[0].Position + Vector3.Normalize(DirectionHelper.ToDirectionalVector(railsAtPosition[0].Direction)),
-                        mousePosition);
+                    float shortestDistance = Vector3.Distance(railsAtPosition[0].Position + 
+                        Vector3.Normalize(railsAtPosition[0].Direction.ToDirectionalVector()), mousePosition);
                     foreach (var model in railsAtPosition)
                     {
-                        float newDistance = Vector3.Distance(model.Position + Vector3.Normalize(DirectionHelper.ToDirectionalVector(model.Direction)),
+                        float newDistance = Vector3.Distance(model.Position + Vector3.Normalize(model.Direction.ToDirectionalVector()),
                             mousePosition);
                         if (shortestDistance > newDistance)
                         {

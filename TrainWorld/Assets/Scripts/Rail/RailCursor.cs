@@ -36,7 +36,7 @@ namespace TrainWorld.Rails
         }
         private void Awake()
         {
-            arrow = Instantiate(arrowPrefab, position, Quaternion.Euler(DirectionHelper.ToEuler(direction))) as GameObject;
+            arrow = Instantiate(arrowPrefab, position, Quaternion.Euler(direction.ToEuler())) as GameObject;
             arrow.SetActive(false);
         }
 
@@ -47,8 +47,8 @@ namespace TrainWorld.Rails
 
         internal void Rotate()
         {
-            direction = DirectionHelper.Next(direction);
-            arrow.transform.rotation = Quaternion.Euler(DirectionHelper.ToEuler(direction));
+            direction = direction.Next();
+            arrow.transform.rotation = Quaternion.Euler(direction.ToEuler());
         }
 
         private void MoveTempRailObjects()

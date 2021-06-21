@@ -47,7 +47,7 @@ namespace TrainWorld.Traffic
 
         private void Update()
         {
-            if (master.myRailblock == PlacementManager.GetRailAt(master.Position, DirectionHelper.Opposite(master.Direction)).myRailblock) // cannot divide
+            if (master.myRailblock == PlacementManager.GetRailAt(master.Position, master.Direction.Opposite()).myRailblock) // cannot divide
             {
                 ChangeLightToGray();
             }

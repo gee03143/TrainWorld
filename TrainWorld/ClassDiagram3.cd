@@ -1,0 +1,324 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="TrainWorld.AI.AiAgent" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AhQBQAAAACIAKACkACBCIIAAIBGgAQAAIgBCgAAAAEA=</HashCode>
+      <FileName>Assets\Scripts\AI\AiAgent.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TrainWorld.AI.TrainPlacementManager" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="6.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAIIAAAAAAAQAAAAAAAABAQAAEAIIAAAAAAAMA=</HashCode>
+      <FileName>Assets\Scripts\AI\TrainPlacementManager.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TrainWorld.CameraMovement" Collapsed="true">
+    <Position X="1.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAACAAAEAAAAAAAAAIAiAACAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\CameraMovement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TrainWorld.DestructionManager" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="6.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAggAAAAAAACAAAAAAAAAAAAAhAQAAAAIIAAABAAAEA=</HashCode>
+      <FileName>Assets\Scripts\DestructionManager.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TrainWorld.DirectionHelper" Collapsed="true">
+    <Position X="12.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgIAAAAABAAAAAAACAAAAAAAAAAAAEAAAAAQAAEAAAA=</HashCode>
+      <FileName>Assets\Scripts\DirectionHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TrainWorld.GameManager">
+    <Position X="4" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAgAAAAAIGQAAAAQBCEAAAAAAgAAQAAgEAKAQBAAAAA=</HashCode>
+      <FileName>Assets\Scripts\GameManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="destructionManager" />
+      <Field Name="railPlacementManager" />
+      <Field Name="trafficPlacementManager" />
+      <Field Name="trainPlacementManager" />
+      <Field Name="stationPlacementManager" />
+      <Field Name="neuturalStateManager" />
+      <Field Name="inputManager" />
+      <Field Name="cameraMovement" />
+      <Field Name="uiController" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="TrainWorld.InputManager" Collapsed="true">
+    <Position X="1.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQQAAAAEAAAAAAAMAIIAEAABIAAkACAIAQAAAEAAKEA=</HashCode>
+      <FileName>Assets\Scripts\InputManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TrainWorld.NeuturalStateManager" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="6.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAIAAAAAAAAAABABAQAgAAIIAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\NeuturalStateManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="uiStationData" />
+      <Field Name="uiTrain" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TrainWorld.ObjectSelector" Collapsed="true">
+    <Position X="12.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>Assets\Scripts\ObjectSelector.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TrainWorld.PathVisualizer" Collapsed="true">
+    <Position X="15.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAgACAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\PathVisualizer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TrainWorld.RailGizmo" Collapsed="true">
+    <Position X="18.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAIAAACAAAAAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>Assets\Scripts\Rail\RailGizmo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TrainWorld.UiController" Collapsed="true">
+    <Position X="1.75" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAADEAACAAQAAAgCACwAAAAMAAiAAACBAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Ui\UiController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TrainWorld.UiStationData" Collapsed="true">
+    <Position X="8.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAAAAAAAAAIAAAAgAQABABAAAAAMAQAEA=</HashCode>
+      <FileName>Assets\Scripts\Ui\UiStationData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TrainWorld.UiTrain" Collapsed="true">
+    <Position X="8.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAwAAAABAQAAQAAAGAAgAAAABQAA4AAIAAAEA=</HashCode>
+      <FileName>Assets\Scripts\Ui\UiTrain.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TrainWorld.UiTrainRow" Collapsed="true">
+    <Position X="10.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAQAAAAAAAgAAAAAAACAAAAAIAIAAAAAAAAAUE=</HashCode>
+      <FileName>Assets\Scripts\Ui\UiTrainRow.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TrainWorld.Vertex" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="17" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAkgCAAAAAAAAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Vertex.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TrainWorld.Rails.PlacementManager" Collapsed="true">
+    <Position X="10.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABQAAAAAAAAAAAAEAAAAEAAQABAAACIAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\PlacementManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TrainWorld.Rails.Rail" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="9" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gIAQoAAABAIAoABkAKAAoAQBABCgAAEMAAQigAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Rail\Rail.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="railModel" />
+      <Field Name="trafficSocket" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TrainWorld.Rails.RailArrowUI" Collapsed="true">
+    <Position X="8.75" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAA=</HashCode>
+      <FileName>Assets\Scripts\Rail\RailArrowUI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TrainWorld.Rails.RailCursor" Collapsed="true">
+    <Position X="12.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAIAAIEAgACAAIAAAEAAAIAAAAAAAKAAIAEA=</HashCode>
+      <FileName>Assets\Scripts\Rail\RailCursor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TrainWorld.Rails.RailFactory" Collapsed="true">
+    <Position X="12.25" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAQAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Rail\RailFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TrainWorld.Rails.RailGraphPathfinder" Collapsed="true">
+    <Position X="10.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAACAAAAAgAAAAAAAAAAAAAAAAAACCAAAABAAAIA=</HashCode>
+      <FileName>Assets\Scripts\Rail\RailGraphPathfinder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TrainWorld.Rails.RailModel" Collapsed="true">
+    <Position X="9" Y="14" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAIACgACAAIAAAIAAAAAAIAAACAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Rail\RailModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TrainWorld.Rails.RailPlacementManager" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="6.25" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QgAxAiMCIAAEBCkSACAAAAAAABISAAiAIMQCEAAAQEQ=</HashCode>
+      <FileName>Assets\Scripts\Rail\RailPlacementManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="railBlockManager" />
+      <Field Name="railArrowUI" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TrainWorld.Rails.RailTypeHolder">
+    <Position X="19.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Rail\RailTypeHolder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TrainWorld.Traffic.BFSSearcher" Collapsed="true">
+    <Position X="10.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Traffic\BFSSearcher.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TrainWorld.Traffic.RailBlock" Collapsed="true">
+    <Position X="10.5" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIQAAAkAAAgAEAAAAAACAAQAAAAAAAEAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Traffic\RailBlock.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TrainWorld.Traffic.RailBlockManager" Collapsed="true">
+    <Position X="8.75" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAAAAAAAAAAAAAAACAAQAAAAAAAEA=</HashCode>
+      <FileName>Assets\Scripts\Traffic\RailBlockManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TrainWorld.Traffic.TrafficPlacementManager" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="6.25" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAIAAAAEAAAAAAAAACAQBIQAAAAIIAACAAAAEA=</HashCode>
+      <FileName>Assets\Scripts\Traffic\TrafficPlacementManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="railBlockManager" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TrainWorld.Traffic.TrafficSensor" Collapsed="true">
+    <Position X="13.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACQAAAAAAAAEA=</HashCode>
+      <FileName>Assets\Scripts\Traffic\TrafficSensor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TrainWorld.Traffic.TrafficSignal" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="5.5" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAJAAIAAlACAAIAAAAgCAAAAAAAACgAAAgUA=</HashCode>
+      <FileName>Assets\Scripts\Traffic\TrafficSignal.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TrainWorld.Station.StationPlacementManager" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="6.25" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAgAAAAABAAIAAAAAAAAACAABAQAACgIIAAAAAYAMA=</HashCode>
+      <FileName>Assets\Scripts\Traffic\StationPlacementManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="uiTrain" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TrainWorld.Station.TrafficSocket" Collapsed="true">
+    <Position X="9" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAACAAAIAAEAACAAAAgAAAAAAAAQAABwAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Traffic\TrafficSocket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TrainWorld.Station.TrainStation" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="7.25" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIAAkASAAIAEAAACAAAAIAAACgAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Traffic\TrainStation.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="TrainWorld.InputHandler" Collapsed="true">
+    <Position X="6.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAAAAAAAABAQAAAAIIAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\GameManager.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TrainWorld.ISelectableObject" Collapsed="true">
+    <Position X="5.75" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\ISelectableObject.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="TrainWorld.Direction8way" Collapsed="true">
+    <Position X="1" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACEAAAAAAAAAAAQgAAQAAAAAAAhCIAAA=</HashCode>
+      <FileName>Assets\Scripts\DirectionHelper.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="TrainWorld.SelectableObjectType" Collapsed="true">
+    <Position X="1" Y="14" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAEAEAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\ISelectableObject.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="TrainWorld.Rails.RailType" Collapsed="true">
+    <Position X="1" Y="13.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAABAAAAAAQAAAAECAAAAAAAAAAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Rail\RailTypeHolder.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="TrainWorld.Station.TrafficSocketType" Collapsed="true">
+    <Position X="1" Y="14.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAIAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Traffic\TrafficSocket.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="맑은 고딕" Size="9" />
+</ClassDiagram>

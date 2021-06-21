@@ -28,7 +28,7 @@ namespace TrainWorld.Rails
         {
             if (railDictionary.ContainsKey(railType))
             {
-                Object.Instantiate(railDictionary[railType], position, Quaternion.Euler(DirectionHelper.ToEuler(direction)), parent.transform);
+                Object.Instantiate(railDictionary[railType], position, Quaternion.Euler(direction.ToEuler()), parent.transform);
             }
             else
             {

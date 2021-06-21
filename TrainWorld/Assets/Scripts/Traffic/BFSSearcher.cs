@@ -23,7 +23,7 @@ namespace TrainWorld.Traffic
 
                 List<(Vector3Int, Direction8way)> neighbourTuples = PlacementManager.GetRailAt(current).GetNeighbourTuples();
 
-                List<(Vector3Int, Direction8way)> adjascentPositions = neighbourTuples.Select(x => (x.Item1, DirectionHelper.Opposite(x.Item2))).ToList();
+                List<(Vector3Int, Direction8way)> adjascentPositions = neighbourTuples.Select(x => (x.Item1, x.Item2.Opposite())).ToList();
                 foreach (var adjascent in adjascentPositions)
                 {
                     visited.Add(adjascent);
@@ -34,7 +34,7 @@ namespace TrainWorld.Traffic
                     if (visited.Contains(neighbour) == false) // on unvisited neighbour
                     {
                         if (PlacementManager.GetRailAt(neighbour).HasTraffic() == false &&
-                        PlacementManager.GetRailAt((neighbour.Item1, DirectionHelper.Opposite(neighbour.Item2))).HasTraffic() == false)
+                        PlacementManager.GetRailAt((neighbour.Item1, neighbour.Item2.Opposite())).HasTraffic() == false)
                         // if neighbour dont has traffic
                         {
                             List<(Vector3Int, Direction8way)> railsAtPos = 

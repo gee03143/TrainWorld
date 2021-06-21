@@ -80,13 +80,13 @@ namespace TrainWorld.Rails
         {
             List<(Vector3Int, Direction8way)> AdjacentCells = new List<(Vector3Int, Direction8way)>();
 
-            Vector3Int front = DirectionHelper.ToDirectionalVector(current.Item2);
-            Vector3Int left = DirectionHelper.ToDirectionalVector(DirectionHelper.Prev(current.Item2));
-            Vector3Int right = DirectionHelper.ToDirectionalVector(DirectionHelper.Next(current.Item2));
+            Vector3Int front = current.Item2.ToDirectionalVector();
+            Vector3Int left = current.Item2.Prev().ToDirectionalVector();
+            Vector3Int right = current.Item2.Next().ToDirectionalVector();
 
             AdjacentCells.Add((current.Item1 + front, current.Item2));
-            AdjacentCells.Add((current.Item1 + front + left, DirectionHelper.Prev(current.Item2)));
-            AdjacentCells.Add((current.Item1 + front + right, DirectionHelper.Next(current.Item2)));
+            AdjacentCells.Add((current.Item1 + front + left, current.Item2.Prev()));
+            AdjacentCells.Add((current.Item1 + front + right, current.Item2.Next()));
 
             return AdjacentCells;
         }

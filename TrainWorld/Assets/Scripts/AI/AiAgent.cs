@@ -127,9 +127,20 @@ namespace TrainWorld.AI
 
         private void TimeStepping()
         {
-            if(path.Count > pathIndex)
+            float remainingDistance = float.MaxValue;
+            if (path.Count > pathIndex)
             {
-                float remainingDistance = MoveAgent();
+                Rail agentRail = PlacementManager.GetRailAt(this.Position, this.Direction); // 이 agent가 올라가 있는 rail
+                Rail targetRail = PlacementManager.GetRailAt(currentTarget.Item1, currentTarget.Item2); // agent가 이동할 예정인 rail
+                if (targetRail.myRailblock.hasAgent && agentRail.myRailblock != targetRail.myRailblock) 
+                    //다음 railblock으로 이동할 때 해당 railblock이 agent가 존재한다면
+                {
+                    // do nothing
+                }
+                else
+                {
+                    remainingDistance = MoveAgent();
+                }
                 if(remainingDistance < 0.1f)
                 {
                     this.Position = currentTarget.Item1;
