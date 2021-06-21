@@ -14,14 +14,7 @@ namespace TrainWorld.Station
         [SerializeField]
         private UiTrain uiTrain;
 
-        private Dictionary<String, TrainStation> stations;
-
         private TrainStation tempStation;
-
-        void Awake()
-        {
-            stations = new Dictionary<string, TrainStation>();
-        }
 
         public void OnMouseDown(Vector3 mousePosition)
         {
@@ -35,11 +28,11 @@ namespace TrainWorld.Station
 
             if (railAtCursor != null && railAtCursor.IsTrafficSocketEmpty())
             {
-                TrainStation newStation = railAtCursor.AddStation((stations.Count).ToString());
+                TrainStation newStation = railAtCursor.AddStation((PlacementManager.GetStations().Count).ToString());
                 if (newStation != null)
                 {
-                    stations.Add(newStation.StationName, newStation);
-                    uiTrain.SetStationNameList(stations.Keys.ToList());
+                    PlacementManager.GetStations().Add(newStation.StationName, newStation);
+                    uiTrain.SetStationNameList(PlacementManager.GetStations().Keys.ToList());
                 }
             }
         }
@@ -72,51 +65,21 @@ namespace TrainWorld.Station
             //throw new NotImplementedException();
         }
 
-        public void SetDestinationToAgent(List<string> stationNames, AiAgent target)
+        public TrainStation GetStationOfName(string name)
         {
-            List<TrainStation> stations = new List<TrainStation>();
-            foreach (string name in stationNames)
-            {
-                TrainStation station = GetStationOfName(name);
-                if (station != null)
-                    stations.Add(station);
-                else
-                {
-                    Debug.Log("station with this name is null" + name);
-                    return;
-                }
-            }
-
-            if (target == null)
-            {
-                Debug.Log("Target Agent is null");
-                return;
-            }
-
-            target.SetUpSchedule(stations);
-
-        }
-
-        private TrainStation GetStationOfName(string name)
-        {
-            if (stations.ContainsKey(name))
-            {
-                return stations[name];
-            }
-            else
-                return null;
+            return PlacementManager.GetStationOfName(name);
         }
 
         internal bool TryChangeName(string from, string to, TrainStation selectedStation)
         {
-            if (stations.ContainsKey(to) == false)
+            if (PlacementManager.GetStations().ContainsKey(to) == false)
             {
-                stations.Remove(from);
-                stations.Add(to, selectedStation);
-                uiTrain.SetStationNameList(stations.Keys.ToList());
+                PlacementManager.GetStations().Remove(from);
+                PlacementManager.GetStations().Add(to, selectedStation);
+                uiTrain.SetStationNameList(PlacementManager.GetStations().Keys.ToList());
                 return true;
             }
-            else if (stations.ContainsKey(from) == false)
+            else if (PlacementManager.GetStations().ContainsKey(from) == false)
             {
                 Debug.Log("No station with name : " + from + " Failure at change name");
                 return false;

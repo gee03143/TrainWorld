@@ -5,6 +5,8 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
+using TrainWorld.AI;
+
 namespace TrainWorld
 {
     public class UiTrainRow : MonoBehaviour
@@ -26,11 +28,14 @@ namespace TrainWorld
             Destroy(gameObject);
         }
 
-        internal void SetDropdownSelected(string stationName)
+        internal void SetDropdownSelected(string value)
         {
-            Debug.Log(stationName);
-            dropdown.value = dropdown.options.Select(option => option.text).ToList().IndexOf(stationName);
-            Debug.Log(dropdown.value);
+            dropdown.value = dropdown.options.Select(option => option.text).ToList().IndexOf(value);
+        }
+
+        internal void SetDropdownSelected(int value)
+        {
+            dropdown.value = value - 1; // option starts from 0
         }
 
         internal string GetDropdownSelected()

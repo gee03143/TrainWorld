@@ -6,8 +6,6 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 using TrainWorld.Station;
-using TrainWorld.Rails;
-using TrainWorld.Traffic;
 
 namespace TrainWorld.AI
 {
@@ -31,8 +29,6 @@ namespace TrainWorld.AI
             get { return direction; }
             private set { direction = value; }
         }
-
-        RailBlock lastBlock;
 
         public event Action OnDeath;
         Rigidbody rb;
@@ -61,115 +57,79 @@ namespace TrainWorld.AI
             }
         }
 
+        public List<AgentTask> tasks;
         public List<TrainStation> trainStationsInSchedule;
-        int stationIndex;
+        int taskIndex;
 
         List<(Vector3Int, Direction8way)> path;
-
-        int pathIndex;
-        (Vector3Int, Direction8way) currentTarget;
 
         internal void Init(Vector3Int position, Direction8way direction)
         {
             this.position = position;
             this.direction = direction;
-            this.lastBlock = null;
         }
 
-        public void SetUpSchedule(List<TrainStation> schedule)
+        public void SetUpSchedule(List<(AgentTaskType, string)> schedule)
         {
-            pathIndex = 0;
-            stationIndex = 0;
-            trainStationsInSchedule = schedule;
+            taskIndex = 0;
+            //trainStationsInSchedule = schedule;
             move = true;
-            if(trainStationsInSchedule.Count > 1)
+
+            if (tasks != null)
+                tasks.Clear();
+
+            foreach (var task in schedule)
             {
-                SetUpPath(stationIndex);
+                if (task.Item1 == AgentTaskType.Move)
+                {
+                    MoveToStationTask newTask = new MoveToStationTask(this, PlacementManager.GetStationOfName(task.Item2));
+                    newTask.onFinish += ChangeTask;
+                    newTask.onNextRail += ChangePositionAndDirection;
+                    tasks.Add(newTask);
+                }else if(task.Item1 == AgentTaskType.Wait)
+                {
+                    float.TryParse(task.Item2, out float waitTime);
+                    Debug.Log(waitTime);
+                    WaitTask newTask = new WaitTask(this, waitTime);
+                    newTask.onFinish += ChangeTask;
+                    tasks.Add(newTask);
+                }
             }
         }
 
-        private void SetUpPath(int nextStationIndex)
+        private void ChangeTask()
         {
-            path = PlacementManager.GetRailPathForAgent(this.position, this.direction,
-                trainStationsInSchedule[stationIndex].Position, trainStationsInSchedule[stationIndex].Direction);
-            if(path == null)
-            {
-                Debug.Log("No Path");
-            }
-            pathIndex = 0;
-            currentTarget = path[pathIndex];
+            taskIndex = (taskIndex + 1) % tasks.Count;
+            tasks[taskIndex].OnTaskEnter();
         }
 
         private void Awake()
         {
             rb = GetComponent<Rigidbody>();
-            path = new List<(Vector3Int, Direction8way)>();
-            trainStationsInSchedule = new List<TrainStation>();
-            stationIndex = 0;
-            pathIndex = 0;
+            tasks = new List<AgentTask>();
         }
 
         private void Update()
         {
-            Rail rail = PlacementManager.GetRailAt(this.Position, this.Direction);
-            if(lastBlock != rail.myRailblock && lastBlock != null) // if it moved to next block
-            {
-                lastBlock.hasAgent = false;
-            }
-            lastBlock = rail.myRailblock;
-            lastBlock.hasAgent = true;
-
-            if (move)
-            {
-                TimeStepping();
-            }
+            if(tasks.Count != 0)
+                tasks[taskIndex].DoTask();
         }
 
-        private void TimeStepping()
-        {
-            float remainingDistance = float.MaxValue;
-            if (path.Count > pathIndex)
-            {
-                Rail agentRail = PlacementManager.GetRailAt(this.Position, this.Direction); // 이 agent가 올라가 있는 rail
-                Rail targetRail = PlacementManager.GetRailAt(currentTarget.Item1, currentTarget.Item2); // agent가 이동할 예정인 rail
-                if (targetRail.myRailblock.hasAgent && agentRail.myRailblock != targetRail.myRailblock) 
-                    //다음 railblock으로 이동할 때 해당 railblock이 agent가 존재한다면
-                {
-                    // do nothing
-                }
-                else
-                {
-                    remainingDistance = MoveAgent();
-                }
-                if(remainingDistance < 0.1f)
-                {
-                    this.Position = currentTarget.Item1;
-                    this.Direction = currentTarget.Item2;
-                    // step to next position
-                    pathIndex++;
-                    if(pathIndex >= path.Count)
-                    {
-                        //search new path
-                        int nextStationIndex = (stationIndex + 1) % trainStationsInSchedule.Count;
-                        move = false;
-                        SetUpPath(nextStationIndex);
-                        move = true;
-                        stationIndex = nextStationIndex;
-                    }
-                    currentTarget = path[pathIndex];
-                }
-            }
-        }
-
-        private float MoveAgent()
+        public float MoveAgent((Vector3Int, Direction8way) target)
         {
             float step = speed * Time.deltaTime;
-            transform.position = Vector3.MoveTowards(transform.position, currentTarget.Item1, step);
+            transform.position = Vector3.MoveTowards(transform.position, target.Item1, step);
             rb.velocity = transform.forward * speed;
 
-            Vector3 lookDirection = currentTarget.Item1 - transform.position;
+            Vector3 lookDirection = target.Item1 - transform.position;
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookDirection), Time.deltaTime * rotationSpeed);
-            return Vector3.Distance(transform.position, currentTarget.Item1);
+            return Vector3.Distance(transform.position, target.Item1);
+        }
+
+        private void ChangePositionAndDirection(Vector3Int position, Direction8way direction)
+        {
+            Position = position;
+            Direction = direction;
         }
 
         private void OnDrawGizmosSelected()
