@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using TrainWorld.Rails;
-using TrainWorld.Station;
+using TrainWorld.Traffic;
 using TrainWorld.AI;
 
 namespace TrainWorld
@@ -16,6 +16,8 @@ namespace TrainWorld
         private StationPlacementManager stationPlacementManager;
         [SerializeField]
         private TrainPlacementManager trainPlacementManager;
+        [SerializeField]
+        private TrafficPlacementManager trafficPlacementManager;
 
         private Direction8way cursorDirection;
 
@@ -46,11 +48,13 @@ namespace TrainWorld
                     trainPlacementManager.RemoveAgent((AiAgent)selectableObject);
                 }else if (selectableObject.GetSelectableObjectType() == SelectableObjectType.Station)
                 {
-
+                    stationPlacementManager.RemoveStation((TrainStation)selectableObject);
                 }else if(selectableObject.GetSelectableObjectType() == SelectableObjectType.Rail)
                 {
                     railPlacementManager.RemoveRail(position);
                     railPlacementManager.HideRailArrowUI();
+                }else if(selectableObject.GetSelectableObjectType() == SelectableObjectType.Traffic){
+                    trafficPlacementManager.RemoveTraffic((TrafficSignal)selectableObject);
                 }
             }
             else
@@ -69,10 +73,6 @@ namespace TrainWorld
                 {
                     railPlacementManager.MoveCursorAtDestruction(mousePosition);
                 }
-            }
-            else
-            {
-                Debug.Log("No Selectable object found");
             }
         }
 

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TrainWorld.Station
+namespace TrainWorld.Traffic
 {
     [RequireComponent(typeof(Rigidbody))]
     public class TrainStation : MonoBehaviour, ISelectableObject

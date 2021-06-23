@@ -5,7 +5,7 @@ using UnityEngine;
 
 using TrainWorld.Traffic;
 
-namespace TrainWorld.Station
+namespace TrainWorld.Traffic
 {
     public enum TrafficSocketType
     {

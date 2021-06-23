@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using TrainWorld.Rails;
-using TrainWorld.Station;
+using TrainWorld.Traffic;
 using TrainWorld.AI;
 using TrainWorld.Traffic;
 

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-using TrainWorld.Station;
+using TrainWorld.Traffic;
 
 namespace TrainWorld.AI
 {
@@ -82,7 +82,7 @@ namespace TrainWorld.AI
             {
                 if (task.Item1 == AgentTaskType.Move)
                 {
-                    MoveToStationTask newTask = new MoveToStationTask(this, PlacementManager.GetStationOfName(task.Item2));
+                    MoveToStationTask newTask = new MoveToStationTask(this, task.Item2);
                     newTask.onFinish += ChangeTask;
                     newTask.onNextRail += ChangePositionAndDirection;
                     tasks.Add(newTask);

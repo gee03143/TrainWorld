@@ -170,6 +170,7 @@ MonoBehaviour:
   railPlacementManager: {fileID: 2043687697}
   stationPlacementManager: {fileID: 1354900727}
   trainPlacementManager: {fileID: 1793073998}
+  trafficPlacementManager: {fileID: 721606359}
 --- !u!4 &12620978
 Transform:
   m_ObjectHideFlags: 0
@@ -11000,7 +11001,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3c4fb7b5e49b04409078844d6f0121a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stationPlacementManager: {fileID: 1354900727}
   uiMoveRow: {fileID: 2868018476399963765, guid: 3134b43dbd543fc4f908c57d62c040c3, type: 3}
   uiWaitRow: {fileID: 8798049924215794156, guid: 91352baaf65ed6146aa86f8d51e0f7d9, type: 3}
   taskOptions: {fileID: 1600981240}

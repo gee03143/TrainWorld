@@ -138,7 +138,7 @@ namespace TrainWorld
                     if(tasks[index].taskType == AgentTaskType.Move)
                     {
                         MoveToStationTask moveTask = (MoveToStationTask)tasks[index];
-                        row.SetDropdownSelected(moveTask.targetStation.StationName);
+                        row.SetDropdownSelected(moveTask.targetStation);
                     }
                     else if(tasks[index].taskType == AgentTaskType.Wait)
                     {

@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-using TrainWorld.Station;
-using TrainWorld.Rails;
 using TrainWorld.Traffic;
+using TrainWorld.Rails;
 
 namespace TrainWorld.AI
 {
@@ -30,7 +29,7 @@ namespace TrainWorld.AI
     {
         public Action<Vector3Int, Direction8way> onNextRail;
 
-        public TrainStation targetStation;
+        public string targetStation;
         RailBlock lastBlock;
 
         List<(Vector3Int, Direction8way)> path;
@@ -38,7 +37,7 @@ namespace TrainWorld.AI
         int pathIndex = 0;
         (Vector3Int, Direction8way) currentTarget;
 
-        public MoveToStationTask(AiAgent responsible, TrainStation targetStation)
+        public MoveToStationTask(AiAgent responsible, string targetStation)
         {
             this.taskType = AgentTaskType.Move;
             this.responsible = responsible;
@@ -52,15 +51,21 @@ namespace TrainWorld.AI
 
         private void SetUpPath()
         {
+            TrainStation destination = PlacementManager.GetStationOfName(targetStation);
+            if(destination == null)
+            {
+                Debug.Log("target station : " + targetStation + " is missing");
+                path = new List<(Vector3Int, Direction8way)>();
+                return;
+            }
             path = PlacementManager.GetRailPathForAgent(responsible.Position, responsible.Direction,
-                targetStation.Position, targetStation.Direction);
+                destination.Position, destination.Direction);
             if (path == null)
             {
                 Debug.Log("No Path");
             }
             pathIndex = 0;
             currentTarget = path[pathIndex];
-            Debug.Log(currentTarget.ToString());
         }
 
         public override void DoTask()

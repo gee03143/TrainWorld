@@ -10,7 +10,7 @@ namespace TrainWorld.Traffic
     public class TrafficPlacementManager : MonoBehaviour, InputHandler
     {
         [SerializeField]
-        RailBlockManager railBlockManager;
+        private RailBlockManager railBlockManager;
 
         private Dictionary<(Vector3Int, Direction8way), TrafficSignal> signals;
 
@@ -41,27 +41,18 @@ namespace TrainWorld.Traffic
                     {
                         Debug.Log("myrailblock is null");
                     }
-                    RailBlock railBlockA;
-                    RailBlock railBlockB;
-                    (railBlockA, railBlockB) = railAtCursor.myRailblock.Divide((railAtCursor.Position, railAtCursor.Direction));
-
-                    if (railBlockA == null && railBlockB == null) // fail to divide railblock
-                    {
-                        //do nothing
-                    }
-                    else
-                    {
-                        railBlockManager.railBlocks.Remove(railAtCursor.myRailblock);
-                        railBlockManager.railBlocks.Add(railBlockA);
-                        railBlockManager.railBlocks.Add(railBlockB);
-
-                        railAtCursor.myRailblock.RemoveMyself();
-                        railBlockA.UpdateRailsBlockReference();
-                        railBlockB.UpdateRailsBlockReference();
-                    }
+                    railBlockManager.Split(railAtCursor.myRailblock, railAtCursor.Position, railAtCursor.Direction);
                 }
             }
 
+        }
+
+        internal void RemoveTraffic(TrafficSignal trafficSignal)
+        {
+            RailBlock blockA = PlacementManager.GetRailAt(trafficSignal.Position, trafficSignal.Direction).myRailblock;
+            RailBlock blockB = PlacementManager.GetRailAt(trafficSignal.Position, trafficSignal.Direction.Opposite()).myRailblock;
+            railBlockManager.Unite(blockA, new List<RailBlock> { blockB });
+            blockA.UpdateRailsBlockReference();
         }
 
         public void OnMouseMove(Vector3 mousePosition)

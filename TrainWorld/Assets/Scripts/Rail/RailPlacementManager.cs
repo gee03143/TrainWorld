@@ -120,59 +120,23 @@ namespace TrainWorld.Rails
                     .AddNeighbour((startFrom.Item1, startFrom.Item2.Opposite()));
             }
 
-            List<RailBlock> adjascentRailBlocks = GetAllAdjascentRailBlocks(placeAt, railAtPosition, railAtOpposite);
-            if(adjascentRailBlocks.Count == 0) // 근처 railblock 이 없다면 새 railblock을 만듬
+            List<RailBlock> adjascentRailBlocks = railBlockManager.GetAllAdjascentRailBlocks(placeAt.Item1, placeAt.Item2);
+            Debug.Log("adjascentRailBlocks.Count" + adjascentRailBlocks.Count);
+            if (adjascentRailBlocks.Count == 0) // 근처 railblock 이 없다면 새 railblock을 만듬
             {
-                RailBlock newBlock = new RailBlock();
-                newBlock.AddRail(placeAt);
-                newBlock.AddRail((placeAt.Item1, placeAt.Item2.Opposite()));
-                railAtPosition.myRailblock = newBlock;
-                railAtOpposite.myRailblock = newBlock;
+                RailBlock newBlock = railBlockManager.MakeNewBlock(placeAt.Item1, placeAt.Item2);
+                newBlock.UpdateRailsBlockReference();
             }
-            else if(adjascentRailBlocks.Count == 1) // 근처 railblock 에게 병합됨
+            else // 근처 railblock 존재할 경우 모든 railBlock을 합침
             {
-                RailBlock adjascentBlock = adjascentRailBlocks[0];
-                adjascentBlock.AddRail(placeAt);
-                adjascentBlock.AddRail((placeAt.Item1, placeAt.Item2.Opposite()));
-                railAtPosition.myRailblock = adjascentBlock;
-                railAtOpposite.myRailblock = adjascentBlock;
-            }
-            else // 근처 railblock이 2개 이상일 경우 근처의 모든 railblock을 합침
-            {
-                RailBlock newBlock = new RailBlock();
-                newBlock.AddRail(placeAt);
-                newBlock.AddRail((placeAt.Item1, placeAt.Item2.Opposite()));
-                foreach (var railBlock in adjascentRailBlocks)
-                {
-                    newBlock.Merge(railBlock);
-                    railBlockManager.railBlocks.Remove(railBlock);
-                }
-                railBlockManager.railBlocks.Add(newBlock);
-                newBlock.UpdateRailsBlockReference(); // 근처 모든 block들의 소속을 바꿈
+                RailBlock newBlock = railBlockManager.MakeNewBlock(placeAt.Item1, placeAt.Item2);
+                railBlockManager.Unite(newBlock, adjascentRailBlocks);
+                newBlock.UpdateRailsBlockReference();
             }
 
             AddPositionToRailsToFix(placeAt.Item1, placeAt.Item2);
             AddAdjascentPositionsToRailsToFix(placeAt.Item1, placeAt.Item2);
             FixRails();
-        }
-
-        private List<RailBlock> GetAllAdjascentRailBlocks((Vector3Int, Direction8way) position, Rail railAtPosition, Rail railAtOpposite)
-        {
-            List<RailBlock> adjascentRailBlocks = new List<RailBlock>();
-            List<(Vector3Int, Direction8way)> adjascentTuples = new List<(Vector3Int, Direction8way)>();
-
-            adjascentTuples.AddRange(railAtPosition.GetNeighbourTuples().Select(x => (x.Item1, x.Item2.Opposite())).ToList());
-            adjascentTuples.AddRange(railAtOpposite.GetNeighbourTuples().Select(x => (x.Item1, x.Item2.Opposite())).ToList());
-            adjascentTuples.AddRange(PlacementManager.GetRailsAtPosition(position.Item1).Select(x => (x.Position, x.Direction)).ToList());
-
-            foreach (var tuple in adjascentTuples)
-            {
-                RailBlock block = PlacementManager.GetRailAt(tuple).myRailblock;
-                if (block != null)
-                    adjascentRailBlocks.Add(block);
-            }
-
-            return adjascentRailBlocks;
         }
 
         private void InstantiateRailPrefab((Vector3Int, Direction8way) position, bool isTemp = false)
@@ -302,6 +266,7 @@ namespace TrainWorld.Rails
                 {
                     PlacementManager.GetRailAt((neighbour.Item1, neighbour.Item2.Opposite())).RemoveNeighbourAt(cursorPos);
                 }
+                railBlockManager.Split(PlacementManager.GetRailAt(cursorPos).myRailblock, cursorPos.Item1, cursorPos.Item2);
                 PlacementManager.GetRailAt(cursorPos).DestroyMyself();
                 PlacementManager.RemoveRailAt(cursorPos);
                 PlacementManager.GetRailAt(opposite).DestroyMyself();

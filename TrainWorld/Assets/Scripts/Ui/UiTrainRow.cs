@@ -30,6 +30,9 @@ namespace TrainWorld
 
         internal void SetDropdownSelected(string value)
         {
+            List<string> options = dropdown.options.Select(option => option.text).ToList();
+            if (options.Contains(value) == false)
+                DestroyMyself();
             dropdown.value = dropdown.options.Select(option => option.text).ToList().IndexOf(value);
         }
 

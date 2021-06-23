@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 using System.Linq;
 
-using TrainWorld.Station;
+using TrainWorld.Traffic;
 using TrainWorld.Traffic;
 
 namespace TrainWorld.Rails
@@ -104,6 +104,11 @@ namespace TrainWorld.Rails
             return trafficSocket.GetStation();
         }
 
+        public void RemoveStation()
+        {
+            trafficSocket.Type = TrafficSocketType.Empty;
+        }
+
         public TrainStation AddTempStation()
         {
             trafficSocket.SetMyGameObject(TrafficSocketType.Station);
@@ -133,6 +138,7 @@ namespace TrainWorld.Rails
         public void DestroyMyself()
         {
             neighbourPositions.Clear();
+            myRailblock.RemoveRail(Position, Direction);
             Destroy(gameObject);
         }
 

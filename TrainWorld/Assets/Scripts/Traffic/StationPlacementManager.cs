@@ -7,7 +7,7 @@ using TrainWorld.Rails;
 using TrainWorld.AI;
 using System.Linq;
 
-namespace TrainWorld.Station
+namespace TrainWorld.Traffic
 {
     public class StationPlacementManager : MonoBehaviour, InputHandler
     {
@@ -46,12 +46,20 @@ namespace TrainWorld.Station
         {
             ClearTempStations();
 
-            Rails.Rail railAtCursor = PlacementManager.GetRailViaMousePosition(mousePosition, true);
+            Rail railAtCursor = PlacementManager.GetRailViaMousePosition(mousePosition, true);
 
             if(railAtCursor != null && railAtCursor.IsTrafficSocketEmpty())
             {
                 tempStation = railAtCursor.AddTempStation();
             }
+        }
+
+        internal void RemoveStation(TrainStation selectedStation)
+        {
+            PlacementManager.RemoveStationOfName(selectedStation.StationName);
+            Rail railAtPosition = PlacementManager.GetRailAt(selectedStation.Position, selectedStation.Direction);
+            railAtPosition.RemoveStation();
+            uiTrain.SetStationNameList(PlacementManager.GetStations().Keys.ToList());
         }
 
         private void ClearTempStations()

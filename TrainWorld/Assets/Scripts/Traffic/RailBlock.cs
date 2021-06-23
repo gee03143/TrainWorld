@@ -34,6 +34,25 @@ namespace TrainWorld.Traffic {
             rails.Add(position);
         }
 
+        public void AddRail(Vector3Int position, Direction8way direction)
+        {
+            if (rails == null)
+            {
+                rails = new HashSet<(Vector3Int, Direction8way)>();
+            }
+            rails.Add((position, direction));
+        }
+
+        public void RemoveRail(Vector3Int position, Direction8way direction)
+        {
+            if (rails.Contains((position, direction)) == false)
+            {
+                Debug.Log("Cannot find that position at railBlock. Your Input : " + position + " " + direction);
+                return;
+            }
+            rails.Remove((position, direction));
+        }
+
         public (RailBlock, RailBlock) Divide((Vector3Int, Direction8way) startPosition)
         {
             RailBlock groupA = new RailBlock(BFSSearcher.BFSSearch(startPosition));

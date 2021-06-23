@@ -4,7 +4,8 @@ using System.Linq;
 using UnityEngine;
 
 using TrainWorld.Rails;
-using TrainWorld.Station;
+using TrainWorld.Traffic;
+using System;
 
 namespace TrainWorld
 {
@@ -56,6 +57,10 @@ namespace TrainWorld
             placementData.Remove(position);
         }
 
+        internal static void RemoveStationOfName(string stationName)
+        {
+            stationData.Remove(stationName);
+        }
 
         public static List<Rail> GetRailsAtPosition(Vector3Int position)
         {
