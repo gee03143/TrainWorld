@@ -128,9 +128,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   position: {x: 0, y: 0, z: 0}
   direction: 0
-  speed: 3
+  speed: 0.1
   rotationSpeed: 10
   loop: 0
+  trainStationsInSchedule: []
 --- !u!1001 &9222096960897364499
 PrefabInstance:
   m_ObjectHideFlags: 0

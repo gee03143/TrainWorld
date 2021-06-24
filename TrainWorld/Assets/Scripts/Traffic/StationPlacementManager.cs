@@ -58,7 +58,7 @@ namespace TrainWorld.Traffic
         {
             PlacementManager.RemoveStationOfName(selectedStation.StationName);
             Rail railAtPosition = PlacementManager.GetRailAt(selectedStation.Position, selectedStation.Direction);
-            railAtPosition.RemoveStation();
+            railAtPosition.RemoveTrafficSocket();
             uiTrain.SetStationNameList(PlacementManager.GetStations().Keys.ToList());
         }
 

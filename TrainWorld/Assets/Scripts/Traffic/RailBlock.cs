@@ -94,7 +94,15 @@ namespace TrainWorld.Traffic {
         {
             foreach ((Vector3Int, Direction8way) position in rails)
             {
-                PlacementManager.GetRailAt(position).railGroupDisplay.material.color = color;
+                PlacementManager.GetRailAt(position).GetComponentInChildren<RailColorChanger>().ChangeRailColor(color);
+            }
+        }
+
+        public void ChangeColorToDefault()
+        {
+            foreach ((Vector3Int, Direction8way) position in rails)
+            {
+                PlacementManager.GetRailAt(position).GetComponentInChildren<RailColorChanger>().ChangeRailColorToDefault();
             }
         }
     }

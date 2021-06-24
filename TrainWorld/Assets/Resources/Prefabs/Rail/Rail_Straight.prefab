@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4346381341551166656}
   - component: {fileID: 4046229594392126769}
   - component: {fileID: 1216339661147551956}
+  - component: {fileID: 4315793913175916489}
   m_Layer: 10
   m_Name: Rail_Straight
   m_TagString: Rail
@@ -59,6 +60,22 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.95, y: 0.2, z: 0.35}
   m_Center: {x: 0, y: 0.1, z: 0.25}
+--- !u!114 &4315793913175916489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1452118978755660829}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 509ce00952ebd8147bb2658e7f80b773, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  railMaterial: {fileID: -876546973899608171, guid: b3bc047035ffb22418c1a56093ef6a53, type: 3}
+  sideMaterial: {fileID: -6478536213147159724, guid: b3bc047035ffb22418c1a56093ef6a53, type: 3}
+  railRenderer: {fileID: 880350011568958619}
+  sideRenderer: {fileID: 1303292629987365124}
 --- !u!1001 &2174057672654310977
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -143,5 +160,15 @@ PrefabInstance:
 --- !u!4 &1846885493643979178 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b3bc047035ffb22418c1a56093ef6a53, type: 3}
+  m_PrefabInstance: {fileID: 2174057672654310977}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &880350011568958619 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7918335002988649766, guid: b3bc047035ffb22418c1a56093ef6a53, type: 3}
+  m_PrefabInstance: {fileID: 2174057672654310977}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &1303292629987365124 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 882129737928793925, guid: b3bc047035ffb22418c1a56093ef6a53, type: 3}
   m_PrefabInstance: {fileID: 2174057672654310977}
   m_PrefabAsset: {fileID: 0}

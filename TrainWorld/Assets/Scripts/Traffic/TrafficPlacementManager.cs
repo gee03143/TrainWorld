@@ -44,15 +44,19 @@ namespace TrainWorld.Traffic
                     railBlockManager.Split(railAtCursor.myRailblock, railAtCursor.Position, railAtCursor.Direction);
                 }
             }
-
+            railBlockManager.ShowRailBlockDisplay();
         }
 
         internal void RemoveTraffic(TrafficSignal trafficSignal)
         {
-            RailBlock blockA = PlacementManager.GetRailAt(trafficSignal.Position, trafficSignal.Direction).myRailblock;
+            Rail railAtPosition = PlacementManager.GetRailAt(trafficSignal.Position, trafficSignal.Direction);
+            railAtPosition.RemoveTrafficSocket();
+            RailBlock blockA = railAtPosition.myRailblock;
             RailBlock blockB = PlacementManager.GetRailAt(trafficSignal.Position, trafficSignal.Direction.Opposite()).myRailblock;
             railBlockManager.Unite(blockA, new List<RailBlock> { blockB });
             blockA.UpdateRailsBlockReference();
+            signals.Remove((trafficSignal.Position, trafficSignal.Direction));
+            railBlockManager.ShowRailBlockDisplay();
         }
 
         public void OnMouseMove(Vector3 mousePosition)
@@ -85,12 +89,14 @@ namespace TrainWorld.Traffic
 
         public void OnEnter()
         {
+            railBlockManager.ShowRailBlockDisplay();
             Debug.Log("Traffic Placement Enter");
         }
 
         public void OnExit()
         {
             ClearTempSignal();
+            railBlockManager.DisableRailBlockDisplay();
             Debug.Log("Traffic Placement Exit");
         }
     }

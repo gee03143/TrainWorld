@@ -171,6 +171,7 @@ MonoBehaviour:
   stationPlacementManager: {fileID: 1354900727}
   trainPlacementManager: {fileID: 1793073998}
   trafficPlacementManager: {fileID: 721606359}
+  railBlockManager: {fileID: 1915662686}
 --- !u!4 &12620978
 Transform:
   m_ObjectHideFlags: 0

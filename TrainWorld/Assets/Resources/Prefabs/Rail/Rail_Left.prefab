@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5690701665309159359}
   - component: {fileID: -7819512728290534223}
+  - component: {fileID: 1279645951947495616}
   m_Layer: 10
   m_Name: Rail_Left
   m_TagString: Rail
@@ -45,6 +46,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
+--- !u!114 &1279645951947495616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8764105014242271527}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 509ce00952ebd8147bb2658e7f80b773, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  railMaterial: {fileID: -6478536213147159724, guid: 6a03518b798a08b49b0a5360b685a6b6, type: 3}
+  sideMaterial: {fileID: -3846018093981099296, guid: 6a03518b798a08b49b0a5360b685a6b6, type: 3}
+  railRenderer: {fileID: 7163820630983937645}
+  sideRenderer: {fileID: 9028196622746891250}
 --- !u!1001 &8176123135011613879
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -146,5 +163,15 @@ PrefabInstance:
 --- !u!4 &8574244360827505500 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6a03518b798a08b49b0a5360b685a6b6, type: 3}
+  m_PrefabInstance: {fileID: 8176123135011613879}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &7163820630983937645 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7918335002988649766, guid: 6a03518b798a08b49b0a5360b685a6b6, type: 3}
+  m_PrefabInstance: {fileID: 8176123135011613879}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &9028196622746891250 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 882129737928793925, guid: 6a03518b798a08b49b0a5360b685a6b6, type: 3}
   m_PrefabInstance: {fileID: 8176123135011613879}
   m_PrefabAsset: {fileID: 0}

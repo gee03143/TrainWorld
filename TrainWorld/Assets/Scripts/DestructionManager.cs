@@ -18,6 +18,8 @@ namespace TrainWorld
         private TrainPlacementManager trainPlacementManager;
         [SerializeField]
         private TrafficPlacementManager trafficPlacementManager;
+        [SerializeField]
+        private RailBlockManager railBlockManager;
 
         private Direction8way cursorDirection;
 
@@ -28,12 +30,14 @@ namespace TrainWorld
 
         public void OnEnter()
         {
+            railBlockManager.ShowRailBlockDisplay();
             Debug.Log("Destruction Enter");
         }
 
         public void OnExit()
         {
             railPlacementManager.HideRailArrowUI();
+            railBlockManager.DisableRailBlockDisplay();
             Debug.Log("Destruction Exit");
         }
 
@@ -56,6 +60,7 @@ namespace TrainWorld
                 }else if(selectableObject.GetSelectableObjectType() == SelectableObjectType.Traffic){
                     trafficPlacementManager.RemoveTraffic((TrafficSignal)selectableObject);
                 }
+                railBlockManager.ShowRailBlockDisplay();
             }
             else
             {

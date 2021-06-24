@@ -16,7 +16,7 @@ namespace TrainWorld.Traffic
         private void Awake()
         {
             railBlocks = new List<RailBlock>();
-            colors = new List<Color> { Color.red, Color.yellow, Color.green, Color.blue, Color.white, Color.cyan };
+            colors = new List<Color> { Color.red, Color.yellow, Color.green, Color.blue, Color.white};
         }
 
         public List<RailBlock> GetAllAdjascentRailBlocks(Vector3Int position, Direction8way direction)
@@ -69,7 +69,6 @@ namespace TrainWorld.Traffic
                 railBlockA.UpdateRailsBlockReference();
                 railBlockB.UpdateRailsBlockReference();
             }
-
         }
 
         public RailBlock MakeNewBlock(Vector3Int position, Direction8way direction)
@@ -81,13 +80,21 @@ namespace TrainWorld.Traffic
             return newBlock;
         }
 
-        void OnDrawGizmosSelected()
+        public void ShowRailBlockDisplay()
         {
             int i = 0;
             foreach (var railBlock in railBlocks)
             {
-                railBlock.ChangeColor(colors[i % 6]);
+                railBlock.ChangeColor(colors[i % 5]);
                 i++;
+            }
+        }
+
+        public void DisableRailBlockDisplay()
+        {
+            foreach (var railBlock in railBlocks)
+            {
+                railBlock.ChangeColorToDefault();
             }
         }
     }

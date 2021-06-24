@@ -43,9 +43,6 @@ namespace TrainWorld.Rails
         [SerializeField]
         private TrafficSocket trafficSocket;
 
-        [SerializeField]
-        public Renderer railGroupDisplay;
-
         public RailBlock myRailblock;
 
         internal void Init(Vector3Int position, Direction8way direction)
@@ -104,7 +101,7 @@ namespace TrainWorld.Rails
             return trafficSocket.GetStation();
         }
 
-        public void RemoveStation()
+        public void RemoveTrafficSocket()
         {
             trafficSocket.Type = TrafficSocketType.Empty;
         }
