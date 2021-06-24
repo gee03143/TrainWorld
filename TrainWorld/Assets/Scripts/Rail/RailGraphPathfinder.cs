@@ -32,25 +32,25 @@ namespace TrainWorld.Rails
 
             while (positionsTocheck.Count > 0)
             {
-                (Vector3Int, Direction8way) current = GetClosestVertex(positionsTocheck, priorityDictionary);
-                positionsTocheck.Remove(current);
-                if (current.Item1.Equals(endPosition) && (current.Item2.Equals(endDirection) || isAgent == false))
+                (Vector3Int, Direction8way) currentPos = GetClosestVertex(positionsTocheck, priorityDictionary);
+                positionsTocheck.Remove(currentPos);
+                if (currentPos.Item1.Equals(endPosition) && (currentPos.Item2.Equals(endDirection) || isAgent == false))
                 {
-                    path = GeneratePath(parentsDictionary, current);
+                    path = GeneratePath(parentsDictionary, currentPos);
                     return path;
                 }
 
-                if(ManhattanDiscance(Vector3Int.RoundToInt(current.Item1), placementStartPosition) > 5 && isAgent == false)
+                if(ManhattanDiscance(Vector3Int.RoundToInt(currentPos.Item1), placementStartPosition) > 5 && isAgent == false)
                 {
-                    path = GeneratePath(parentsDictionary, current);
+                    path = GeneratePath(parentsDictionary, currentPos);
                     return path;
                 }
 
-                List<(Vector3Int, Direction8way)> nextPositions = isAgent ? GetNeighbourCells(current, railGraph) : GetAdjacentCells(current);
+                List<(Vector3Int, Direction8way)> nextPositions = isAgent ? GetNeighbourCells(currentPos, railGraph) : GetAdjacentCells(currentPos);
 
                 foreach ((Vector3Int, Direction8way) nextPos in nextPositions)
                 {
-                    float newCost = costDictionary[current] + GetCostOfEnteringCell(nextPos, current);
+                    float newCost = costDictionary[currentPos] + GetCostOfEnteringCell(nextPos, currentPos, isAgent);
                     if (!costDictionary.ContainsKey(nextPos) || newCost < costDictionary[nextPos])
                     {
                         costDictionary[nextPos] = newCost;
@@ -59,7 +59,7 @@ namespace TrainWorld.Rails
                         positionsTocheck.Add(nextPos);
                         priorityDictionary[nextPos] = priority;
 
-                        parentsDictionary[nextPos] = current;
+                        parentsDictionary[nextPos] = currentPos;
                     }
                 }
             }
@@ -71,9 +71,17 @@ namespace TrainWorld.Rails
             return Mathf.Abs(endPosition.x - startPosition.x) + Mathf.Abs(endPosition.z - startPosition.z);
         }
 
-        private static float GetCostOfEnteringCell((Vector3Int, Direction8way) neighbour, (Vector3Int, Direction8way) current)
+        private static float GetCostOfEnteringCell((Vector3Int, Direction8way) next, (Vector3Int, Direction8way) prev, bool isAgent)
         {
-            return ManhattanDiscance(Vector3Int.RoundToInt(neighbour.Item1), Vector3Int.RoundToInt(current.Item1));
+            float penalty = 0.0f;
+            if (isAgent)    //  if it's agent  we should calculate penalty
+            {
+                if (PlacementManager.GetRailAt(next).myRailblock.hasAgent)
+                {
+                    penalty += 10;
+                }
+            }
+            return ManhattanDiscance(Vector3Int.RoundToInt(next.Item1), Vector3Int.RoundToInt(prev.Item1)) + penalty;
         }
 
         private static List<(Vector3Int, Direction8way)> GetAdjacentCells((Vector3Int, Direction8way) current)

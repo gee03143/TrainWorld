@@ -67,6 +67,7 @@ namespace TrainWorld.AI
         {
             this.position = position;
             this.direction = direction;
+            PlacementManager.GetRailAt(position, direction).myRailblock.hasAgent = true;
         }
 
         public void SetUpSchedule(List<(AgentTaskType, string)> schedule)
