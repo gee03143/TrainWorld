@@ -8,6 +8,7 @@ TagManager:
   - Rail
   - Agent
   - Station
+  - Building
   layers:
   - Default
   - TransparentFX

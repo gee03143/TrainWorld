@@ -25,6 +25,7 @@ namespace TrainWorld
 
         public void DestroyMyself()
         {
+            onDestroy?.Invoke(this);
             Destroy(gameObject);
         }
 
@@ -43,6 +44,10 @@ namespace TrainWorld
 
         internal string GetDropdownSelected()
         {
+            if(dropdown == null) // for load/unload task
+            {
+                return "";
+            }
             return dropdown.options[dropdown.value].text;
         }
 
@@ -55,11 +60,6 @@ namespace TrainWorld
                 option.text = name;
                 dropdown.options.Add(option);
             }
-        }
-
-        private void OnDestroy()
-        {
-            onDestroy?.Invoke(this);
         }
     }
 }

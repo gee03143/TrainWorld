@@ -121,7 +121,7 @@ namespace TrainWorld.Rails
             }
 
             List<RailBlock> adjascentRailBlocks = railBlockManager.GetAllAdjascentRailBlocks(placeAt.Item1, placeAt.Item2);
-            Debug.Log("adjascentRailBlocks.Count" + adjascentRailBlocks.Count);
+            Debug.Log("adjascentRailBlocks.Count : " + adjascentRailBlocks.Count);
             if (adjascentRailBlocks.Count == 0) // 근처 railblock 이 없다면 새 railblock을 만듬
             {
                 RailBlock newBlock = railBlockManager.MakeNewBlock(placeAt.Item1, placeAt.Item2);
@@ -143,7 +143,7 @@ namespace TrainWorld.Rails
         {
             if (isTemp == false)
             {
-                if (PlacementManager.IsEmpty(position))
+                if (PlacementManager.GetRailAt(position) == null)
                 {
                     GameObject newObject = Instantiate(railPrefab, position.Item1, Quaternion.Euler(position.Item2.ToEuler()), railParent) as GameObject;
                     Rail newRail = newObject.GetComponent<Rail>();
@@ -153,11 +153,11 @@ namespace TrainWorld.Rails
                     (Vector3Int, Direction8way) rearPos = (position.Item1 - position.Item2.ToDirectionalVector(), position.Item2);
 
                     //search nearby rails, if adjascent add to neighbour
-                    if (PlacementManager.IsEmpty(frontPos) == false)
+                    if (PlacementManager.IsRailAtPosition(frontPos))
                     {
                         newRail.AddNeighbour(frontPos);
                     }
-                    if (PlacementManager.IsEmpty(rearPos) == false)
+                    if (PlacementManager.IsRailAtPosition(rearPos))
                     {
                         PlacementManager.GetRailAt(rearPos).AddNeighbour(position);
                     }
@@ -184,16 +184,20 @@ namespace TrainWorld.Rails
 
         private void AddAdjascentPositionsToRailsToFix(Vector3Int position, Direction8way direction)
         {
-            railsToFix.UnionWith(PlacementManager.GetRailAt(position, direction).GetNeighbourTuples());
-            railsToFix.UnionWith(PlacementManager.GetRailAt(position, direction.Opposite()).GetNeighbourTuples());
+            if(PlacementManager.IsRailAtPosition((position, direction)))
+                railsToFix.UnionWith(PlacementManager.GetRailAt(position, direction).GetNeighbourTuples());
+            if (PlacementManager.IsRailAtPosition((position, direction.Opposite())))
+                railsToFix.UnionWith(PlacementManager.GetRailAt(position, direction.Opposite()).GetNeighbourTuples());
         }
 
         private void FixRails()
         {
             foreach (var railToFix in railsToFix)
             {
-                PlacementManager.GetRailAt(railToFix).FixMyModel();
-                PlacementManager.GetRailAt(railToFix.Item1, railToFix.Item2.Opposite()).FixMyModel();
+                if (PlacementManager.IsRailAtPosition(railToFix))
+                    PlacementManager.GetRailAt(railToFix).FixMyModel();
+                if (PlacementManager.IsRailAtPosition((railToFix.Item1, railToFix.Item2.Opposite())))
+                    PlacementManager.GetRailAt(railToFix.Item1, railToFix.Item2.Opposite()).FixMyModel();
             }
 
             railsToFix.Clear();
@@ -249,13 +253,13 @@ namespace TrainWorld.Rails
             (Vector3Int, Direction8way) opposite = (railUnderCursor.Position, railUnderCursor.Direction.Opposite());
 
             // if selected position is out of border or empty do nothing
-            if (IsPositionOutOfBorder(railUnderCursor.Position) || PlacementManager.IsEmpty(railUnderCursor.Position, railUnderCursor.Direction))
+            if (IsPositionOutOfBorder(railUnderCursor.Position) || PlacementManager.IsRailAtPosition(cursorPos) == false)
                 return;
 
             AddAdjascentPositionsToRailsToFix(railUnderCursor.Position, railUnderCursor.Direction);
 
 
-            if (PlacementManager.IsEmpty(cursorPos) == false || PlacementManager.IsEmpty(opposite) == false)
+            if (PlacementManager.IsRailAtPosition(cursorPos) == true || PlacementManager.IsRailAtPosition(opposite) == true)
             {
                 foreach (var neighbour in PlacementManager.GetRailAt(cursorPos).GetNeighbourTuples())
                 {
@@ -267,8 +271,11 @@ namespace TrainWorld.Rails
                     PlacementManager.GetRailAt((neighbour.Item1, neighbour.Item2.Opposite())).RemoveNeighbourAt(cursorPos);
                 }
                 railBlockManager.Split(PlacementManager.GetRailAt(cursorPos).myRailblock, cursorPos.Item1, cursorPos.Item2);
+                railBlockManager.Split(PlacementManager.GetRailAt(opposite).myRailblock, opposite.Item1, opposite.Item2);
+               
                 PlacementManager.GetRailAt(cursorPos).DestroyMyself();
                 PlacementManager.RemoveRailAt(cursorPos);
+               
                 PlacementManager.GetRailAt(opposite).DestroyMyself();
                 PlacementManager.RemoveRailAt(opposite);
             }
@@ -335,11 +342,6 @@ namespace TrainWorld.Rails
                 tempRailPositions.Add((placementStartPosition, placementStartDirection));
                 CreateTempRailModel();
             }
-        }
-
-        internal void RailPlacementEnter()
-        {
-            placementMode = false;
         }
 
         public void OnEnter()

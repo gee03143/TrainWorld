@@ -6,7 +6,7 @@ using UnityEngine;
 using TrainWorld.Rails;
 using TrainWorld.Traffic;
 using TrainWorld.AI;
-using TrainWorld.Traffic;
+using TrainWorld.Buildings;
 
 namespace TrainWorld
 {
@@ -28,6 +28,8 @@ namespace TrainWorld
         [SerializeField]
         private TrafficPlacementManager trafficPlacementManager;
         [SerializeField]
+        private BuildingPlacementManager buildingPlacementManager;
+        [SerializeField]
         private DestructionManager destructionManager;
         [SerializeField]
         private UiController uiController;
@@ -42,6 +44,7 @@ namespace TrainWorld
             uiController.OnStationPlacement += StationButtonHandler;
             uiController.OnTrafficPlacement += TrafficButtonHandler;
             uiController.OnTrainPlacement += TrainButtonHandler;
+            uiController.OnBuildingPlacement += BuildingButtonHandler;
             uiController.OnDestruction += DestructionButtonHandler;
 
             inputManager.onEscInput = HandleEscape;
@@ -100,6 +103,11 @@ namespace TrainWorld
         private void TrainButtonHandler()
         {
             SwitchHandler(trainPlacementManager);
+        }
+
+        private void BuildingButtonHandler()
+        {
+            SwitchHandler(buildingPlacementManager);
         }
 
         private void DestructionButtonHandler()

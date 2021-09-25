@@ -6,6 +6,6 @@ namespace TrainWorld.AI
 {
     public class AgentTaskTypeHolder : MonoBehaviour
     {
-        public AgentTaskType taskType;
+        public AgentStatusType taskType;
     }
 }

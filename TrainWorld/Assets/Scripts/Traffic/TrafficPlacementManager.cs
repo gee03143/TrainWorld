@@ -30,6 +30,7 @@ namespace TrainWorld.Traffic
         {
             ClearTempSignal();
             Rails.Rail railAtCursor = PlacementManager.GetRailViaMousePosition(mousePosition, true);
+            Rails.Rail railAtOpposite = PlacementManager.GetRailAt((railAtCursor.Position, railAtCursor.Direction.Opposite()));
 
             if (railAtCursor != null && railAtCursor.IsTrafficSocketEmpty())
             {
@@ -41,7 +42,10 @@ namespace TrainWorld.Traffic
                     {
                         Debug.Log("myrailblock is null");
                     }
-                    railBlockManager.Split(railAtCursor.myRailblock, railAtCursor.Position, railAtCursor.Direction);
+                    else {
+                        railBlockManager.Split(railAtCursor.myRailblock, railAtCursor.Position, railAtCursor.Direction);
+                        railBlockManager.Split(railAtOpposite.myRailblock, railAtOpposite.Position, railAtOpposite.Direction);
+                    }
                 }
             }
             railBlockManager.ShowRailBlockDisplay();

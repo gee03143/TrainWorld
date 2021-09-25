@@ -11,6 +11,8 @@ namespace TrainWorld.Rails
 {
     public static class RailGraphPathfinder
     {
+        private const int MAXSEARCHLENGTH = 10;
+
         private static (Vector3Int, Direction8way) nullVertex = (Vector3Int.zero, Direction8way.DIRECTION_COUNT);
 
         internal static List<(Vector3Int, Direction8way)> AStarSearch(Vector3Int placementStartPosition, Direction8way placementStartDirection,
@@ -40,7 +42,8 @@ namespace TrainWorld.Rails
                     return path;
                 }
 
-                if(ManhattanDiscance(Vector3Int.RoundToInt(currentPos.Item1), placementStartPosition) > 5 && isAgent == false)
+                if(MathFunctions.ManhattanDiscance((currentPos.Item1), placementStartPosition) > MAXSEARCHLENGTH 
+                    && isAgent == false)
                 {
                     path = GeneratePath(parentsDictionary, currentPos);
                     return path;
@@ -55,7 +58,7 @@ namespace TrainWorld.Rails
                     {
                         costDictionary[nextPos] = newCost;
 
-                        float priority = newCost + ManhattanDiscance(endPosition, nextPos.Item1);
+                        float priority = newCost + (float)MathFunctions.ManhattanDiscance(endPosition, nextPos.Item1);
                         positionsTocheck.Add(nextPos);
                         priorityDictionary[nextPos] = priority;
 
@@ -64,11 +67,6 @@ namespace TrainWorld.Rails
                 }
             }
             return path;
-        }
-
-        private static float ManhattanDiscance(Vector3Int endPosition, Vector3Int startPosition)
-        {
-            return Mathf.Abs(endPosition.x - startPosition.x) + Mathf.Abs(endPosition.z - startPosition.z);
         }
 
         private static float GetCostOfEnteringCell((Vector3Int, Direction8way) next, (Vector3Int, Direction8way) prev, bool isAgent)
@@ -81,20 +79,24 @@ namespace TrainWorld.Rails
                     penalty += 10;
                 }
             }
-            return ManhattanDiscance(Vector3Int.RoundToInt(next.Item1), Vector3Int.RoundToInt(prev.Item1)) + penalty;
+            return (float)MathFunctions.ManhattanDiscance(Vector3Int.RoundToInt(next.Item1), Vector3Int.RoundToInt(prev.Item1)) + penalty;
         }
 
         private static List<(Vector3Int, Direction8way)> GetAdjacentCells((Vector3Int, Direction8way) current)
         {
             List<(Vector3Int, Direction8way)> AdjacentCells = new List<(Vector3Int, Direction8way)>();
 
-            Vector3Int front = current.Item2.ToDirectionalVector();
+            Vector3Int front =  current.Item2.ToDirectionalVector();
             Vector3Int left = current.Item2.Prev().ToDirectionalVector();
             Vector3Int right = current.Item2.Next().ToDirectionalVector();
 
-            AdjacentCells.Add((current.Item1 + front, current.Item2));
-            AdjacentCells.Add((current.Item1 + front + left, current.Item2.Prev()));
-            AdjacentCells.Add((current.Item1 + front + right, current.Item2.Next()));
+            //check if selected position is empty
+            if(PlacementManager.GetPlacementTypeAt(current.Item1 + front) != PlacementType.eBuilding)
+                AdjacentCells.Add((current.Item1 + front, current.Item2));
+            if (PlacementManager.GetPlacementTypeAt(current.Item1 + front + left) != PlacementType.eBuilding)
+                AdjacentCells.Add((current.Item1 + front + left, current.Item2.Prev()));
+            if (PlacementManager.GetPlacementTypeAt(current.Item1 + front + right) != PlacementType.eBuilding)
+                AdjacentCells.Add((current.Item1 + front + right, current.Item2.Next()));
 
             return AdjacentCells;
         }

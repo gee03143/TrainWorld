@@ -19,6 +19,7 @@ namespace TrainWorld.Rails
             materialDictionary.Add(Color.white, materials[2]);
             materialDictionary.Add(Color.yellow, materials[3]);
             materialDictionary.Add(Color.blue, materials[4]);
+            materialDictionary.Add(Color.black, materials[5]);
         }
 
         public void ChangeRailColor(Color newColor)

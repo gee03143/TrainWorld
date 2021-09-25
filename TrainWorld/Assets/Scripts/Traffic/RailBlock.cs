@@ -86,7 +86,8 @@ namespace TrainWorld.Traffic {
         {
             foreach ((Vector3Int, Direction8way) position in rails)
             {
-                PlacementManager.GetRailAt(position).myRailblock = this;
+                if(PlacementManager.IsRailAtPosition(position))
+                    PlacementManager.GetRailAt(position).myRailblock = this;
             }
         }
 

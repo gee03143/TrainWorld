@@ -21,13 +21,6 @@ namespace TrainWorld
         [SerializeField]
         private RailBlockManager railBlockManager;
 
-        private Direction8way cursorDirection;
-
-        private void Awake()
-        {
-            cursorDirection = Direction8way.N;
-        }
-
         public void OnEnter()
         {
             railBlockManager.ShowRailBlockDisplay();

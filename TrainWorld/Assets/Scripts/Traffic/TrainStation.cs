@@ -3,11 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using TrainWorld.Buildings;
+
 namespace TrainWorld.Traffic
 {
     [RequireComponent(typeof(Rigidbody))]
     public class TrainStation : MonoBehaviour, ISelectableObject
     {
+        public Inserter inserter = null;
+
+        public List<Storage> connectedStorage;
+
         [SerializeField]
         private string stationName;
 
@@ -38,6 +44,8 @@ namespace TrainWorld.Traffic
             this.position = position;
             this.direction = direction;
             this.StationName = name;
+            connectedStorage = new List<Storage>();
+            inserter = gameObject.GetComponent<Inserter>();
         }
 
         public override string ToString()
@@ -48,6 +56,16 @@ namespace TrainWorld.Traffic
         public SelectableObjectType GetSelectableObjectType()
         {
             return SelectableObjectType.Station;
+        }
+
+        internal void AddConnectedBuilding(Storage storage)
+        {
+            connectedStorage.Add(storage);
+        }
+
+        internal void RemoveConnectedBuilding(Storage storage)
+        {
+            connectedStorage.Remove(storage);
         }
 
         public void ShowMyUI()

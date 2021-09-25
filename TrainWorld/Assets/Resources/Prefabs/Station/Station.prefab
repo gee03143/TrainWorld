@@ -106,6 +106,7 @@ GameObject:
   - component: {fileID: 2880697278416905539}
   - component: {fileID: 6531459712914617587}
   - component: {fileID: -2333456387508004705}
+  - component: {fileID: -3466321149374760488}
   m_Layer: 10
   m_Name: Station
   m_TagString: Station
@@ -140,9 +141,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb8c7602bc172b54b8d1760fb1332c09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inserter: {fileID: 0}
+  connectedStorage: []
   stationName: 
-  Position: {x: 0, y: 0, z: 0}
-  Direction: 0
 --- !u!54 &-2333456387508004705
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -159,3 +160,16 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-3466321149374760488
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1340141908927854759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f18bffd48b879e14b8f4c56c1eeb7c42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  InserterSpeed: 1

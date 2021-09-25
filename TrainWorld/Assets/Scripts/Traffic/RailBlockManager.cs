@@ -24,10 +24,18 @@ namespace TrainWorld.Traffic
             List<RailBlock> adjascentRailBlocks = new List<RailBlock>();
             List<(Vector3Int, Direction8way)> adjascentTuples = new List<(Vector3Int, Direction8way)>();
 
-            adjascentTuples.AddRange(PlacementManager.GetRailAt(position, direction).GetNeighbourTuples()
-                .Select(x => (x.Item1, x.Item2.Opposite())).ToList());
-            adjascentTuples.AddRange(PlacementManager.GetRailAt(position, direction.Opposite()).GetNeighbourTuples()
-                .Select(x => (x.Item1, x.Item2.Opposite())).ToList());
+            if (PlacementManager.IsRailAtPosition((position, direction)))
+            {
+                adjascentTuples.AddRange(PlacementManager.GetRailAt(position, direction)
+                    .GetNeighbourTuples()
+                    .Select(x => (x.Item1, x.Item2.Opposite())).ToList());
+            }
+            if (PlacementManager.IsRailAtPosition((position, direction.Opposite())))
+            {
+                adjascentTuples.AddRange(PlacementManager.GetRailAt(position, direction.Opposite())
+                    .GetNeighbourTuples()
+                    .Select(x => (x.Item1, x.Item2.Opposite())).ToList());
+            }
             adjascentTuples.AddRange(PlacementManager.GetRailsAtPosition(position).Select(x => (x.Position, x.Direction)).ToList());
 
             foreach (var tuple in adjascentTuples)
@@ -53,6 +61,7 @@ namespace TrainWorld.Traffic
         {
             RailBlock railBlockA;
             RailBlock railBlockB;
+           // RailBlock railBlockC;
             (railBlockA, railBlockB) = original.Divide((splitPosition, splitDirection));
 
             if (railBlockA == null && railBlockB == null) // fail to divide railblock
@@ -61,13 +70,13 @@ namespace TrainWorld.Traffic
             }
             else
             {
-                railBlocks.Remove(original);
-                railBlocks.Add(railBlockA);
-                railBlocks.Add(railBlockB);
+                    railBlocks.Remove(original);
+                    railBlocks.Add(railBlockA);
+                    railBlocks.Add(railBlockB);
 
-                original.RemoveMyself();
-                railBlockA.UpdateRailsBlockReference();
-                railBlockB.UpdateRailsBlockReference();
+                    original.RemoveMyself();
+                    railBlockA.UpdateRailsBlockReference();
+                    railBlockB.UpdateRailsBlockReference();
             }
         }
 

@@ -9,52 +9,75 @@ using System;
 
 namespace TrainWorld
 {
+    public enum PlacementType
+    {
+        eRail,
+        eBuilding,
+        eEmpty
+    }
+
     public class PlacementManager
     {
-        private static Dictionary<(Vector3Int, Direction8way), Rail> placementData;
+        private static Dictionary<Vector3Int, PlacementType> placementData;
+
+        private static Dictionary<(Vector3Int, Direction8way), Rail> railData;
         private static Dictionary<string, TrainStation> stationData;
 
         static PlacementManager()
         {
-            placementData = new Dictionary<(Vector3Int, Direction8way), Rail>();
+            placementData = new Dictionary<Vector3Int, PlacementType>();
+            railData = new Dictionary<(Vector3Int, Direction8way), Rail>();
             stationData = new Dictionary<string, TrainStation>();
         }
 
-        public static bool IsEmpty(Vector3Int position, Direction8way direction)
+        public static PlacementType GetPlacementTypeAt(Vector3Int position)
         {
-            return placementData.ContainsKey((position, direction)) == false;
+            if (placementData.ContainsKey(position) == false)
+                return PlacementType.eEmpty;
+
+            return placementData[position];
         }
 
-        public static bool IsEmpty((Vector3Int, Direction8way) position)
+        internal static void AddBuildingAt(Vector3Int roundedPosition)
         {
-            return placementData.ContainsKey(position) == false;
+            placementData.Add(roundedPosition, PlacementType.eBuilding);
+        }
+
+        public static bool IsRailAtPosition((Vector3Int, Direction8way) position)
+        {
+            return railData.ContainsKey(position) == true;
         }
 
         public static void AddRailAt((Vector3Int, Direction8way) position, Rail newRail)
         {
-            placementData.Add((position), newRail);
+            placementData[position.Item1] = PlacementType.eRail;
+            railData.Add(position, newRail);
         }
 
         public static Rail GetRailAt(Vector3Int position, Direction8way direction)
         {
-            if (placementData.ContainsKey((position, direction)) == false)
+            if (railData.ContainsKey((position, direction)) == false)
                 return null;
 
-            return placementData[(position, direction)];
+            return railData[(position, direction)];
         }
 
         public static Rail GetRailAt((Vector3Int, Direction8way) position)
         {
-            if (placementData.ContainsKey((position)) == false)
+            if (railData.ContainsKey(position) == false)
                 return null;
 
-            return placementData[(position)];
+            return railData[position];
         }
 
         public static void RemoveRailAt((Vector3Int, Direction8way) position)
         {
             // TODO : remove station/traffic of rail, 함께 삭제되어야 함
-            placementData.Remove(position);
+            railData.Remove(position);
+
+            // 만약 해당 position에 더 이상 rail이 남아 있지 않다면 placementData에서 key 삭제
+            if (GetRailsAtPosition(position.Item1).Count == 0)
+                placementData.Remove(position.Item1);
         }
 
         internal static void RemoveStationOfName(string stationName)
@@ -64,7 +87,7 @@ namespace TrainWorld
 
         public static List<Rail> GetRailsAtPosition(Vector3Int position)
         {
-            List<Rail> railsAtPosition = placementData.Where(x => position == x.Key.Item1).Select(x => x.Value).ToList();
+            List<Rail> railsAtPosition = railData.Where(x => position == x.Key.Item1).Select(x => x.Value).ToList();
 
             return railsAtPosition;
         }
@@ -74,7 +97,7 @@ namespace TrainWorld
             // railModel 의 위치를 기준으로 찾는 방법과 trafficsocket의 위치를 기준으로 찾는 두 가지 모드 존재
 
             Vector3Int roundedPosition = Vector3Int.RoundToInt(mousePosition);
-            List<Rail> railsAtPosition = placementData.Values.Where(x => roundedPosition == x.Position).ToList();
+            List<Rail> railsAtPosition = railData.Values.Where(x => roundedPosition == x.Position).ToList();
 
             if (railsAtPosition.Count > 0)
             {
@@ -103,7 +126,7 @@ namespace TrainWorld
                             nearestDirection = model.Direction;
                         }
                     }
-                    return placementData[(roundedPosition, nearestDirection)];
+                    return railData[(roundedPosition, nearestDirection)];
                 }
             }
             return null;
@@ -111,7 +134,7 @@ namespace TrainWorld
 
         public static List<(Vector3Int, Direction8way)> GetRailPathForAgent(Vector3Int startPosition, Direction8way startDirection, Vector3Int endPosition, Direction8way endDirection)
         {
-            return RailGraphPathfinder.AStarSearch(startPosition, startDirection, endPosition, endDirection, true, placementData);
+            return RailGraphPathfinder.AStarSearch(startPosition, startDirection, endPosition, endDirection, true, railData);
         }
 
         public static void AddStationOfName(string name, TrainStation newStation)

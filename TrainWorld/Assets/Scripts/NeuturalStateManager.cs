@@ -12,6 +12,9 @@ namespace TrainWorld
         [SerializeField]
         private UiTrain uiTrain;
 
+        [SerializeField]
+        private UiBuilding uiBuilding;
+
         public void OnMouseDown(Vector3 position)
         {
             //raycast hit
@@ -20,13 +23,22 @@ namespace TrainWorld
             {
                 if (selectableObject.GetSelectableObjectType() == SelectableObjectType.Station)
                 {
+                    CloseUI();
                     uiStationData.SetActive(true);
                     uiStationData.SetSelectedStation(selectableObject);
                     uiStationData.DisplaySelectedStationData();
                 }else if (selectableObject.GetSelectableObjectType() == SelectableObjectType.Agent)
                 {
+                    CloseUI();
                     uiTrain.SetActive(true);
                     uiTrain.SetSelectedAi(selectableObject);
+                }else if(selectableObject.GetSelectableObjectType() == SelectableObjectType.Building)
+                {
+                    CloseUI();
+                    uiBuilding.SetActive(true);
+                    uiBuilding.SetSelectedBuilding(selectableObject);
+                    uiBuilding.DisplaySelectedStationData();
+                    selectableObject.ShowMyUI();
                 }
                 else
                 {
@@ -54,6 +66,7 @@ namespace TrainWorld
         {
             uiStationData?.SetActive(false);
             uiTrain?.SetActive(false);
+            uiBuilding?.SetActive(false);
         }
 
         public void OnEnter()

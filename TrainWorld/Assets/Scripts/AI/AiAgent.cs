@@ -5,30 +5,18 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
+using TrainWorld.Rails;
 using TrainWorld.Traffic;
+using TrainWorld.Buildings;
 
 namespace TrainWorld.AI
 {
     [RequireComponent(typeof(Rigidbody))]
     public class AiAgent : MonoBehaviour, ISelectableObject
     {
-        [SerializeField]
-        private Vector3Int position;
+        public Storage storage;
 
-        public Vector3Int Position
-        {
-            get { return position; }
-            private set { position = value; }
-        }
-
-        [SerializeField]
-        private Direction8way direction;
-
-        public Direction8way Direction
-        {
-            get { return direction; }
-            private set { direction = value; }
-        }
+        private TrainStation currentStation;
 
         public event Action OnDeath;
         Rigidbody rb;
@@ -38,9 +26,28 @@ namespace TrainWorld.AI
         [SerializeField]
         private float rotationSpeed = 10.0f;
 
-        public bool loop;
 
-        private bool move;
+        [SerializeField]
+        private Vector3Int position;
+
+        public Vector3Int Position
+        {
+            get { return position; }
+            private set {          
+                position = value;
+            }
+        }
+
+        [SerializeField]
+        private Direction8way direction;
+
+        public Direction8way Direction
+        {
+            get { return direction; }
+            private set {
+                direction = value;
+            }
+        }
 
         private bool stop;
 
@@ -57,66 +64,170 @@ namespace TrainWorld.AI
             }
         }
 
-        public List<AgentTask> tasks;
-        public List<TrainStation> trainStationsInSchedule;
-        int taskIndex;
+        public List<(TrainStation, DepartureConditionType)> schedules;
 
+        //for move status
+        int scheduleIndex;
+        int pathIndex;
+        (Vector3Int, Direction8way) currentTarget;
         List<(Vector3Int, Direction8way)> path;
+        RailBlock lastBlock;
+
+        //for wait status(waiting until departure condition accomplished
 
         internal void Init(Vector3Int position, Direction8way direction)
         {
-            this.position = position;
-            this.direction = direction;
+            this.Position = position;
+            this.Direction = direction;
             PlacementManager.GetRailAt(position, direction).myRailblock.hasAgent = true;
+            storage = gameObject.GetComponent<Storage>();
+            schedules = new List<(TrainStation, DepartureConditionType)>();
         }
 
-        public void SetUpSchedule(List<(AgentTaskType, string)> schedule)
+
+
+        public void SetUpSchedule(List<(TrainStation, DepartureConditionType)> newSchedule)
         {
-            taskIndex = 0;
-            //trainStationsInSchedule = schedule;
-            move = true;
+            scheduleIndex = 0;
 
-            if (tasks != null)
-                tasks.Clear();
+            if (schedules != null)
+                schedules.Clear();
 
-            foreach (var task in schedule)
-            {
-                if (task.Item1 == AgentTaskType.Move)
-                {
-                    MoveToStationTask newTask = new MoveToStationTask(this, task.Item2);
-                    newTask.onFinish += ChangeTask;
-                    newTask.onNextRail += ChangePositionAndDirection;
-                    tasks.Add(newTask);
-                }else if(task.Item1 == AgentTaskType.Wait)
-                {
-                    float.TryParse(task.Item2, out float waitTime);
-                    Debug.Log(waitTime);
-                    WaitTask newTask = new WaitTask(this, waitTime);
-                    newTask.onFinish += ChangeTask;
-                    tasks.Add(newTask);
-                }
-            }
-        }
-
-        private void ChangeTask()
-        {
-            taskIndex = (taskIndex + 1) % tasks.Count;
-            tasks[taskIndex].OnTaskEnter();
+            schedules = newSchedule;
+            Stop = false;
         }
 
         private void Awake()
         {
             rb = GetComponent<Rigidbody>();
-            tasks = new List<AgentTask>();
         }
 
-        private void Update()
+        private void SetUpPath()
         {
-            if(tasks.Count != 0)
-                tasks[taskIndex].DoTask();
+            TrainStation destination = schedules[scheduleIndex].Item1;
+            if (destination == null)
+            {
+                Debug.Log("target station : " + destination.StationName + " is missing");
+                path = new List<(Vector3Int, Direction8way)>();
+                return;
+            }
+            path = PlacementManager.GetRailPathForAgent(Position, Direction,
+                destination.Position, destination.Direction);
+            if (path == null)
+            {
+                Debug.Log("No Path");
+            }
+            pathIndex = 0;
+            currentTarget = path[pathIndex];
         }
 
-        public float MoveAgent((Vector3Int, Direction8way) target)
+        void Update()
+        {
+            if (schedules.Count == 0)
+                return;
+
+            if (Stop)
+            {
+                if (IsDepartureConditionAccomplished())
+                {
+                    SetToNextSchedule();
+                    currentStation.inserter.StopInserterCoroutine();
+                    Stop = false;
+                }
+    
+            }
+            else
+            {
+                if (path == null)
+                    SetUpPath();
+
+                Rail rail = PlacementManager.GetRailAt(Position, Direction);
+                if (lastBlock != rail.myRailblock && lastBlock != null) // if it moved to next block
+                {
+                    lastBlock.hasAgent = false;
+                }
+                lastBlock = rail.myRailblock;
+                lastBlock.hasAgent = true;
+
+                TimeStepping();
+            }
+        }
+
+        private void SetToNextSchedule()
+        {
+            scheduleIndex = (scheduleIndex + 1) % schedules.Count;
+            SetUpPath();
+        }
+
+        //for waiting departure condition
+        private bool IsDepartureConditionAccomplished()
+        {
+            DepartureConditionType departureCondition = schedules[scheduleIndex].Item2;
+
+            if(departureCondition == DepartureConditionType.Load)
+            {
+                return storage.IsFull();
+            }else if(departureCondition == DepartureConditionType.Unload)
+            {
+                return storage.IsEmpty();
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        private void TimeStepping()
+        {
+            float remainingDistance = float.MaxValue;
+            if (path.Count > pathIndex)
+            {
+                Rail agentRail = PlacementManager.GetRailAt(Position, Direction); // 이 agent가 올라가 있는 rail
+                Rail targetRail = PlacementManager.GetRailAt(currentTarget.Item1, currentTarget.Item2); // agent가 이동할 예정인 rail
+                if (targetRail.myRailblock.hasAgent && agentRail.myRailblock != targetRail.myRailblock)
+                //다음 railblock으로 이동할 때 해당 railblock이 agent가 존재한다면
+                {
+                    return;
+                }
+                else
+                {
+                    remainingDistance = MoveAgent(currentTarget);
+                }
+                if (remainingDistance < 0.1f)
+                {
+                    ChangePositionAndDirection(currentTarget.Item1, currentTarget.Item2);
+                    // step to next position
+                    pathIndex++;
+                    if (pathIndex >= path.Count)
+                    {
+                        SwitchToStopStatus();
+                        stop = true;
+
+                        pathIndex = 0;
+                        return;
+                    }
+                    currentTarget = path[pathIndex];
+                }
+            }
+        }
+
+        private void SwitchToStopStatus()
+        {
+            currentStation = schedules[scheduleIndex].Item1;
+            if(schedules[scheduleIndex].Item2 == DepartureConditionType.Load)
+            {
+                currentStation.inserter.AddReceiver(storage);
+                currentStation.inserter.AddProviders(currentStation.connectedStorage);
+                currentStation.inserter.StartInserterCoroutine();
+            }else if (schedules[scheduleIndex].Item2 == DepartureConditionType.Unload)
+            {
+                currentStation.inserter.AddProvider(storage);
+                currentStation.inserter.AddReceivers(currentStation.connectedStorage);
+                currentStation.inserter.StartInserterCoroutine();
+            }
+        }
+
+        private float MoveAgent((Vector3Int, Direction8way) target)
         {
             float step = speed * Time.deltaTime;
             transform.position = Vector3.MoveTowards(transform.position, target.Item1, step);
@@ -133,6 +244,7 @@ namespace TrainWorld.AI
             Direction = direction;
         }
 
+
         private void OnDrawGizmosSelected()
         {
             if (path == null)
@@ -147,6 +259,7 @@ namespace TrainWorld.AI
 
         private void OnDestroy()
         {
+            PlacementManager.GetRailAt((Position, Direction)).myRailblock.hasAgent = false;
             OnDeath?.Invoke();
         }
 

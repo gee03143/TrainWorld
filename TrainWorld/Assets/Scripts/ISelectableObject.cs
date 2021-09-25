@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 
 namespace TrainWorld
@@ -10,7 +11,8 @@ namespace TrainWorld
         Rail,
         Agent,
         Station,
-        Traffic
+        Traffic,
+        Building
     }
 
     public interface ISelectableObject

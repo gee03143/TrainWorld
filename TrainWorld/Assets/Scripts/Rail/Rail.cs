@@ -5,7 +5,6 @@ using System;
 using System.Linq;
 
 using TrainWorld.Traffic;
-using TrainWorld.Traffic;
 
 namespace TrainWorld.Rails
 {
