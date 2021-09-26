@@ -13,6 +13,9 @@ namespace TrainWorld
     public class UiTrain : MonoBehaviour
     {
         [SerializeField]
+        private CameraFollow cameraFollow;
+
+        [SerializeField]
         private GameObject uiDestinationRow;
         [SerializeField]
         private Transform DestinationsParent;
@@ -93,6 +96,14 @@ namespace TrainWorld
 
         private void AddRowHandler()
         {
+            AddRow();
+
+            addDestinationRow.transform.SetAsLastSibling();
+            changeScheduleButton.transform.SetAsLastSibling();
+        }
+
+        private void AddRow()
+        {
             GameObject newObject = Instantiate(uiDestinationRow, DestinationsParent);
 
             UiDestination destination = newObject.GetComponent<UiDestination>();
@@ -102,9 +113,9 @@ namespace TrainWorld
             destination.SetDropdownOptions();
             destination.SetDropdownSelected(destinationOptions.value);
 
+            destination.onLocationButtonClicked += cameraFollow.SetTarget;
+
             newObject.transform.SetAsLastSibling();
-            addDestinationRow.transform.SetAsLastSibling();
-            changeScheduleButton.transform.SetAsLastSibling();
         }
 
         private void RemoveRowFromList(UiDestination row)
@@ -136,18 +147,7 @@ namespace TrainWorld
             {
                 foreach (var schedule in schedules)
                 {
-                    GameObject newObject = Instantiate(uiDestinationRow, DestinationsParent);
-
-                    UiDestination destination = newObject.GetComponent<UiDestination>();
-
-                    uiDestinations.Add(destination);
-                    destination.onDestroy += RemoveRowFromList;
-
-                    destination.SetDropdownOptions();
-                    Debug.Log("( " + schedule.Item1 + " , " + schedule.Item2 + " )");
-                    destination.SetDropdownSelected(schedule.Item1.StationName, schedule.Item2);
-
-                    newObject.transform.SetAsLastSibling();
+                    AddRow();
                 }
             }
 

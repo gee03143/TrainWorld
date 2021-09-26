@@ -12171,6 +12171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3c4fb7b5e49b04409078844d6f0121a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameraFollow: {fileID: 1901117319}
   uiDestinationRow: {fileID: 3860857979004455679, guid: 78d04a16a1d459940948aa39f1d63f08, type: 3}
   DestinationsParent: {fileID: 557821361}
   destinationOptions: {fileID: 1600981240}
@@ -24258,6 +24259,7 @@ GameObject:
   - component: {fileID: 1901117317}
   - component: {fileID: 1901117316}
   - component: {fileID: 1901117315}
+  - component: {fileID: 1901117319}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -24377,6 +24379,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 45, y: 30, z: 0}
+--- !u!114 &1901117319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1901117313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08ec3b8ad01abf8409631b404052246f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  smoothSpeed: 10
+  offset: {x: -8.5, y: 15.86, z: -14}
 --- !u!1001 &1901250266
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -18,6 +18,8 @@ namespace TrainWorld
 
     public class UiDestination : MonoBehaviour
     {
+        public Action<Vector3> onLocationButtonClicked;
+
         [SerializeField]
         Dropdown stationDropdown;
         [SerializeField]
@@ -68,8 +70,8 @@ namespace TrainWorld
         private void FindStation()
         {
             TrainStation targetStation = GetStationDropdownSelected();
-
             // TODO : focus camera on target station
+            onLocationButtonClicked?.Invoke(targetStation.transform.position);
         }
 
         internal TrainStation GetStationDropdownSelected()
