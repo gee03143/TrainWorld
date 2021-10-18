@@ -8,7 +8,7 @@ namespace TrainWorld
     public class CameraMovement : MonoBehaviour
     {
         private Camera gameCamera;
-        [Range(0.1f,10.0f)]
+        [Range(0.1f,25.0f)]
         public float cameraMovementSpeed = 5;
 
         public float minOrthoSize = 3.0f;

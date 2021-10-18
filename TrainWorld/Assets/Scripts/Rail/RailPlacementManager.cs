@@ -19,11 +19,6 @@ namespace TrainWorld.Rails
     {
 
         [SerializeField]
-        int maxWidth;
-        [SerializeField]
-        int maxHeight;
-
-        [SerializeField]
         private RailArrowUI railArrowUI;
         [SerializeField]
         private GameObject railPrefab;
@@ -53,11 +48,6 @@ namespace TrainWorld.Rails
             placementStartDirection = Direction8way.N;
         }
 
-        private bool IsPositionOutOfBorder(Vector3Int position)
-        {
-            return position.x < 0 || position.x > maxWidth || position.z < 0 || position.z > maxHeight;
-        }
-
         public void OnMouseDown(Vector3 mousePosition)
         {
             PlaceRail(mousePosition);
@@ -66,10 +56,6 @@ namespace TrainWorld.Rails
         private void PlaceRail(Vector3 position)
         {
             Vector3Int roundedPosition = Vector3Int.RoundToInt(position);
-
-            //해당 위치가 경계 바깥이면 종료 
-            if (IsPositionOutOfBorder(roundedPosition))
-                return;
 
             if (placementMode)  //  confirm rail placement, place rail at temp rail positions
             {
@@ -253,7 +239,7 @@ namespace TrainWorld.Rails
             (Vector3Int, Direction8way) opposite = (railUnderCursor.Position, railUnderCursor.Direction.Opposite());
 
             // if selected position is out of border or empty do nothing
-            if (IsPositionOutOfBorder(railUnderCursor.Position) || PlacementManager.IsRailAtPosition(cursorPos) == false)
+            if (PlacementManager.IsRailAtPosition(cursorPos) == false)
                 return;
 
             AddAdjascentPositionsToRailsToFix(railUnderCursor.Position, railUnderCursor.Direction);

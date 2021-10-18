@@ -214,17 +214,9 @@ namespace TrainWorld.AI
         private void SwitchToStopStatus()
         {
             currentStation = schedules[scheduleIndex].Item1;
-            if(schedules[scheduleIndex].Item2 == DepartureConditionType.Load)
-            {
-                currentStation.inserter.AddReceiver(storage);
-                currentStation.inserter.AddProviders(currentStation.connectedStorage);
-                currentStation.inserter.StartInserterCoroutine();
-            }else if (schedules[scheduleIndex].Item2 == DepartureConditionType.Unload)
-            {
-                currentStation.inserter.AddProvider(storage);
-                currentStation.inserter.AddReceivers(currentStation.connectedStorage);
-                currentStation.inserter.StartInserterCoroutine();
-            }
+            currentStation.inserter.SetStorages(storage, currentStation.connectedStorage,
+                schedules[scheduleIndex].Item2);
+            currentStation.inserter.StartInserterCoroutine();
         }
 
         private float MoveAgent((Vector3Int, Direction8way) target)

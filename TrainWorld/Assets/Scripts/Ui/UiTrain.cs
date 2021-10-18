@@ -118,6 +118,22 @@ namespace TrainWorld
             newObject.transform.SetAsLastSibling();
         }
 
+        private void AddRow(TrainStation trainStation, DepartureConditionType departureConditionType)
+        {
+            GameObject newObject = Instantiate(uiDestinationRow, DestinationsParent);
+
+            UiDestination destination = newObject.GetComponent<UiDestination>();
+            uiDestinations.Add(destination);
+            destination.onDestroy += RemoveRowFromList;
+
+            destination.SetDropdownOptions();
+            destination.SetDropdownSelected(trainStation.StationName, departureConditionType);
+
+            destination.onLocationButtonClicked += cameraFollow.SetTarget;
+
+            newObject.transform.SetAsLastSibling();
+        }
+
         private void RemoveRowFromList(UiDestination row)
         {
             uiDestinations.Remove(row);
@@ -147,7 +163,8 @@ namespace TrainWorld
             {
                 foreach (var schedule in schedules)
                 {
-                    AddRow();
+                    Debug.Log(schedule.Item1.ToString() + "  " + schedule.Item2.ToString());
+                    AddRow(schedule.Item1, schedule.Item2);
                 }
             }
 

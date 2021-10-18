@@ -14,21 +14,33 @@ namespace TrainWorld.Buildings
         [SerializeField]
         private GameObject fullBuildingPrefab;
         [SerializeField]
-        private GameObject tempBuildingObject;
+        private GameObject providerPrefab;
+        [SerializeField]
+        private GameObject consuerPrefab;
+        [SerializeField]
+        private GameObject tempBuildingParent;
 
-        bool placingFullBuilding = false;
+        private List<GameObject> prefabList;
+
+        [SerializeField]
+        private List<GameObject> tempBuildingList;
+        private int listIndex = 0;
+
+        public void Awake()
+        {
+            prefabList = new List<GameObject> { buildingPrefab , fullBuildingPrefab , providerPrefab, consuerPrefab };
+        }
 
         public void OnEnter()
         {
             Debug.Log("Building Placement Enter");
-            tempBuildingObject.SetActive(true);
-            tempBuildingObject.GetComponent<Building>().Init(new Vector3Int(0, 0, 0));
+            SetTempbuildingActive(0);
         }
 
         public void OnExit()
         {
             Debug.Log("Building Placement Exit");
-            tempBuildingObject.SetActive(false);
+            SetTempbuildingUnvisible();
         }
 
         public void OnMouseDown(Vector3 mousePosition)
@@ -43,18 +55,9 @@ namespace TrainWorld.Buildings
             GameObject newObject;
             Building newBuilding;
 
-            if (placingFullBuilding)
-            {
-                newObject = Instantiate(fullBuildingPrefab, roundedPosition, Quaternion.Euler(Direction8way.N.ToEuler()), buildingParent);
-                newBuilding = newObject.GetComponent<Building>();
-            }
-            else
-            {
-                newObject = Instantiate(buildingPrefab, roundedPosition, Quaternion.Euler(Direction8way.N.ToEuler()), buildingParent);
-                newBuilding = newObject.GetComponent<Building>();
-            }
+            newObject = Instantiate(prefabList[listIndex], roundedPosition, Quaternion.Euler(Direction8way.N.ToEuler()), buildingParent);
+            newBuilding = newObject.GetComponent<Building>();
 
-            
             newBuilding.Init(roundedPosition);
             Vector3Int minBuildingPos = newBuilding.GetMinPosition();
             Vector3Int maxBuildingPos = newBuilding.GetMaxPosition();
@@ -95,12 +98,32 @@ namespace TrainWorld.Buildings
 
             Vector3Int roundedPosition = Vector3Int.RoundToInt(mousePosition);
             //visual red when not placeable
-            tempBuildingObject.transform.position = roundedPosition;
+            tempBuildingParent.transform.position = roundedPosition;
         }
 
         public void OnRInput()
         {
-            placingFullBuilding = !placingFullBuilding;
+            listIndex++;
+            if(listIndex >= prefabList.Count)
+            {
+                listIndex = 0;
+            }
+
+            SetTempbuildingActive(listIndex);
+        }
+
+        private void SetTempbuildingActive(int index)
+        {
+            SetTempbuildingUnvisible();
+            tempBuildingList[index].SetActive(true);
+        }
+
+        private void SetTempbuildingUnvisible()
+        {
+            foreach (var item in tempBuildingList)
+            {
+                item.SetActive(false);
+            }
         }
     }
 }

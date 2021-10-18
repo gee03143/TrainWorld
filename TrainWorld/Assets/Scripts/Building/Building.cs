@@ -44,8 +44,7 @@ namespace TrainWorld.Buildings
             }
         }
 
-        [SerializeField]
-        private int possibleStationSearchDistance;
+        private const int possibleStationInSearchDistance = 5;
 
 
         [SerializeField]
@@ -95,7 +94,7 @@ namespace TrainWorld.Buildings
 
             foreach (var station in allStations)
             {
-                if(MathFunctions.ManhattanDiscance(station.Position, position) <= possibleStationSearchDistance)
+                if(MathFunctions.ManhattanDiscance(station.Position, position) <= possibleStationInSearchDistance)
                 {
                     trainStations.Add(station);
                 }

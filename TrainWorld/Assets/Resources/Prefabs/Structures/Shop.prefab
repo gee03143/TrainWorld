@@ -64,7 +64,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   storage: {fileID: 0}
   position: {x: 0, y: 0, z: 0}
-  possibleStationSearchDistance: 4
+  possibleStationInSearchDistance: 3
   sizeX: 3
   sizeZ: 3
 --- !u!54 &3989889697492581768

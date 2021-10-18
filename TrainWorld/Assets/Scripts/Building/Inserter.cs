@@ -13,10 +13,15 @@ namespace TrainWorld.Buildings
         List<Storage> provider;
         List<Storage> receiver;
 
+        Storage agnetStorage;
+        List<Storage> connectedStorages;
+        DepartureConditionType inserterMode;
+
         private void Awake()
         {
             provider = new List<Storage>();
             receiver = new List<Storage>();
+            connectedStorages = new List<Storage>();
         }
 
         public void AddProvider(Storage storage)
@@ -45,12 +50,29 @@ namespace TrainWorld.Buildings
             receiver.AddRange(storages);
         }
 
+        public void SetStorages(Storage agent, List<Storage> storages, DepartureConditionType mode)
+        {
+            agnetStorage = agent;
+            connectedStorages = storages;
+            inserterMode = mode;
+
+            if(inserterMode == DepartureConditionType.Load)
+            {
+                provider = connectedStorages;
+                AddReceiver(agent);
+            }else if(inserterMode == DepartureConditionType.Unload)
+            {
+                receiver = connectedStorages;
+                AddProvider(agent);
+            }
+        }
+
         public void RemoveReceiver(Storage storage)
         {
             receiver.Remove(storage);
         }
 
-        public Storage PollNextProvider(Storage currentProvider)
+        private Storage PollNextProvider(Storage currentProvider)
         {
             int providerIndex = provider.IndexOf(currentProvider);
 
@@ -60,7 +82,7 @@ namespace TrainWorld.Buildings
                 return  null;
         }
 
-        public Storage PollNextReceiver(Storage currentReceiver)
+        private Storage PollNextReceiver(Storage currentReceiver)
         {
             int receiverIndex = receiver.IndexOf(currentReceiver);
 
@@ -93,8 +115,9 @@ namespace TrainWorld.Buildings
 
         private void InserterLoop()
         {
-            int actualAmount = CheckReceiverSpace(InserterSpeed); // 여유 공간 확인
-            int supply = TryReceiveFromProvider(actualAmount); // 여유 공간만큼 가져옴
+            int remainingSpace = CheckReceiverSpace(InserterSpeed); // 여유 공간 확인
+            int supply = TryReceiveFromProvider(remainingSpace);
+            // generator 인가? 공급자로부터 item을 가져옴 : 아이템을 생성함
             TrySendToReceiver(supply); // 가져온 양만큼 전달
         }
 

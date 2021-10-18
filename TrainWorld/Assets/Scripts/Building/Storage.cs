@@ -40,7 +40,7 @@ namespace TrainWorld.Buildings
         [SerializeField]
         public int maxStorage = 100;
 
-        public int GetItemFromStorage(int amount)
+        public virtual int GetItemFromStorage(int amount)
         {
             //아이템을 창고에서 꺼내감
             int supply = amount;
@@ -66,8 +66,9 @@ namespace TrainWorld.Buildings
             storageUIBar.fillAmount = (float)CurrentStorage / (float)maxStorage;
         }
 
-        public int GiveItemToStorage(int amount)
+        public virtual int GiveItemToStorage(int amount)
         {
+            //창고에 아이템 적재, remains는 창고에 넣고 남은 양
             int remains = 0;
             CurrentStorage += amount;
 
@@ -85,17 +86,17 @@ namespace TrainWorld.Buildings
             OnReceiveItem = OnSendItem = OnDataChanged = OnStorageFull = null;
         }
 
-        internal bool IsEmpty()
+        public virtual bool IsEmpty()
         {
             return CurrentStorage == 0;
         }
 
-        internal bool IsFull()
+        public virtual bool IsFull()
         {
             return CurrentStorage == maxStorage;
         }
 
-        internal int GetRemainingSpace()
+        public virtual int GetRemainingSpace()
         {
             return maxStorage - CurrentStorage;
         }
