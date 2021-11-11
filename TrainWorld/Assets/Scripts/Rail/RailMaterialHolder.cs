@@ -9,22 +9,23 @@ namespace TrainWorld.Rails
     {
         public Material railMaterial;
 
-        public Material sideMaterial;
+        public MeshRenderer[] railRenderer;
 
-        public MeshRenderer railRenderer;
-
-        public MeshRenderer sideRenderer;
 
         public void SetMaterialToDefault()
         {
-            railRenderer.material = railMaterial;
-            sideRenderer.material = sideMaterial;
+            foreach (MeshRenderer renderer in railRenderer)
+            {
+                renderer.material = railMaterial;
+            }
         }
 
         public void SetMaterial(Material input)
         {
-            railRenderer.material = input;
-            sideRenderer.material = input;
+            foreach (MeshRenderer renderer in railRenderer)
+            {
+                renderer.material = input;
+            }
         }
     }
 }

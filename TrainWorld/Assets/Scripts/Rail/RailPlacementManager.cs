@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 
 using TrainWorld.Traffic;
+using TrainWorld.Audio;
 
 namespace TrainWorld.Rails
 {
@@ -207,7 +208,7 @@ namespace TrainWorld.Rails
         {
             Vector3Int roundedPosition = Vector3Int.RoundToInt(cursorPosition);
             railUnderCursor = PlacementManager.GetRailViaMousePosition(cursorPosition);
-            ShowRailUI(cursorPosition);
+            railArrowUI.ShowRailUI(railUnderCursor);
             if (placementMode)
             {
                 //clear temp rails
@@ -272,27 +273,7 @@ namespace TrainWorld.Rails
         internal void MoveCursorAtDestruction(Vector3 cursorPosition)
         {
             railUnderCursor = PlacementManager.GetRailViaMousePosition(cursorPosition);
-            ShowRailUI(cursorPosition);
-        }
-
-        private void ShowRailUI(Vector3 cursorPosition)
-        {
-            if (railUnderCursor != null)
-            {
-                railArrowUI.arrow.SetActive(true);
-                railArrowUI.arrow.transform.position = railUnderCursor.Position;
-
-                railArrowUI.arrow.transform.rotation = Quaternion.Euler(railUnderCursor.Direction.ToEuler());
-            }
-            else
-            {
-                HideRailArrowUI();
-            }
-        }
-
-        public void HideRailArrowUI()
-        {
-            railArrowUI.arrow.SetActive(false);
+            railArrowUI.ShowRailUI(railUnderCursor);
         }
 
         private void CreateTempRailModel()
@@ -339,7 +320,7 @@ namespace TrainWorld.Rails
         {
             RemoveTempRails();
             tempRailPositions.Clear();
-            railArrowUI.arrow.SetActive(false);
+            railArrowUI.HideRailArrowUI();
             placementMode = false;
             Debug.Log("Rail Placement Exit");
         }

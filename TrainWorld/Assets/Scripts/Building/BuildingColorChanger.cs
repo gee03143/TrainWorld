@@ -20,7 +20,6 @@ namespace TrainWorld.Buildings
 
         void OnTriggerEnter(Collider other)
         {
-            Debug.Log(other.gameObject.tag);
             if (other.gameObject.CompareTag("Rail") || other.gameObject.CompareTag("Building"))
             {
                 ChangeColorToRed();

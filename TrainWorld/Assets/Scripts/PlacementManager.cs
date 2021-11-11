@@ -5,6 +5,7 @@ using UnityEngine;
 
 using TrainWorld.Rails;
 using TrainWorld.Traffic;
+using TrainWorld.Audio;
 using System;
 
 namespace TrainWorld
@@ -41,6 +42,7 @@ namespace TrainWorld
         internal static void AddBuildingAt(Vector3Int roundedPosition)
         {
             placementData.Add(roundedPosition, PlacementType.eBuilding);
+            AudioManager.instance.PlaySound("Placement_Building");
         }
 
         public static bool IsRailAtPosition((Vector3Int, Direction8way) position)
@@ -52,6 +54,7 @@ namespace TrainWorld
         {
             placementData[position.Item1] = PlacementType.eRail;
             railData.Add(position, newRail);
+            AudioManager.instance.PlaySound("Placement_Rail");
         }
 
         public static Rail GetRailAt(Vector3Int position, Direction8way direction)
@@ -78,11 +81,13 @@ namespace TrainWorld
             // 만약 해당 position에 더 이상 rail이 남아 있지 않다면 placementData에서 key 삭제
             if (GetRailsAtPosition(position.Item1).Count == 0)
                 placementData.Remove(position.Item1);
+            AudioManager.instance.PlaySound("Destruction");
         }
 
         internal static void RemoveStationOfName(string stationName)
         {
             stationData.Remove(stationName);
+            AudioManager.instance.PlaySound("Destruction");
         }
 
         public static List<Rail> GetRailsAtPosition(Vector3Int position)
@@ -140,6 +145,7 @@ namespace TrainWorld
         public static void AddStationOfName(string name, TrainStation newStation)
         {
             stationData.Add(name, newStation);
+            AudioManager.instance.PlaySound("Placement_Building");
         }
 
         public static TrainStation GetStationOfName(string name)

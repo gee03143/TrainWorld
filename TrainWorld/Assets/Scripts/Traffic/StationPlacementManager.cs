@@ -14,6 +14,9 @@ namespace TrainWorld.Traffic
         [SerializeField]
         private UiTrain uiTrain;
 
+        [SerializeField]
+        private RailArrowUI railArrowUI;
+
         private TrainStation tempStation;
 
         public void OnMouseDown(Vector3 mousePosition)
@@ -31,7 +34,7 @@ namespace TrainWorld.Traffic
                 TrainStation newStation = railAtCursor.AddStation((PlacementManager.GetStations().Count).ToString());
                 if (newStation != null)
                 {
-                    PlacementManager.GetStations().Add(newStation.StationName, newStation);
+                    PlacementManager.AddStationOfName(newStation.StationName, newStation);
                     uiTrain.SetStationNameList(PlacementManager.GetStations().Keys.ToList());
                 }
             }
@@ -51,6 +54,11 @@ namespace TrainWorld.Traffic
             if(railAtCursor != null && railAtCursor.IsTrafficSocketEmpty())
             {
                 tempStation = railAtCursor.AddTempStation();
+                railArrowUI.ShowRailUI(railAtCursor);
+            }
+            else
+            {
+                railArrowUI.HideRailArrowUI();
             }
         }
 
@@ -107,6 +115,7 @@ namespace TrainWorld.Traffic
         public void OnExit()
         {
             ClearTempStations();
+            railArrowUI.HideRailArrowUI();
             Debug.Log("Station Placement Exit");
         }
     }

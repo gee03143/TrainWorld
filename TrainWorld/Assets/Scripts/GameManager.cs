@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using TrainWorld.Audio;
 using TrainWorld.Rails;
 using TrainWorld.Traffic;
 using TrainWorld.AI;
@@ -51,6 +52,7 @@ namespace TrainWorld
             inputManager.onAxisInput += cameraMovement.MoveCamera;
             inputManager.onMouseScroll += cameraMovement.ChangeOrthoSize;
             SwitchHandler(neuturalStateManager);
+
         }
 
         private void HandleEscape()

@@ -10,11 +10,13 @@ namespace TrainWorld.AI
     public class TrainPlacementManager : MonoBehaviour, InputHandler
     {
         [SerializeField]
+        private RailArrowUI railArrowUI;
+        [SerializeField]
         private GameObject trainPrefab;
 
         private List<AiAgent> trains;
 
-        private Rails.Rail railAtCursor;
+        private Rail railUnderCursor;
 
         private void Awake()
         {
@@ -35,13 +37,13 @@ namespace TrainWorld.AI
             }
             else
             {
-                railAtCursor = PlacementManager.GetRailViaMousePosition(mousePosition);
+                railUnderCursor = PlacementManager.GetRailViaMousePosition(mousePosition);
 
-                GameObject newObject = Instantiate(trainPrefab, railAtCursor.Position,
-                    Quaternion.Euler(railAtCursor.Direction.ToEuler()));
+                GameObject newObject = Instantiate(trainPrefab, railUnderCursor.Position,
+                    Quaternion.Euler(railUnderCursor.Direction.ToEuler()));
 
                 AiAgent newAgent = newObject.GetComponent<AiAgent>();
-                newAgent.Init(railAtCursor.Position, railAtCursor.Direction);
+                newAgent.Init(railUnderCursor.Position, railUnderCursor.Direction);
                 trains.Add(newAgent);
             }
         }
@@ -59,12 +61,19 @@ namespace TrainWorld.AI
 
         public void OnExit()
         {
+            railArrowUI.HideRailArrowUI();
             Debug.Log("Train Placement Exit");
         }
 
         public void OnMouseMove(Vector3 mousePosition)
         {
-            //throw new NotImplementedException();
+            MoveCursorAtTrainPlacement(mousePosition);
+        }
+
+        internal void MoveCursorAtTrainPlacement(Vector3 cursorPosition)
+        {
+            railUnderCursor = PlacementManager.GetRailViaMousePosition(cursorPosition);
+            railArrowUI.ShowRailUI(railUnderCursor);
         }
 
         public void OnRInput()

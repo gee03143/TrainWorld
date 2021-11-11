@@ -59,11 +59,11 @@ namespace TrainWorld.Buildings
             if(inserterMode == DepartureConditionType.Load)
             {
                 provider = connectedStorages;
-                AddReceiver(agent);
+                receiver = new List<Storage> { agent };
             }else if(inserterMode == DepartureConditionType.Unload)
             {
                 receiver = connectedStorages;
-                AddProvider(agent);
+                provider = new List<Storage> { agent };
             }
         }
 
@@ -200,8 +200,6 @@ namespace TrainWorld.Buildings
 
         internal void ClearProviderReceiver()
         {
-            provider.Clear();
-            receiver.Clear();
         }
     }
 }

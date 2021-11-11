@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6403740562223443684}
   - component: {fileID: 8288074114022238616}
   - component: {fileID: 2307242402874417092}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Consumer
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -184,7 +184,7 @@ GameObject:
   - component: {fileID: 7888317473473275379}
   - component: {fileID: 8579667693448176916}
   - component: {fileID: 5546983677370049042}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -479,23 +479,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8bf501b374bf64440af0944b91ecd08a, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0
+      value: -0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8bf501b374bf64440af0944b91ecd08a, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8bf501b374bf64440af0944b91ecd08a, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.7069834
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8bf501b374bf64440af0944b91ecd08a, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.7072302
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8bf501b374bf64440af0944b91ecd08a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: -89.98
+      value: 270
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8bf501b374bf64440af0944b91ecd08a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -503,11 +503,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8bf501b374bf64440af0944b91ecd08a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 180
+      value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 8bf501b374bf64440af0944b91ecd08a, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 51d486b9844305e43ad62d9243040362, type: 2}
+    - target: {fileID: -5754084199372789682, guid: 8bf501b374bf64440af0944b91ecd08a, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 9113743562689292391, guid: bd5cd6471abfd154d818737c55c3e646, type: 3}
     - target: {fileID: 919132149155446097, guid: 8bf501b374bf64440af0944b91ecd08a, type: 3}
       propertyPath: m_Name
       value: House2
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8bf501b374bf64440af0944b91ecd08a, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8bf501b374bf64440af0944b91ecd08a, type: 3}

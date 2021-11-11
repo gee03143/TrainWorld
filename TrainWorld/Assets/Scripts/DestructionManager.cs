@@ -20,6 +20,8 @@ namespace TrainWorld
         private TrafficPlacementManager trafficPlacementManager;
         [SerializeField]
         private RailBlockManager railBlockManager;
+        [SerializeField]
+        private RailArrowUI railArrowUI;
 
         public void OnEnter()
         {
@@ -29,7 +31,7 @@ namespace TrainWorld
 
         public void OnExit()
         {
-            railPlacementManager.HideRailArrowUI();
+            railArrowUI.HideRailArrowUI();
             railBlockManager.DisableRailBlockDisplay();
             Debug.Log("Destruction Exit");
         }
@@ -49,7 +51,8 @@ namespace TrainWorld
                 }else if(selectableObject.GetSelectableObjectType() == SelectableObjectType.Rail)
                 {
                     railPlacementManager.RemoveRail(position);
-                    railPlacementManager.HideRailArrowUI();
+                    railArrowUI.HideRailArrowUI();
+                    
                 }else if(selectableObject.GetSelectableObjectType() == SelectableObjectType.Traffic){
                     trafficPlacementManager.RemoveTraffic((TrafficSignal)selectableObject);
                 }
@@ -66,7 +69,7 @@ namespace TrainWorld
             ISelectableObject selectableObject = ObjectSelector.GetObjectFromPointer();
             if (selectableObject != null)
             {
-                railPlacementManager.HideRailArrowUI();
+                railArrowUI.HideRailArrowUI();
                 if (selectableObject.GetSelectableObjectType() == SelectableObjectType.Rail)
                 {
                     railPlacementManager.MoveCursorAtDestruction(mousePosition);
